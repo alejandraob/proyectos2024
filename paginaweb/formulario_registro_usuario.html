@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de registro de usuario</title>
+</head>
+<body>
+    <h1>Formulario de registro de usuario</h1>
+    <form action="enviar.php" method="post">
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" id="nombre" required>
+        <br>
+        <label for="apellido">Apellido:</label>
+        <input type="text" name="apellido" id="apellido" required>
+        <br>
+        <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
+        <br>
+        <label for="genero">Género:</label>
+        <select name="genero" id="genero" required>
+            <option value="masculino">Masculino</option>
+            <option value="femenino">Femenino</option>
+            <option value="otro">Otro</option>
+        </select>
+        <br>
+        <label for="direccion">Dirección:</label>
+        <input type="text" name="direccion" id="direccion" required>
+        <br>
+        <label for="ciudad">Ciudad:</label>
+        <input type="text" name="ciudad" id="ciudad" required>
+        <br>
+        <label for="provincia">Provincia:</label>
+        <input type="text" name="provincia" id="provincia" required>
+        <br>
+        <label for="codigo_postal">Código postal:</label>
+        <input type="text" name="codigo_postal" id="codigo_postal" required>
+        <br>
+        <label for="pais">País:</label>
+        <input type="text" name="pais" id="pais" required>
+        <br>
+        <label for="telefono">Teléfono:</label>
+        <input type="tel" name="telefono" id="telefono" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required>
+        <br>
+        <label for="password">Contraseña:</label>
+        <input type="password" name="password" id="password" required>
+        <br>
+        <label for="password2">Repetir contraseña:</label>
+        <input type="password" name="password2" id="password2" required>
+        <br>
+
+        <input type="submit" value="Enviar">
+    </form>
+</html>
