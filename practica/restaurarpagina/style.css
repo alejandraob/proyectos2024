@@ -6,6 +6,10 @@
 body {
  font-family: 'Lucida Sans', Tahoma, 'Trebuchet MS',Verdana, Arial, sans-serif;
  font-size: 73%;
+ margin: 0;
+ padding: 0;
+ color: #555;
+ background: #f7f7f7;
 }
 
 
@@ -17,6 +21,14 @@ body {
   background-repeat: no-repeat;
   background-size: 100%;
   color: #333;
+}
+
+#container{
+  width: 99.5%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0px;
+  line-height: 1.5em;
 }
 
 
@@ -52,7 +64,7 @@ body {
 }
 
 #navlist li a:hover {
-  color: #000;
+  color: #fff;
   background: #7aba2e;
 }
 #navlist li a#current {
@@ -61,12 +73,12 @@ body {
 }
 .menu ul li {
   line-height: 1.8em;
-  margin: 0 10px 0 0;
-  padding: 0;
-  list-style-type: square;
   color: #f17c0b;
   background: inherit;
-}
+  }
+  .menu li   {
+      list-style: square;
+    }
 
 .menu li a {
   margin: 0;
@@ -80,9 +92,20 @@ body {
   background: inherit;
 }
 
+
+
 /* Instrucion: el elemento #content debe tener relleno 0, margen izquierdo y derecho de 170 pixeles, y bordes izquierdos 
 y derechos de un pixed, dashed y de color #333    */
 #content {
+  padding: 0;
+  margin-left: 170px;
+  margin-right: 170px;
+  border-left: 1px;
+  border-right: 1px;
+  border-style: dashed;
+  border-top: 0px;
+  border-bottom: 0px;
+  border-color: #333;
   float: center;
   color: #555;
   background-color: #f7f7f7;
@@ -96,20 +119,29 @@ y derechos de un pixed, dashed y de color #333    */
 
 #siderbar-a{
   float: left;
-  width: 140px;
+ /* width: 140px;*/
   margin-left: 5px;
   padding: 0px 5px 0px 5px;
   color: #666;
   background: #f7f7f7;
   border-left: 1px solid #f17c0b;
   border-style: dashed;
+
+  
+  position: absolute;
+    width: 10%;
 }
 #sidebar-a li {
   margin: 0;
   padding: 0;
-  list-style-type:disc;
+  list-style-type:square;
 
 }
+
+#sidebar-a li::marker{
+  color: #555;
+}
+
 #sidebar-a a{
   padding: 5px;
   margin: 0;
@@ -130,6 +162,7 @@ y derechos de un pixed, dashed y de color #333    */
   padding: 0 5px 0 5px;
   color: #333;
   background: inherit;
+
 }
 
 
@@ -146,7 +179,7 @@ no modifique padding ni color
 #sidebar-b {
   float:right;
   width: 140px;
-  margin: 5px 0 0 0;
+  margin: 0px 5px 0px 0px;
   padding: 0 5px 15px 5px;
   color: #333; 
   background: #faf8e9;
@@ -257,29 +290,63 @@ blockquote {
   margin: 0 3%;
 }
 
+
+.articulos{
+  display: flex;
+  justify-content: space-around;
+}
+
 /*Formulario*/
-form {
-  margin-left: 3%;
+
+/* Estilo para las etiquetas */
+#formulario {
+ 
   padding: 0;
 }
-form input[type="text"]{
-  width: 200px;
-  padding: 2px 0 2px 5px;
-  margin: 1em 0 0 1em ;
+
+.contenedor-formulario{
+  display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
 
 }
-form input[type="submit"]{
+.cont-input {
+  display: flex;
+  align-items: center; /* Alinea verticalmente los elementos */
+  margin-bottom: 5px; /* Espacio entre los elementos */
+}
+
+.boton-enviar{
+  margin: 5px;
+  padding: 5px;
+}
+
+.cont-texterea{
+  display: flex;
+  flex-direction: row;
+}
+
+.label_formulario {
+  width: 150px; /* Ancho fijo para las etiquetas */
+ 
+}
+
+input[type="text"],
+textarea {
+  width: 200px;
+  flex: 1; /* Los elementos ocupan todo el espacio disponible */
+  padding: 5px; /* Espaciado interno */
+  background-color: #faf8e9; /* Color de fondo */
+  border: 1px solid #ccc; /* Borde */
+}
+
+input[type="submit"] {
+  margin-left: 140px;
   width: 100px;
-  padding: 2px 0 2px 5px;
-  margin: 1em 0 0 1em ;
-  background: #476042;
-  color: #fff;
+  padding: 5px; /* Espaciado interno */
+  background: #faf8e9; /* Color de fondo */
+  color: #333;
   border: 1px solid #476042;
+  border-radius: 0px;
 }
-form textarea{
-  width: 200px;
-  padding: 2px 0 2px 5px;
-  margin: 1em 0 0 1em ;
-}
-
-
