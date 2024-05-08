@@ -115,21 +115,17 @@ y derechos de un pixed, dashed y de color #333    */
   padding: 0;
   margin: 20px;
   text-align: justify;
+ 
 }
 
-#siderbar-a{
+#sidebar-a{
   float: left;
- /* width: 140px;*/
+ width: 140px;
+ position: absolute;
   margin-left: 5px;
   padding: 0px 5px 0px 5px;
   color: #666;
   background: #f7f7f7;
-  border-left: 1px solid #f17c0b;
-  border-style: dashed;
-
-  
-  position: absolute;
-    width: 10%;
 }
 #sidebar-a li {
   margin: 0;
@@ -154,6 +150,7 @@ y derechos de un pixed, dashed y de color #333    */
   float: left;
     margin: 0 60px 90px 0;
     padding: 0 5px 0 5px;
+    
     }
 
 #sidebar-a p{
@@ -291,7 +288,7 @@ blockquote {
 }
 
 
-.articulos{
+#articulos{
   display: flex;
   justify-content: space-around;
 }
@@ -301,7 +298,7 @@ blockquote {
 /* Estilo para las etiquetas */
 #formulario {
  
-  padding: 0;
+  padding: 25px;
 }
 
 .contenedor-formulario{
