@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Parcial JS </title>
+  <link href="default.css" rel="stylesheet" type="text/css" />
+
+  <script>
+    // Resuelva el parcial en esta seccion
+    // Ud. puede usar o no esta variable. No es obligatorio.
+    var RegistroVotantes = new Array();
+
+    var votosKodos = 0;
+    var votosKang = 0;
+
+        // https://www.w3schools.com/jsref/jsref_push.asp
+
+
+    function marcarCampoInvalido(){
+      var txCandidato = document.getElementById("txCandidato");
+      var txDNI = document.getElementById("txDNI");
+      var txSexo = document.getElementById("txSexo");
+      txCandidato.style.borderColor = "red";
+      txDNI.style.borderColor = "red";
+      txSexo.style.borderColor = "red";
+    }
+
+        function Registrar() {
+          //alert("Registrar");
+          var txCandidato = document.getElementById("txCandidato").value;
+          var txDNI = document.getElementById("txDNI").value;
+          var txSexo = document.getElementById("txSexo").value;
+
+          var arraycompleto= [];
+          arraycompleto.push((txDNI,txCandidato));
+
+          if (txCandidato == "" || txDNI == "" || txSexo == "") {
+            marcarCampoInvalido(txCandidato);
+            marcarCampoInvalido(txDNI);
+            marcarCampoInvalido(txSexo);
+          }
+          if (!isNaN(txDNI) && (txDNI < 10000000 || txDNI > 99999999)) {
+            marcarCampoInvalido(txDNI);
+          }
+
+          if (txCandidato.toUpperCase() != "KANG" && txCandidato.toUpperCase() != "KODOS" && txCandidato.toUpperCase() != "BLANCO") {
+            marcarCampoInvalido(txCandidato);
+          }
+
+          if (txSexo.toUpperCase() != "M" && txSexo.toUpperCase() != "F") {
+            marcarCampoInvalido(txSexo);
+          }
+
+
+          if (RegistroVotantes.includes(txDNI) ) {
+            alert("Esta persona ya emitió su voto. El fraude está mal claro que sí");
+            resetearCampos();
+          }else{
+
+            if (txCandidato.toUpperCase() == "KANG") {
+              var votosKang = document.getElementById("ResultadosKang").innerHTML;
+              votosKang++;
+              document.getElementById("ResultadosKang").innerHTML = votosKang;
+              resetearCampos();
+            } else if (txCandidato.toUpperCase() == "KODOS") {
+              var votosKodos = document.getElementById("ResultadosKodos").innerHTML;
+              votosKodos++;
+              document.getElementById("ResultadosKodos").innerHTML = votosKodos;
+              resetearCampos();
+            }
+            else if (txCandidato.toUpperCase() == "BLANCO") {
+              var votosBlanco = document.getElementById("ResultadosBlanco").innerHTML;
+              votosBlanco++;
+              document.getElementById("ResultadosBlanco").innerHTML = votosBlanco;
+              resetearCampos();
+            }
+            
+            RegistroVotantes.push(txDNI,'-');
+            visualizarVotosenVotantes();
+           // console.log(RegistroVotantes);
+          }
+          
+        }
+
+        function resetearCampos(){
+          var formulario=document.getElementById("form");
+          formulario.reset();
+        }
+        function visualizarVotosenVotantes(){
+          document.getElementById("Votantes").innerHTML = RegistroVotantes.toString();	
+
+        }
+
+        
+        function cerrarMesa(){
+          var votosKodos = document.getElementById("ResultadosKodosGanador").innerHTML;
+          var votosKang = document.getElementById("ResultadosKangGanador").innerHTML;
+
+          var resultado="";
+          if (votosKodos== votosKang) {
+            resultado="Empate";
+            alert("Empate");
+          }else if (votosKodos > votosKang) {
+            resultado="Ganó Kodos";
+            document.getElementById("ResultadosKodosGanador").innerHTML = resultado;
+          }else{
+            resultado="Ganó Kang";
+            document.getElementById("ResultadosKangGanador").innerHTML = resultado;
+          }
+
+        }
+
+  </script>
+
+
+</head>
+
+<body>
+  <div id="header">
+    <div id="logo" style="margin-left: 15px">
+      <h1><a href="#">Programación Estática y Laboratorio Web</a></h1>
+      <h2><a href="#">Parcial JS - 27/06/2023</a></h2>
+    </div>
+  </div>
+  <div id="menu">
+    <ul>
+      <li><a href="Consigna.html">Consigna</a></li>
+      <li><a href="EjercicioJSParcial.html">HOJA Ejercicio</a></li>
+    </ul>
+  </div>
+  <div id="content">
+
+    <form id="form">
+      <table style="padding: 10px;">
+        <tr>
+          <td>Candidato:</td>
+          <td><input id="txCandidato" name="txCandidato" type="text" style="width:280px" /></td>
+        </tr>
+        <tr>
+          <td>DNI:</td>
+          <td><input id="txDNI" name="txDNI" type="text" style="width:280px" /></td>
+        </tr>
+        <tr>
+          <td>Sexo:</td>
+          <td><input id="txSexo" name="txSexo" type="text" style="width:64px" /></td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td><input type="button" value="Registrar" onclick="Registrar()">&nbsp;
+            <input type="button" value="Cierre de mesa" onclick="cerrarMesa()"></td>
+        </tr>
+
+      </table>
+    </form>
+    <p></p>
+
+    <div id="dResultados" style="display: nosne;">
+      <h2>Resultados:</h2>
+      <!-- Ingrese aquí quien gano, por cuantos votos, y su imagen-->
+
+      (no llegue a hacerlo)
+
+
+
+
+    </div>
+
+
+    <div style="background-color: lightblue; border: 1px solid black;padding: 10px;">
+      <span id="ResultadosKang" style="font-size: 72px;">0</span>
+      <img src="images/VoteKang.png" height="80" style="float:right">
+
+    </div>
+    <br />
+
+    <div style="background-color: lightpink; border: 1px solid black;padding: 10px;">
+      <span id="ResultadosKodos" style="font-size: 72px;">0</span>
+      <img src="images/VoteKodos.png" height="80" style="float:right">
+
+    </div>
+    <br />
+
+    <div style="padding: 10px;">
+      <span style="font-size: 36px;">En Blanco: </span> <span id="ResultadosBlanco" style="font-size: 36px;">0</span>
+    </div>
+
+    <br />
+
+    Votantes:
+    <div id="Votantes" style="border: 1px solid black;padding: 10px;">
+
+
+    </div>
+
+
+    </table>
+
+  </div>
+  <div id="footer" style="margin-top: 240px;">
+    <p id="legal">Copyright &copy; AtomoHost. All Rights Reserved.
+      Designed by <a href="http://www.freecsstemplates.org/">Free CSS
+        Templates</a>.</p>
+    <p id="links"><a href="#">Privacy Policy</a> | <a href="#">Terms
+        of Use</a></p>
+  </div>
+  <br />
+  <br />
+</body>
+
+</html>
