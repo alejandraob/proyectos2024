@@ -9,96 +9,127 @@ Released for free under a Creative Commons Attribution 2.5 License
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <title>Parcial JS </title>
+  <style>
+    .error {
+      border: 1px solid red;
+    }
+  </style>
   <link href="default.css" rel="stylesheet" type="text/css" />
 
   <script>
     // Resuelva el parcial en esta seccion
     // Ud. puede usar o no esta variable. No es obligatorio.
+    // https://www.w3schools.com/jsref/jsref_push.asp
     var RegistroVotantes = new Array();
-
     var votosKodos = 0;
-    var votosKang = 0;
+    var votosKang = 0;    
 
-        // https://www.w3schools.com/jsref/jsref_push.asp
+    function validarCampos() {
+      var camposRequeridos = document.querySelectorAll('[required]');
+      var formularioValido = true;
 
+      camposRequeridos.forEach(function (campo) {
+        if (campo.value.trim() === '') {
+          campo.classList.add('error');
+          formularioValido = false;
+        } else {
+          campo.classList.remove('error');
+        }
+      });
 
-    function marcarCampoInvalido(){
+      if (!formularioValido) {
+        alert('Por favor complete todos los campos requeridos en rojo.');
+        return;
+      } else {
+        Registrar();
+      }
+    }
+    function marcarCampoInvalido() {
       var txCandidato = document.getElementById("txCandidato");
       var txDNI = document.getElementById("txDNI");
       var txSexo = document.getElementById("txSexo");
       txCandidato.style.borderColor = "red";
       txDNI.style.borderColor = "red";
       txSexo.style.borderColor = "red";
+      return;
+    }
+    function resetearCampos() {
+      var formulario = document.getElementById("form");
+      formulario.reset();
     }
 
-        function Registrar() {
-          //alert("Registrar");
-          var txCandidato = document.getElementById("txCandidato").value;
-          var txDNI = document.getElementById("txDNI").value;
-          var txSexo = document.getElementById("txSexo").value;
+    function comprobarDuplicadoDNI(txDNI) {
+      //comprobar que el dni registrado no exista en el array
+      var resultado= true;
+      var txDNI = document.getElementById("txDNI").value;
+      if (RegistroVotantes.includes(txDNI)) {
+        alert("Esta persona ya emitió su voto. El fraude está mal claro que sí");
+        resetearCampos();
+        resultado = false;
+      }
+      return resultado;
+    }
 
-          var arraycompleto= [];
-          arraycompleto.push((txDNI,txCandidato));
+    function comprobarDNI(txDNI){
+      var resultado= true;  
+      var txDNI = txDNI || document.getElementById("txDNI").value;
+      if (isNaN(txDNI) || txDNI < 10000000 || txDNI > 99999999) {
+        alert("El DNI ingresado no es válido");
+        resetearCampos();
+         resultado = false;
+      }
+      return resultado;
+    }
 
-          if (txCandidato == "" || txDNI == "" || txSexo == "") {
-            marcarCampoInvalido(txCandidato);
-            marcarCampoInvalido(txDNI);
-            marcarCampoInvalido(txSexo);
-          }
-          if (!isNaN(txDNI) && (txDNI < 10000000 || txDNI > 99999999)) {
-            marcarCampoInvalido(txDNI);
-          }
+    function comprobarTexto(){
+      var resultado= true; 
+      var txCandidato = document.getElementById("txCandidato").value;
+      var txSexo = document.getElementById("txSexo").value;
+      if (txCandidato.toUpperCase() != "KANG" && txCandidato.toUpperCase() != "KODOS" && txCandidato.toUpperCase() != "BLANCO") {
+        alert("El candidato ingresado no es válido");
+        resetearCampos();
+        resultado = false;
+      }
+      if (txSexo.toUpperCase() != "M" && txSexo.toUpperCase() != "F") {
+        alert("El sexo ingresado no es válido");
+        resetearCampos();
+        resultado = false;
+      }
+      return resultado;
+    }
 
-          if (txCandidato.toUpperCase() != "KANG" && txCandidato.toUpperCase() != "KODOS" && txCandidato.toUpperCase() != "BLANCO") {
-            marcarCampoInvalido(txCandidato);
-          }
+    function Registrar() {
+      var txCandidato = document.getElementById("txCandidato").value;
+      var txDNI = document.getElementById("txDNI").value;
+      var txSexo = document.getElementById("txSexo").value;
 
-          if (txSexo.toUpperCase() != "M" && txSexo.toUpperCase() != "F") {
-            marcarCampoInvalido(txSexo);
-          }
+     if(comprobarDNI() == false){
+       return;
+     }
 
+     if (comprobarTexto() == false){
+       return;
+     }
+     if (comprobarDuplicadoDNI(txDNI) == false){
+       return;
+     }
+      if (txCandidato.toUpperCase() == "KANG") {
+        votosKang++;
+        document.getElementById("ResultadosKang").innerHTML = votosKang;
+      } else if (txCandidato.toUpperCase() == "KODOS") {
+        votosKodos++;
+        document.getElementById("ResultadosKodos").innerHTML = votosKodos;
+      } else if (txCandidato.toUpperCase() == "BLANCO") {
+        var votosBlanco = document.getElementById("ResultadosBlanco").innerHTML;
+        votosBlanco++;
+        document.getElementById("ResultadosBlanco").innerHTML = votosBlanco;
+      }
 
-          if (RegistroVotantes.includes(txDNI) ) {
-            alert("Esta persona ya emitió su voto. El fraude está mal claro que sí");
-            resetearCampos();
-          }else{
+      RegistroVotantes.push(txDNI);
+      document.getElementById("Votantes").innerHTML = RegistroVotantes.toString();
+    }
 
-            if (txCandidato.toUpperCase() == "KANG") {
-              var votosKang = document.getElementById("ResultadosKang").innerHTML;
-              votosKang++;
-              document.getElementById("ResultadosKang").innerHTML = votosKang;
-              resetearCampos();
-            } else if (txCandidato.toUpperCase() == "KODOS") {
-              var votosKodos = document.getElementById("ResultadosKodos").innerHTML;
-              votosKodos++;
-              document.getElementById("ResultadosKodos").innerHTML = votosKodos;
-              resetearCampos();
-            }
-            else if (txCandidato.toUpperCase() == "BLANCO") {
-              var votosBlanco = document.getElementById("ResultadosBlanco").innerHTML;
-              votosBlanco++;
-              document.getElementById("ResultadosBlanco").innerHTML = votosBlanco;
-              resetearCampos();
-            }
-            
-            RegistroVotantes.push(txDNI,'-');
-            visualizarVotosenVotantes();
-           // console.log(RegistroVotantes);
-          }
-          
-        }
-
-        function resetearCampos(){
-          var formulario=document.getElementById("form");
-          formulario.reset();
-        }
-        function visualizarVotosenVotantes(){
-          document.getElementById("Votantes").innerHTML = RegistroVotantes.toString();	
-
-        }
-
-        
-        function cerrarMesa(){
+    function cerrarMesa(){
           var votosKodos = document.getElementById("ResultadosKodosGanador").innerHTML;
           var votosKang = document.getElementById("ResultadosKangGanador").innerHTML;
 
@@ -113,8 +144,9 @@ Released for free under a Creative Commons Attribution 2.5 License
             resultado="Ganó Kang";
             document.getElementById("ResultadosKangGanador").innerHTML = resultado;
           }
-
+          
         }
+
 
   </script>
 
@@ -140,20 +172,21 @@ Released for free under a Creative Commons Attribution 2.5 License
       <table style="padding: 10px;">
         <tr>
           <td>Candidato:</td>
-          <td><input id="txCandidato" name="txCandidato" type="text" style="width:280px" /></td>
+          <td><input id="txCandidato" name="txCandidato" type="text" style="width:280px" required /></td>
         </tr>
         <tr>
           <td>DNI:</td>
-          <td><input id="txDNI" name="txDNI" type="text" style="width:280px" /></td>
+          <td><input id="txDNI" name="txDNI" type="text" style="width:280px" required /></td>
         </tr>
         <tr>
           <td>Sexo:</td>
-          <td><input id="txSexo" name="txSexo" type="text" style="width:64px" /></td>
+          <td><input id="txSexo" name="txSexo" type="text" style="width:64px" required /></td>
         </tr>
         <tr>
           <td>&nbsp;</td>
-          <td><input type="button" value="Registrar" onclick="Registrar()">&nbsp;
-            <input type="button" value="Cierre de mesa" onclick="cerrarMesa()"></td>
+          <td><input type="button" value="Registrar" onclick="validarCampos()">&nbsp;
+            <input type="button" value="Cierre de mesa" onclick="cerrarMesa()">
+          </td>
         </tr>
 
       </table>
