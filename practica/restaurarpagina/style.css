@@ -6,8 +6,8 @@
 body {
  font-family: 'Lucida Sans', Tahoma, 'Trebuchet MS',Verdana, Arial, sans-serif;
  font-size: 73%;
- margin: 0;
- padding: 0;
+ margin: 0px;
+ padding: 0px;
  color: #555;
  background: #f7f7f7;
 }
@@ -15,7 +15,7 @@ body {
 
 #banner {
   height: 150px;
-  padding: 0;
+  padding: 0px;
   background: #f7f7f7;
   background-image: url(images/image00.jpg);
   background-repeat: no-repeat;
@@ -33,8 +33,8 @@ body {
 
 
 #navlist {
-  padding: 4px 5px 5px 0;
-  margin: 0 0 20px 0;
+  padding: 4px 5px 5px 0px;
+  margin: 0 0 20px 0px;
   text-align: left;
   letter-spacing: 3px;
   color: #fff;
@@ -43,12 +43,12 @@ body {
 
 #navlist li {
   list-style: none;
-  margin: 0;
+  margin: 0px;
   display: inline;
 }
 #navlist li a {
   padding: 5px 0.75em;
-  margin: 0;
+  margin: 0px;
   color: #fff;
   background: #476042;
   text-decoration: none;
@@ -81,7 +81,7 @@ body {
     }
 
 .menu li a {
-  margin: 0;
+  margin: 0px;
   color: #476042;
   background: inherit;
   text-decoration: none;
@@ -97,7 +97,7 @@ body {
 /* Instrucion: el elemento #content debe tener relleno 0, margen izquierdo y derecho de 170 pixeles, y bordes izquierdos 
 y derechos de un pixed, dashed y de color #333    */
 #content {
-  padding: 0;
+  padding: 0px;
   margin-left: 170px;
   margin-right: 170px;
   border-left: 1px;
@@ -112,7 +112,7 @@ y derechos de un pixed, dashed y de color #333    */
 }
 
 #content p {
-  padding: 0;
+  padding: 0px;
   margin: 20px;
   text-align: justify;
  
@@ -128,8 +128,8 @@ y derechos de un pixed, dashed y de color #333    */
   background: #f7f7f7;
 }
 #sidebar-a li {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
   list-style-type:square;
 
 }
@@ -140,7 +140,7 @@ y derechos de un pixed, dashed y de color #333    */
 
 #sidebar-a a{
   padding: 5px;
-  margin: 0;
+  margin: 0px;
   color: #f17c0b;
   background: inherit;
   text-decoration: none;
@@ -148,14 +148,14 @@ y derechos de un pixed, dashed y de color #333    */
 
 #sidebar-a p .border{
   float: left;
-    margin: 0 60px 90px 0;
+    margin: 0 60px 90px 0px;
     padding: 0 5px 0 5px;
     
     }
 
 #sidebar-a p{
   float: bottom;
-  margin: 0 900px 0x 0;
+  margin: 0 900px 0x 0px;
   padding: 0 5px 0 5px;
   color: #333;
   background: inherit;
@@ -188,7 +188,7 @@ flotantes */
 
 #footer {
   padding: 5px;
-  margin: 0;
+  margin: 0px;
   background: #476042;
   color: #f7f7f7;
 }
@@ -204,7 +204,7 @@ a:hover {
   background: inherit;
 }
 a img {
-  border: 0;
+  border: 0px;
 }
 
 /* Instruccion: todos los elementos de clase border deberian
@@ -232,7 +232,7 @@ h1 {
   background: #476042;
 }
 #banner h1 {
-  margin: 0;
+  margin: 0px;
   padding: 5px;
   color: #fff;
   background: inherit;
@@ -280,8 +280,8 @@ blockquote {
 .col3center {
   float: left;
   width: 30.5%;
-  padding: 0;
-  margin: 0 3% 0 0;
+  padding: 0px;
+  margin: 0 3% 0 0px;
 }
 .col3center {
   margin: 0 3%;
