@@ -23,6 +23,7 @@ Released for free under a Creative Commons Attribution 2.5 License
     var RegistroVotantes = new Array();
     var votosKodos = 0;
     var votosKang = 0;    
+    var votosBlanco=0;
 
     function validarCampos() {
       var camposRequeridos = document.querySelectorAll('[required]');
@@ -129,23 +130,38 @@ Released for free under a Creative Commons Attribution 2.5 License
       document.getElementById("Votantes").innerHTML = RegistroVotantes.toString();
     }
 
-    function cerrarMesa(){
-          var votosKodos = document.getElementById("ResultadosKodosGanador").innerHTML;
-          var votosKang = document.getElementById("ResultadosKangGanador").innerHTML;
 
-          var resultado="";
-          if (votosKodos== votosKang) {
-            resultado="Empate";
-            alert("Empate");
-          }else if (votosKodos > votosKang) {
-            resultado="Ganó Kodos";
-            document.getElementById("ResultadosKodosGanador").innerHTML = resultado;
-          }else{
-            resultado="Ganó Kang";
-            document.getElementById("ResultadosKangGanador").innerHTML = resultado;
-          }
-          
-        }
+
+        function cerrarMesa(){
+  // Obtener votos de Kodos y Kang
+  var votosKodos = parseInt(document.getElementById("ResultadosKodos").innerHTML);
+  var votosKang = parseInt(document.getElementById("ResultadosKang").innerHTML);
+
+  // Calcular resultado
+  var resultado = "";
+  if (votosKodos === votosKang) {
+    resultado = "Empate";
+  } else if (votosKodos > votosKang) {
+    resultado = "Ganó Kodos por " + (votosKodos - votosKang) + " votos!"
+ document.getElementById("ganador").setAttribute("src","images/VoteKodos.png");
+  } else {
+    resultado = "Ganó Kang por " + (votosKang - votosKodos) + " votos!";
+document.getElementById("ganador").setAttribute("src","images/VoteKang.png");
+  }
+  
+  // Mostrar resultado en el div de resultados
+  var divResultados = document.getElementById("dResultados");
+  divResultados.style.display = "flex";
+  divResultados.style.flexDirection = "column";
+  divResultados.innerHTML += "<span>" + resultado + "</span>";
+
+  // Deshabilitar botón de cierre de mesa y cualquier otro botón necesario
+  document.getElementById("botonRegistrar").disabled = true;
+  document.getElementById("botonCierreMesa").disabled = true;
+ 
+}
+
+
 
 
   </script>
@@ -184,8 +200,8 @@ Released for free under a Creative Commons Attribution 2.5 License
         </tr>
         <tr>
           <td>&nbsp;</td>
-          <td><input type="button" value="Registrar" onclick="validarCampos()">&nbsp;
-            <input type="button" value="Cierre de mesa" onclick="cerrarMesa()">
+          <td><input type="button" id="botonRegistrar" value="Registrar" onclick="validarCampos()">&nbsp;
+            <input type="button" id="botonCierreMesa" value="Cierre de mesa" onclick="cerrarMesa()">
           </td>
         </tr>
 
@@ -193,15 +209,9 @@ Released for free under a Creative Commons Attribution 2.5 License
     </form>
     <p></p>
 
-    <div id="dResultados" style="display: nosne;">
+    <div id="dResultados" style="display: none;">
       <h2>Resultados:</h2>
-      <!-- Ingrese aquí quien gano, por cuantos votos, y su imagen-->
-
-      (no llegue a hacerlo)
-
-
-
-
+       <img id="ganador"  height="95" width="95" style="float:right">
     </div>
 
 
@@ -219,7 +229,7 @@ Released for free under a Creative Commons Attribution 2.5 License
     </div>
     <br />
 
-    <div style="padding: 10px;">
+    <div style="border: 1px solid black; padding: 10px;">
       <span style="font-size: 36px;">En Blanco: </span> <span id="ResultadosBlanco" style="font-size: 36px;">0</span>
     </div>
 
