@@ -1,0 +1,25 @@
+:root{
+    /*Estas son variables que funcionan en nuestro estilos, no es necesario declarar una clase en la hoja de html*/
+    /***Colores***/
+    --blanco:#ffffff;
+    --oscuro: #212121;
+    --gris:#757575;
+    --primario:#FFC107;
+    --secundario:#0097A7;
+
+}
+html{
+    font-size: 62.5%;
+}
+body{
+    font-size: 16px; /* 1rem=10px */
+}
+
+.titulo{
+    text-align: center;
+    font-size: 3.8rem;
+    color: var(--primario);
+}
+.titulo span{
+    font-size: 2rem;
+}
