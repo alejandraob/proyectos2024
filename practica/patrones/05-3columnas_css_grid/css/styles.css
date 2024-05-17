@@ -49,3 +49,20 @@ p {
 
 
 /** CODIGO AQUI **/
+@media (min-width:768px){
+    .contendor-grid{
+        display: grid;
+       /* grid-template-columns: 20% 60% 20%;*/
+       grid-template-columns: 1fr 3fr 1fr;
+       grid-auto-flow: column;
+        column-gap: 2rem;
+    }
+    .contenido-principal{
+        grid-column: 2 / 3;
+    }
+    .sidebar-1{
+        grid-column: 1 / 2;
+    }
+
+}
+
