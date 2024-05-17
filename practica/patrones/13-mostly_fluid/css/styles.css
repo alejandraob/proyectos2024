@@ -37,3 +37,13 @@ p {
 }
 
 /** CODIGO AQUI **/
+h1{
+    font-size: 3rem;
+    text-align: center;
+}
+@media (min-width:768px){
+    h1{
+        font-size: 6rem;
+        text-align: left;
+    }
+}
