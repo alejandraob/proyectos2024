@@ -49,6 +49,13 @@ body{
     display: flex;
     flex-direction: column;
 }
+.form a{
+    color: var(--hospital-green);
+    font-size: var(--sm);
+    text-decoration: none;
+    text-align: center;
+    margin-bottom: 30px;
+}
 .label{
     font-size: var(--sm);
     font-weight: bold;
@@ -62,6 +69,9 @@ body{
     font-size: var(-md);
     padding: 6px;
     margin-bottom: 12px;
+}
+.input-email{
+    margin-bottom: 22px;
 }
 .primary-button{
     background-color: var(--hospital-green);
@@ -109,4 +119,20 @@ body{
 .resend a{
     color: var(--hospital-green);
     text-decoration: none;
+}
+
+.secundary-button{
+    background-color: var(--white);
+    color: var(--hospital-green);
+    border: 1px solid var(--hospital-green);
+    border-radius: 8px;
+    height: 50px;
+    width: 100%;
+    font-size: var(--md);
+    font-weight: bold;
+    cursor: pointer;
+}
+.newuser{
+    text-align: start;
+    margin-bottom: 22px;
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicia Sesión</title>
+    <title>Modificar cuenta</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/normalize.css">
@@ -13,16 +13,17 @@
         <div class="login-container">
             <img src="./img/logos/logo_yard_sale.svg" alt="logo" class="logo">
 
+            <h1 class="title newuser">Modificar cuenta</h1>
 
             <form action="" class="form">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" name="name" id="password" class="input input-name" placeholder="Mi nombre es...">   
                 <label for="email" class="form-label">Email</label>
-                <input type="email" name="email" id="email" class="input input-email" placeholder="mimail@...">
+                <input type="email" name="email" id="email" class="input input-email" placeholder="miemail@...">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" name="password" id="password" class="input input-password" placeholder="***">
-                <input type="submit" value="Confirmar" class="primary-button login-button">
-                <a href="newpass.html">Olvidé mi contraseña</a>
+                <input type="password" name="newpassword" id="password" class="input input-password" placeholder="***">
+                <input type="submit" value="Modificar" class="secundary-button login-button">
              </form>
-             <button class="secundary-button singup-button"> Registrarse</button>
          </div>
     </div>
 </body>
