@@ -169,6 +169,8 @@ for (product of productList) {
     const productStock = document.createElement('span');
     productStock.innerText = 'Stock: ' + product.stock;
 
+
+
     productInfoDiv.appendChild(productPrice);
     productInfoDiv.appendChild(productNAme);
     productInfoDiv.appendChild(productStock);
@@ -176,6 +178,15 @@ for (product of productList) {
     const productInfoFigure = document.createElement('figure');
     const productImgCard = document.createElement('img');
     productImgCard.setAttribute('src', 'img/icons/bt_add_to_cart.svg');
+
+
+    if (product.stock === 0) {
+        productStock.style.color = 'white';
+        productStock.style.backgroundColor = 'red';
+        productStock.innerText = 'Sin Stock';
+        productImgCard.style.display = 'none'; // Oculta el botón cuando no hay stock
+    }
+
 
     // Agregamos un evento de clic al botón de agregar al carrito
     /*productImgCard.addEventListener('click', () => {
@@ -189,7 +200,6 @@ for (product of productList) {
     (function(product) {
         productImgCard.addEventListener('click', () => {
             addToCart(product.name, product.price, product.image);
-            alert('Producto agregado al carrito: ' + product.name);
         });
     })(product);
 
@@ -293,22 +303,35 @@ function updateCar() {
 }
 
 function addToCart(prodNombre, prodPrice, prodImg) {
-    productListCarrito.push({
-        name: prodNombre,
-        price: prodPrice,
-        image: prodImg
-    });
-    updateCar();
+    const productToAdd = productList.find(product => product.name === prodNombre);
+    if (productToAdd && productToAdd.stock > 0) {
+        // Restar una unidad del stock del producto
+        productToAdd.stock--;
+        // Agregar el producto al carrito
+        productListCarrito.push({
+            name: prodNombre,
+            price: prodPrice,
+            image: prodImg
+        });
+        updateCar(); // Actualiza la vista del carrito
+        alert('Producto Agregado al carrito.');
+    } else {
+        alert('No hay suficiente stock disponible.');
+    }
 }
 
-
-// Función para eliminar un producto del carrito
 function removeFromCart(productName) {
     // Encuentra el índice del producto en el carrito
     const index = productListCarrito.findIndex(item => item.name === productName);
     
     // Si el producto está en el carrito, remuévelo
     if (index !== -1) {
+        // Incrementar el stock del producto eliminado del carrito
+        const removedProduct = productList.find(product => product.name === productName);
+        if (removedProduct) {
+            removedProduct.stock++;
+        }
+        
         productListCarrito.splice(index, 1); // Remueve el producto del array
         updateCar(); // Actualiza la vista del carrito
     }
