@@ -140,7 +140,7 @@ productList.push(
         name: 'Mesa',
         price: 25963,
         image: 'img/pexels-dreamypixel-552774.jpg',
-        Stock: 1
+        stock: 0
     }
 );
 
@@ -178,12 +178,21 @@ for (product of productList) {
     productImgCard.setAttribute('src', 'img/icons/bt_add_to_cart.svg');
 
     // Agregamos un evento de clic al botón de agregar al carrito
-    productImgCard.addEventListener('click', () => {
+    /*productImgCard.addEventListener('click', () => {
         // Aquí puedes agregar la lógica para añadir el producto al carrito
         // Por ejemplo: addToCart(product);
-        addToCart(product.name,product.price,product.img);
+        addToCart(product.name,product.price,product.image);
         alert('Producto agregado al carrito: ' + product.name);
-    });
+    });*/
+
+    // Usamos una función de fábrica para capturar el producto actual en el bucle
+    (function(product) {
+        productImgCard.addEventListener('click', () => {
+            addToCart(product.name, product.price, product.image);
+            alert('Producto agregado al carrito: ' + product.name);
+        });
+    })(product);
+
     productInfoFigure.appendChild(productImgCard);
     productInfo.appendChild(productInfoDiv);
     productInfo.appendChild(productInfoFigure);
@@ -237,6 +246,9 @@ function createCartItem(product) {
     const closeIcon = document.createElement('img');
     closeIcon.src = 'img/icons/icon_close.png';
     closeIcon.alt = 'close';
+    closeIcon.classList.add('cursor-pointer');
+    closeIcon.addEventListener('click', () => removeFromCart(product.name)); // Elimina el producto del carrito al hacer clic en el ícono
+
 
     // Agregar todos los elementos al contenedor del producto
     shoppingCart.appendChild(productImg);
@@ -289,6 +301,19 @@ function addToCart(prodNombre, prodPrice, prodImg) {
     updateCar();
 }
 
+
+// Función para eliminar un producto del carrito
+function removeFromCart(productName) {
+    // Encuentra el índice del producto en el carrito
+    const index = productListCarrito.findIndex(item => item.name === productName);
+    
+    // Si el producto está en el carrito, remuévelo
+    if (index !== -1) {
+        productListCarrito.splice(index, 1); // Remueve el producto del array
+        updateCar(); // Actualiza la vista del carrito
+    }
+}
+
 // Crear la lista inicial del carrito
 function creatListCarrito() {
     updateCar();
@@ -296,3 +321,4 @@ function creatListCarrito() {
 
 // Inicializar la lista del carrito cuando se cargue la página
 creatListCarrito();
+

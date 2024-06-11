@@ -15,6 +15,12 @@
   .inactive{
     display: none;
   }
+
+  .cursor-pointer {
+    cursor: pointer;
+}
+
+
   nav {
     display: flex;
     justify-content: space-between;
@@ -203,6 +209,7 @@
   .title-container img {
     transform: rotate(180deg);
     margin-right: 14px;
+    
   }
   .title {
     font-size: var(--lg);
@@ -245,6 +252,7 @@
     height: 70px;
     border-radius: 20px;
     object-fit: cover;
+    
   }
   .shopping-cart p:nth-child(2) {
     color: var(--very-light-pink);
