@@ -24,6 +24,7 @@ menuHamIcon.addEventListener('click', toggleMobileMenu);
 menuCarritoIcon.addEventListener('click', toggleCarritoMenu);
 productDetailIconClose.addEventListener('click', productDetailAsideClose);
 
+///////////////////////////////
 
 //funcion para abrir y cerrar menu usuario
 
@@ -95,28 +96,28 @@ productList.push(
     {
         name: 'BIKE',
         price: 963,
-        image: './img/pexels-dreamypixel-552774.jpg'
+        image: 'img/pexels-dreamypixel-552774.jpg'
     }
 );
 productList.push(
     {
         name: 'Reloj',
         price: 693,
-        image: './img/pexels-dreamypixel-552774.jpg'
+        image: 'img/pexels-dreamypixel-552774.jpg'
     }
 );
 productList.push(
     {
         name: 'Silla',
         price: 1466,
-        image: './img/pexels-dreamypixel-552774.jpg'
+        image: 'img/pexels-dreamypixel-552774.jpg'
     }
 );
 productList.push(
     {
         name: 'Mesa',
         price: 25963,
-        image: './img/pexels-dreamypixel-552774.jpg'
+        image: 'img/pexels-dreamypixel-552774.jpg'
     }
 );
 
@@ -149,7 +150,7 @@ for (product of productList) {
 
     const productInfoFigure = document.createElement('figure');
     const productImgCard = document.createElement('img');
-    productImgCard.setAttribute('src', './icons/bt_add_to_cart.svg');
+    productImgCard.setAttribute('src', 'img/icons/bt_add_to_cart.svg');
     productInfoFigure.appendChild(productImgCard);
 
 
