@@ -335,7 +335,7 @@ body{
  text-align: end;
  font-weight: bold;
 }
-/*****ordenes****/
+/*****ordenes list****/
 .order-list{
     display: grid;
     grid-template-columns: auto 1fr auto;
