@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapsodia Artesanias</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+        rel="stylesheet">
+    <link rel="preload" href="styles/normalize.css" as="style">
+    <link rel="stylesheet" href="styles/normalize.css">
+    <link rel="preload" href="styles/styles.css" as="style">
+    <!--esto cargara más rápido la hoja de estilo y luego la ejecutará-->
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="contenedor">
+            <div class="barra">
+                <nav class="navegacion">
+                    <img src="img/icons/icon_menu.svg" alt="menu" class="menu">
+                    <div class="navegacion-izquierda">
+                        <img src="img/logos/logosm.jpg" alt="logo" class="logo">
+
+                        <ul>
+                            <li><a href="nosotros.html" class="navegacion__enlace">Catalogo</a></li>
+                            <li><a href="nosotros.html" class="navegacion__enlace">Nosotros</a></li>
+                        </ul>
+
+                    </div>
+                    <div class="navegacion-derecha">
+                        <ul>
+                            <li><a href="nosotros.html" class="navegacion__enlace">Mi Cuenta</a></li>
+                            <li class="nav-compra-carrito" ><img src="img/icons/shopping-cart_9408015.png" alt="carrito"><div><span>2</span></div></li>
+                        </ul>
+
+                    </div>
+                    <!--MENU DESPLEGABLE CUANDO LA PANTALLA ES CHICA-->
+                    <div class="menu-chico inactive">
+                        
+                        <div class="menu-chico__contenido">
+                            <ul>
+                                <li><a href="nosotros.html" class="navegacion__enlace">Catalogo</a></li>
+                                <li><a href="nosotros.html" class="navegacion__enlace">Nosotros</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="nosotros.html" class="navegacion__enlace">Mi Cuenta</a></li>
+                            <li><a href="nosotros.html" class="navegacion__enlace">Mi Carrito</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="menu-cuenta inactive">
+                        <ul>
+                            <li><a href="/">Editar Mis Datos</a></li>
+                            <li><a href="/">Mis Compras</a></li>
+                            <li><a href="/">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div><!--cierra barra-->
+        </div><!--cierra contenedor-->
+    </header><!--cierra header-->
+<section class="hero">
+    <div class="contenido-hero">
+        <h2>Rapsodia <span>Artesanias</span></h2>
+        <div class="ubicacion">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-pin" width="68" height="68" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FFD166" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+              </svg>
+
+            <p>Catriel - Rio Negro - Argentina</p>
+        </div>
+        <a class="boton" href="#">Contactar</a>
+    </div>
+</section>
+
+
+
+
+
+
+
+</body>
+
+</html>

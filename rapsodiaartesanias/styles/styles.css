@@ -1,0 +1,141 @@
+:root{
+    /* CSS HEX */
+--rich-black: #031926ff;
+--yinmn-blue: #26547cff;
+--bright-pink-crayola: #ef476fff;
+--sunglow: #ffd166ff;
+--emerald: #06d6a0ff;
+--white: #fcfcfcff;
+--very-light-pink: #C7C7C7;
+
+--fuente: "Plus Jakarta Sans", sans-serif;
+
+}
+/** GLOBALES **/
+html{
+    font-size: 62.5%;/* 1rem=10px */
+    box-sizing: border-box; /*Hack para box model*/
+    
+}
+*,*:before, *:after{
+    box-sizing: inherit;
+}
+/** clase para ocultar elementos */
+.inactive{
+    display: none;
+}
+/** cursor */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/** estilos generales**/
+
+body{
+    font-size: 16px; /* 1rem=10px */
+    font-family: var(--fuente);
+    font-weight: 400;
+    background-color: var(--white);
+    color: var(--white);
+    margin: 0;
+    padding: 0;
+}
+a {
+    text-decoration: none;
+}
+ul{
+    list-style: none;
+}
+/**Navegacion**/
+.barra{
+    background-color: var(--white);
+    border-bottom: .1rem solid var(--very-light-pink);
+}
+.logo{
+    margin: 0 1rem;
+    width: 15rem;
+}
+.navegacion{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 0;
+}
+.navegacion-izquierda ul, .navegacion-derecha ul{
+    display: flex;
+    align-items: center;
+
+}
+.navegacion-izquierda{
+    display: flex;
+}
+
+.navegacion-izquierda ul{
+    margin-left: 2rem;
+}
+.navegacion-izquierda ul li, .navegacion-derecha ul li{
+    margin-right: 2rem;
+}
+
+.nav-compra-carrito img{
+    margin: 0 1rem;
+    width: 2.5rem;
+    position: relative;
+    top: 0.5rem;
+}
+
+@media (max-width: 640px){
+    .menu{
+        margin: 1rem 1rem;
+        display: block;
+    }
+    
+    .navegacion-izquierda ul, .navegacion-derecha ul{
+        display: none;
+    }
+
+}
+@media (min-width: 641px){
+    .menu{
+        display: none;
+    }
+   
+}
+
+
+
+
+/** CONTENIDO HERO **/
+.hero{
+    background-image: url(../img/banner.png); 
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 410px;
+    padding: 20px;
+    position: relative;
+    margin-bottom: 2rem;
+  
+  }
+  
+  .contenido-hero{
+  position: absolute;
+  background-color: rgb(0 0 0 / 70%);
+  bottom: 0;
+  left: 0;
+  top: 0;
+  right: 0;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  }
+  .contenido-hero h2,
+  .contenido-hero p{
+     color: var(--blanco);
+  }
+  .contenido-hero .ubicacion{
+     display: flex;
+     align-items: flex-end;
+  }
