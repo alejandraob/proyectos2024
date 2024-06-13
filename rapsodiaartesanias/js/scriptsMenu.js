@@ -11,8 +11,6 @@ const asideCarrito = document.querySelector('.producto-detail');
 
 
 
-
-
 /*Eventos*/
 miCuenta.addEventListener('click', toogleMenuCuenta);
 menuHamIcon.addEventListener('click',toogleMenuDesplegable);
@@ -23,10 +21,18 @@ menuCarritoIcon.addEventListener('click', toggleCarritoMenu);
 /*Funciones*/
 function toogleMenuCuenta(){
 
+    const isCarritoMenuClosed = asideCarrito.classList.contains('inactive');
+    if(!isCarritoMenuClosed){
+        asideCarrito.classList.add('inactive')
+    }
     menuCuenta.classList.toggle('inactive');
 }
 
 function toogleMenuDesplegable(){
+    const isCarritoMenuClosed = asideCarrito.classList.contains('inactive');
+    if(!isCarritoMenuClosed){
+        asideCarrito.classList.add('inactive')
+    }
     menuDesplegable.classList.toggle('inactive');
 
 }
@@ -90,7 +96,7 @@ function createCartItem(product) {
 
     // Crear elemento para el ícono de cerrar
     const closeIcon = document.createElement('img');
-    closeIcon.src = 'img/icons/icon_close.png';
+    closeIcon.src = 'img/icons/close.png';
     closeIcon.alt = 'close';
     closeIcon.classList.add('cursor-pointer');
     closeIcon.addEventListener('click', () => removeFromCart(product.name)); // Elimina el producto del carrito al hacer clic en el ícono
