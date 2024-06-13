@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapsodia Artesanias - Catalogo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+        rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
+ 
+    <link rel="preload" href="styles/normalize.css" as="style">
+    <link rel="stylesheet" href="styles/normalize.css">
+    <link rel="preload" href="styles/styles.css" as="style">
+    <!--esto cargara más rápido la hoja de estilo y luego la ejecutará-->
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="contenedor-nav">
+            <div class="barra">
+                <nav class="navegacion">
+                    <img src="img/icons/icon_menu.svg" alt="menu" class="menu">
+                    <div class="navegacion-izquierda">
+                        <img src="img/logos/logosm.jpg" alt="logo" class="logo">
+
+                        <ul>
+                            <li><a href="catalogo.html" class="navegacion__enlace">Catalogo</a></li>
+                            <li><a href="nosotros.html" class="navegacion__enlace">Nosotros</a></li>
+                        </ul>
+
+                    </div>
+                    <div class="navegacion-derecha">
+                        <ul>
+                            <li><a class="navegacion__enlace miCuenta">Mi Cuenta</a></li>
+                            <li class="nav-compra-carrito" ><img src="img/icons/shopping-cart_9408015.png" alt="carrito"><div><span>2</span></div></li>
+                        </ul>
+
+                    </div>
+                    <!--MENU DESPLEGABLE CUANDO LA PANTALLA ES CHICA-->
+                    <div class="menu-chico inactive">
+                        
+                        <div class="menu-chico__contenido">
+                            <ul>
+                                <li><a href="catalogo.html" class="navegacion__enlace">Catalogo</a></li>
+                                <li><a href="nosotros.html" class="navegacion__enlace">Nosotros</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="nosotros.html" class="navegacion__enlace mi_cuenta" >Mi Cuenta</a></li>
+                            <li><a href="nosotros.html" class="navegacion__enlace mi_compra">Mi Carrito</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="menu-cuenta inactive">
+                        <ul>
+                            <li><a href="/">Editar Mis Datos</a></li>
+                            <li><a href="/">Mis Compras</a></li>
+                            <li><a href="/">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <!--lista de compra carrito-->
+  <aside class="producto-detail inactive">
+    <div class="title-contenido">
+      <img src="img/icons/arrow.png" alt="arrow">
+      <p class="title">Mi Carrito</p>
+    </div>
+    <div class="mi-orden-contenido"></div>
+    </div>
+  </aside>
+
+            </div><!--cierra barra-->
+        </div><!--cierra contenedor-->
+    </header><!--cierra header-->
+<main>
+    <!--Tarjetas de catalogo-->
+    <section class="main-container">
+        <div class="cards-container"></div>
+      </section>
+</main>
+
+
+    <footer class="footer">
+        <p>Rapsodia Artesanias</p>
+    </footer>
+
+    <script src="js/scriptsMenu.js"></script>
+    <script src="js/catalogo.js"></script>
+</body>
+
+</html>

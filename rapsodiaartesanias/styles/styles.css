@@ -312,7 +312,8 @@ h3 {
 /*lista de carrito*/
 .producto-detail {
     width: 360px;
-    padding: 0 24px;
+    padding: 2rem 24px;
+   
     background: var(--white);
     box-sizing: border-box;
     position: absolute;
@@ -424,14 +425,14 @@ h3 {
 }
 
 .servicio .iconos {
-    height: 15rem;
-    width: 15rem;
+    height: 10rem;
+    width: 10rem;
     background-color: var(--sunglow);
     border-radius: 50%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    cursor: pointer;
+    
 }
 
 
@@ -475,6 +476,71 @@ h3 {
 }
 
 
+/***Productos Cardd*/
+.cards-container {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 240px);
+    gap: 26px;
+    place-content: center;
+  }
+  .product-card {
+    width: 240px;
+  }
+  .product-card img {
+    width: 240px;
+    height: 240px;
+    border-radius: 20px;
+    object-fit: cover;
+  }
+  .product-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+  }
+  .product-info figure {
+    margin: 0;
+  }
+  .product-info figure img {
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+  }
+  .product-info div p:nth-child(1) {
+    font-weight: bold;
+    font-size: var(--md);
+    margin-top: 0;
+    margin-bottom: 4px;
+  }
+  .product-info div p:nth-child(2) {
+    font-size: var(--sm);
+    margin-top: 0;
+    margin-bottom: 0;
+    color: var(--very-light-pink);
+  }
+  .product-info span{
+    color: var(--very-light-pink);
+    font-size: var(--sm);
+  }
+
+
+/****Nosotros***/
+.contenedor-nosotros {
+    max-width: 1200px;
+    width: 95%;
+    margin: 0 auto;
+}
+
+.contenedor-nosotros .entrada-blog a {
+    display: inline-block;
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+}
 
 
 
@@ -534,4 +600,15 @@ h3 {
     .menu-chico{
         display: none;
     }
+    .con-sidebar{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        column-gap: 4rem;
+        grid-auto-flow: column;
+    }
+    aside{
+        grid-column: 2 / 3;
+    }
 }
+
+
