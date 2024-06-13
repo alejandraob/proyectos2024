@@ -1,30 +1,38 @@
-:root{
+:root {
     /* CSS HEX */
---rich-black: #031926ff;
---yinmn-blue: #26547cff;
---bright-pink-crayola: #ef476fff;
---sunglow: #ffd166ff;
---emerald: #06d6a0ff;
---white: #fcfcfcff;
---very-light-pink: #C7C7C7;
+    --rich-black: #031926ff;
+    --yinmn-blue: #26547cff;
+    --bright-pink-crayola: #ef476fff;
+    --sunglow: #ffd166ff;
+    --emerald: #06d6a0ff;
+    --white: #fcfcfcff;
+    --very-light-pink: #C7C7C7;
 
---fuente1: "Plus Jakarta Sans", sans-serif;
---fuente2:"Teko", sans-serif;
+    --fuente1: "Plus Jakarta Sans", sans-serif;
+    --fuente2: "Teko", sans-serif;
 
 }
+
 /** GLOBALES **/
-html{
-    font-size: 62.5%;/* 1rem=10px */
-    box-sizing: border-box; /*Hack para box model*/
-    
+html {
+    font-size: 62.5%;
+    /* 1rem=10px */
+    box-sizing: border-box;
+    /*Hack para box model*/
+
 }
-*,*:before, *:after{
+
+*,
+*:before,
+*:after {
     box-sizing: inherit;
 }
+
 /** clase para ocultar elementos */
-.inactive{
+.inactive {
     display: none;
 }
+
 /** cursor */
 .cursor-pointer {
     cursor: pointer;
@@ -32,8 +40,9 @@ html{
 
 /** estilos generales**/
 
-body{
-    font-size: 16px; /* 1rem=10px */
+body {
+    font-size: 16px;
+    /* 1rem=10px */
     font-family: var(--fuente1);
     font-weight: 400;
     background-color: var(--white);
@@ -41,91 +50,172 @@ body{
     margin: 0;
     padding: 0;
 }
+
 a {
     text-decoration: none;
 }
-ul{
+
+ul {
     list-style: none;
 }
+
 /** footer pie de pagina **/
-.footer{
+.footer {
     text-align: center;
     color: var(--yinmn-blue);
 }
 
 /** TIPOGRAFIA **/
 
-h1{
+h1 {
     font-size: 3.8rem;
 }
-h2{
+
+h2 {
     font-size: 2.8rem;
 }
-h3{
+
+h3 {
     font-size: 1.8rem;
 }
-h1,h2,h3{
+
+h1,
+h2,
+h3 {
     text-align: center;
 }
 
 /**Navegacion**/
-.barra{
+.barra {
     background-color: var(--white);
     border-bottom: .1rem solid var(--very-light-pink);
 }
-.logo{
+
+.logo {
     margin: 0 1rem;
     width: 15rem;
 }
-.navegacion{
+
+.navegacion {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 2rem 0;
-   
+
 }
-.navegacion-izquierda ul, .navegacion-derecha ul{
+
+.navegacion-izquierda ul,
+.navegacion-derecha ul {
     display: flex;
     align-items: center;
 
 }
-.navegacion-izquierda{
+
+.navegacion-izquierda {
     display: flex;
 }
 
-.navegacion-izquierda ul{
+.navegacion-izquierda ul {
     margin-left: 2rem;
 }
-.navegacion-izquierda ul li, .navegacion-derecha ul li{
+
+.navegacion-izquierda ul li,
+.navegacion-derecha ul li {
     margin-right: 2rem;
 }
 
-.nav-compra-carrito img{
+.navegacion-izquierda ul li a, .navegacion-derecha ul li a{
+    
+    color: var(--very-light-pink);
+    border: 1px solid var(--white);
+    padding: 8px;
+    border-radius: 8px;
+ 
+ }
+ .navegacion-izquierda ul li a:hover, .navegacion-derecha ul li a:hover{
+     border: 1px solid var(--sunglow);
+     color: var(--rich-black);
+ }
+
+
+
+.nav-compra-carrito img {
     margin: 0 1rem;
     width: 2.5rem;
     position: relative;
     top: 0.5rem;
 }
 
-@media (max-width: 640px){
-    .menu{
+/*********/
+.nav-compra-carrito {
+    position: relative;
+    cursor: pointer;
+}
+
+.nav-compra-carrito div {
+    width: 18px;
+    height: 18px;
+    background-color: var(--sunglow);
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    position: absolute;
+    color: var(--white);
+    top: -10px;
+    right: -12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 640px) {
+    .menu {
         margin: 1rem 1rem;
         display: block;
     }
-    
-    .navegacion-izquierda ul, .navegacion-derecha ul{
+
+    .navegacion-izquierda ul,
+    .navegacion-derecha ul {
+        display: none;
+    }
+
+    .article-presentacion {
         display: none;
     }
 
 }
-@media (min-width: 641px){
-    .menu{
+
+@media (min-width: 641px) {
+    .menu {
         display: none;
     }
-    .servicios{
+
+    .servicios {
         display: grid;
-        grid-template-columns: repeat(3,1fr); 
+        grid-template-columns: repeat(3, 1fr);
         column-gap: 1rem;
+    }
+
+    .dos-columnas {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 2rem;
+    }
+
+    /**Articulo**/
+    .article-presentacion {
+        display: flex;
+        flex-direction: column;
+        width: auto;
+        margin: auto;
+
+    }
+
+    .article-presentacion p {
+        width: auto;
+        font-style: italic;
+        padding: 0 3rem;
     }
 }
 
@@ -133,8 +223,8 @@ h1,h2,h3{
 
 
 /** CONTENIDO HERO **/
-.hero{
-    background-image: url(../img/banner.png); 
+.hero {
+    background-image: url(../img/banner.png);
     background-repeat: no-repeat;
     background-size: cover;
     height: 410px;
@@ -142,41 +232,45 @@ h1,h2,h3{
     position: relative;
     margin-bottom: 2rem;
     color: var(--white);
-  
-  }
-  
-  .contenido-hero{
-  position: absolute;
-  background-color: rgb(0 0 0 / 70%);
-  bottom: 0;
-  left: 0;
-  top: 0;
-  right: 0;
-  
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  
-  }
-  .contenido-hero h2,
-  .contenido-hero p{
-     color: var(--blanco);
-  }
 
-  .contenido-hero h2{
+}
+
+.contenido-hero {
+    position: absolute;
+    background-color: rgb(0 0 0 / 70%);
+    bottom: 0;
+    left: 0;
+    top: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.contenido-hero h2,
+.contenido-hero p {
+    color: var(--blanco);
+}
+
+.contenido-hero h2 {
     font-size: 5rem;
-  }
-  .hero-span{
+}
+
+.hero-span {
     font-family: var(--fuente2);
     font-size: 3rem;
     font-weight: 100;
-  }
-  .contenido-hero .ubicacion{
-     display: flex;
-     align-items: flex-end;
-  }
-  .boton-secundario{
+}
+
+.contenido-hero .ubicacion {
+    display: flex;
+    align-items: flex-end;
+}
+
+.boton-secundario {
     background-color: var(--sunglow);
     color: var(--blanco);
     padding: 1rem 3rem;
@@ -186,37 +280,41 @@ h1,h2,h3{
     text-transform: uppercase;
     font-weight: bold;
     border-radius: .5rem;
-    width: 10%;
+  /*  width: 10%;*/
     text-align: center;
     border: none;
 
-    
+
 }
 
 
 /*Servicios */
 
-.servicio{
+.servicio {
 
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 2rem;
 
 }
-.servicio h3{
+
+.servicio h3 {
     color: var(--rich-black);
-    font-weight:bold;
+    font-weight: bold;
     text-align: center;
+    
 }
 
-.servicio p{
+.servicio p {
     line-height: 2;
     text-align: center;
     color: var(--rich-black);
     font-weight: 200;
 
 }
-.servicio .iconos{
+
+.servicio .iconos {
     height: 15rem;
     width: 15rem;
     background-color: var(--sunglow);
@@ -224,45 +322,36 @@ h1,h2,h3{
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-}
-
-/**Articulo**/
-.article-presentacion{
-  display: flex;
-  flex-direction: column;
-  width: auto;
-  margin: auto;
-  
-}
-.article-presentacion p{
-    width: auto;
-    font-style: italic;
-    padding: 0 3rem;
+    cursor: pointer;
 }
 
 
+
+/******este seria las entradas a  catlogo y contatco****/
 .contenedor {
     width: auto;
-   max-width: 1200px;
-   width: 95%;
+    max-width: 1200px;
+    width: 95%;
     margin: 0 auto;
-    padding-bottom: 2rem;
+    padding: 3rem 0;
 }
-.contenedor img{
+
+.contenedor img {
     width: 250px;
     height: 200px;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    padding:auto;
+    padding: auto;
 }
 
-.entrada-blog{
+.entrada-blog {
     display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+
 }
 
 .entrada-blog a {
@@ -273,11 +362,12 @@ h1,h2,h3{
     text-decoration: none;
     font-weight: bold;
     text-transform: uppercase;
+    margin-bottom: 3rem;
 }
 
-.dos-columnas{
+/*.dos-columnas{
         display:grid;
         grid-template-columns: 50% 50%;
         column-gap: 2rem;
         gap: 1rem;
-    }
+    }*/
