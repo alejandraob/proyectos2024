@@ -254,7 +254,7 @@ function createCartItem(product) {
 
     // Crear elemento para el ícono de cerrar
     const closeIcon = document.createElement('img');
-    closeIcon.src = 'img/icons/icon_close.png';
+    closeIcon.src = 'img/icons/close.png';
     closeIcon.alt = 'close';
     closeIcon.classList.add('cursor-pointer');
     closeIcon.addEventListener('click', () => removeFromCart(product.name)); // Elimina el producto del carrito al hacer clic en el ícono
