@@ -17,6 +17,7 @@
     <link rel="preload" href="styles/styles.css" as="style">
     <!--esto cargara más rápido la hoja de estilo y luego la ejecutará-->
     <link rel="stylesheet" href="styles/styles.css">
+    <script src="js/newUser.js" defer></script>
 </head>
 
 <body>
@@ -52,7 +53,7 @@
                                 <li><a href="nosotros.html" class="navegacion__enlace">Nosotros</a></li>
                             </ul>
                             <ul>
-                                <li><a href="edit_usuario.html" id="editLink" class="navegacion__enlace mi_cuenta">Editar mis Datos</a></li>
+                                <li><a href="edit_usuario.html" id="editLink" class="navegacion__enlace mi_cuenta">Editar Mis Datos</a></li>
                                 <li><a href="/" class="navegacion__enlace mi_compra">Mi Carrito</a></li>
                             </ul>
                         </div>
@@ -106,7 +107,7 @@
                 </p>
 
             </article>
-            <form class="formulario__registro-Usuario" id="myForm">
+            <form class="formulario__edit-Usuario" id="formEditUsuario" onsubmit="editarCuenta(event)">
                 <div class="campo">
                     <label class="campo__label" for="nombre">Nombre</label>
                     <input type="text" id="nombre" placeholder="Tu nombre" class="campo__field" required>
@@ -136,7 +137,6 @@
                     <div class="campo">
                         <label class="campo__label dir-label" for="piso">Piso</label>
                         <input type="text" id="piso" class="campo__field">
-                        
                     </div>
                     <div class="campo">
                         <label class="campo__label dir-label" for="cp">CP</label>
@@ -155,9 +155,10 @@
                     <span class="error-message"></span>
                 </div>
                 <div class="campo">
-                    <input type="button" value="Enviar" class="btn-form boton-secundario" onclick="newUser()">
-                </div>
+                    <input type="submit" value="Editar" id="btnEditar" class="btn-form boton-secundario">
+                    <input type="submit" value="Eliminar" class="btn-form btndelete boton-secundario" onclick="eliminarCuenta(event)">
                 
+                </div>
             </form>
         </div>
 
@@ -172,11 +173,71 @@
     <footer class="footer">
         <p>Rapsodia Artesanias</p>
     </footer>
+    <script>
+       document.addEventListener("DOMContentLoaded", rellenarFormulario);
 
+function rellenarFormulario() {
+    const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+    if (usuario) {
+        document.getElementById("nombre").value = usuario.nombre;
+        document.getElementById("email").value = usuario.email;
+        document.getElementById("pass").value = usuario.password;
+        document.getElementById("telefono").value = usuario.telefono;
+        document.getElementById("direccion").value = usuario.direccion;
+        document.getElementById("piso").value = usuario.piso;
+        document.getElementById("cp").value = usuario.cp;
+        document.getElementById("provincia").value = usuario.provincia;
+        document.getElementById("pais").value = usuario.pais;
+    }
+}
+
+function editarCuenta(event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+
+    var nombre = document.getElementById("nombre").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("pass").value;
+    var telefono = document.getElementById("telefono").value;
+    var direccion = document.getElementById("direccion").value;
+    var piso = document.getElementById("piso").value;
+    var cp = document.getElementById("cp").value;
+    var provincia = document.getElementById("provincia").value;
+    var pais = document.getElementById("pais").value;
+
+    var usuarioEditado = {
+        nombre: nombre,
+        email: email,
+        password: password,
+        telefono: telefono,
+        direccion: direccion,
+        piso: piso,
+        cp: cp,
+        provincia: provincia,
+        pais: pais
+    };
+
+    // Actualizar los datos del usuario en el array (si es necesario)
+    sessionStorage.setItem('usuario', JSON.stringify(usuarioEditado));
+
+    console.log("Usuario actualizado:", usuarioEditado);
+}
+
+function eliminarCuenta(event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+
+    var email = document.getElementById("email").value;
+    var index = correosRegistrados.indexOf(email);
+    if (index > -1) {
+        correosRegistrados.splice(index, 1);
+        console.log("Usuario eliminado:", email);
+    }
+}
+
+    </script>
     <script src="js/scriptsMenu.js"></script>
     <script src="js/contacto.js"></script>
     <script src="js/catalogo.js"></script>
-    <script src="js/newUser.js"></script>
+
 </body>
 
 </html>

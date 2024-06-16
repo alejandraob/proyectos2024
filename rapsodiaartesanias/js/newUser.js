@@ -12,6 +12,66 @@ const usuario = [
     }
 ];
 
+var correosRegistrados = ['jperez@gmail.com', 'usuario1@mail.com', 'usuario2@mail.com'];
+//
+function rellenarFormulario() {
+    const usuario = JSON.parse(sessionStorage.getItem('usuario'));
+    if (usuario) {
+        document.getElementById("nombre").value = usuario.nombre;
+        document.getElementById("email").value = usuario.email;
+        document.getElementById("pass").value = usuario.password;
+        document.getElementById("telefono").value = usuario.telefono;
+        document.getElementById("direccion").value = usuario.direccion;
+        document.getElementById("piso").value = usuario.piso;
+        document.getElementById("cp").value = usuario.cp;
+        document.getElementById("provincia").value = usuario.provincia;
+        document.getElementById("pais").value = usuario.pais;
+    }
+}
+
+function editarCuenta(event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+
+    var nombre = document.getElementById("nombre").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("pass").value;
+    var telefono = document.getElementById("telefono").value;
+    var direccion = document.getElementById("direccion").value;
+    var piso = document.getElementById("piso").value;
+    var cp = document.getElementById("cp").value;
+    var provincia = document.getElementById("provincia").value;
+    var pais = document.getElementById("pais").value;
+
+    var usuarioEditado = {
+        nombre: nombre,
+        email: email,
+        password: password,
+        telefono: telefono,
+        direccion: direccion,
+        piso: piso,
+        cp: cp,
+        provincia: provincia,
+        pais: pais
+    };
+
+    // Actualizar los datos del usuario en el array (si es necesario)
+    sessionStorage.setItem('usuario', JSON.stringify(usuarioEditado));
+
+    console.log("Usuario actualizado:", usuarioEditado);
+}
+
+function eliminarCuenta(event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+
+    var email = document.getElementById("email").value;
+    var index = correosRegistrados.indexOf(email);
+    if (index > -1) {
+        correosRegistrados.splice(index, 1);
+        console.log("Usuario eliminado:", email);
+    }
+}
+
+/////////
 function newUser() {
     if (verificarDatosIngresados()) {
         var email = document.getElementById("email").value;
@@ -51,7 +111,7 @@ function newUser() {
     }
 }
 
-var correosRegistrados = ['jperez@gmail.com', 'usuario1@mail.com', 'usuario2@mail.com'];
+
 
 function verificarEmailRepetido(email) {
     return new Promise((resolve, reject) => {

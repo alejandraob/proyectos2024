@@ -187,3 +187,9 @@ function creatListCarrito() {
 // Inicializar la lista del carrito cuando se cargue la página
 creatListCarrito();
 
+//////////
+document.getElementById('editLink').addEventListener('click', function (e) {
+    e.preventDefault();
+    sessionStorage.setItem('usuario', JSON.stringify(usuario[0]));
+    window.location.href = 'edit_usuario.html';
+});

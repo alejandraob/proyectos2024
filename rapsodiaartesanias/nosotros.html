@@ -17,6 +17,7 @@
     <link rel="preload" href="styles/styles.css" as="style">
     <!--esto cargara más rápido la hoja de estilo y luego la ejecutará-->
     <link rel="stylesheet" href="styles/styles.css">
+    <script src="js/newUser.js" defer></script>
 </head>
 
 <body>
@@ -26,7 +27,7 @@
                 <nav class="navegacion">
                     <img src="img/icons/icon_menu.svg" alt="menu" class="menu">
                     <div class="navegacion-izquierda">
-                        <img src="img/logos/logosm.jpg" alt="logo" class="logo">
+                        <a href="index.html"> <img src="img/logos/logosm.jpg" alt="logo" class="logo"></a> 
 
                         <ul>
                             <li><a href="catalogo.html" class="navegacion__enlace">Catalogo</a></li>
@@ -50,14 +51,14 @@
                                 <li><a href="nosotros.html" class="navegacion__enlace">Nosotros</a></li>
                             </ul>
                             <ul>
-                                <li><a href="/" class="navegacion__enlace mi_cuenta" >Mi Cuenta</a></li>
+                                <li><a href="edit_usuario.html" id="editLink" class="navegacion__enlace mi_cuenta" >Mi Mis Datos</a></li>
                             <li><a href="/" class="navegacion__enlace mi_compra">Mi Carrito</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="menu-cuenta inactive">
                         <ul>
-                            <li><a href="/">Editar Mis Datos</a></li>
+                            <li><a href="edit_usuario.html" id="editLink">Editar Mis Datos</a></li>
                             <li><a href="/">Mis Compras</a></li>
                             <li><a href="/">Cerrar Sesión</a></li>
                         </ul>
@@ -125,6 +126,7 @@
     </footer>
 
     <script src="js/scriptsMenu.js"></script>
+    <script src="js/catalogo.js"></script>
 </body>
 
 </html>

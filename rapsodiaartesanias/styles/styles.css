@@ -611,7 +611,10 @@ margin-top: 0.5rem; /* Espacio entre el input y el mensaje de error */
   text-align: left;
 }
 
+.btndelete{
+  background-color: var(--bright-pink-crayola);
 
+}
 
 
 
