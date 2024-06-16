@@ -128,21 +128,36 @@
                     <span class="error-message"></span>
                 </div>
                 <div class="direccion">
-                    <label class="campo__label" for="telefono">Dirección
-                        <input type="tel" id="direccion" placeholder="direccion" class="campo__field" required></label>
-                    <label class="campo__label" for="telefono">Piso
-                        <input type="tel" id="piso"  class="campo__field" required></label>
-                    <label class="campo__label" for="telefono">CP
-                        <input type="tel" id="cp"  class="campo__field" required></label>
-                    <label class="campo__label" for="telefono">Provincia
-                        <input type="tel" id="provincia" class="campo__field" required></label>
+                    <div class="campo">
+                        <label class="campo__label dir-label" for="direccion">Dirección</label>
+                        <input type="text" id="direccion" placeholder="dirección" class="campo__field" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="campo">
+                        <label class="campo__label dir-label" for="piso">Piso</label>
+                        <input type="text" id="piso" class="campo__field">
+                        
+                    </div>
+                    <div class="campo">
+                        <label class="campo__label dir-label" for="cp">CP</label>
+                        <input type="text" id="cp" class="campo__field" required>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="campo">
+                        <label class="campo__label dir-label" for="provincia">Provincia</label>
+                        <input type="text" id="provincia" class="campo__field" required>
+                        <span class="error-message"></span>
+                    </div>
                 </div>
-                <label class="campo__label" for="telefono">País
-                    <input type="tel" id="pais"  class="campo__field" required></label>
-
                 <div class="campo">
-                    <input type="submit" value="Enviar" class="btn-form boton-secundario" onclick="enviar()">
+                    <label class="campo__label" for="pais">País</label>
+                    <input type="text" id="pais" class="campo__field" required>
+                    <span class="error-message"></span>
                 </div>
+                <div class="campo">
+                    <input type="button" value="Enviar" class="btn-form boton-secundario" onclick="newUser()">
+                </div>
+                
             </form>
         </div>
 
@@ -160,6 +175,7 @@
 
     <script src="js/scriptsMenu.js"></script>
     <script src="js/contacto.js"></script>
+    <script src="js/newUser.js"></script>
 </body>
 
 </html>
