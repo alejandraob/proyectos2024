@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapsodia Artesanias - Login</title>
+    <title>Rapsodia Artesanias - Contacto</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
@@ -23,37 +23,34 @@
 <body>
 <main>
     <div class="">
-   
         <div class="login">
             <div class="form-container">
-              <img src="img/logos/logolm.jpg" alt="logo" class="logo-login">
+                <img src="img/logos/logolm.jpg" alt="logo" class="logo-login">
         
-              <form action="/" class="form-login" onsubmit="ingresarCuenta(event)">
-                <label for="email" class="label-login">Email</label>
-                <input type="text" id="email" placeholder="mail" class="input input-email">
-    
-                <label for="pass" class="label-login">Password</label>
-                <input type="password" id="pass" placeholder="*********" class="input input-password">
-    
-                <span class="error-message" style="display:none;"></span> <!-- Span para mensajes de error -->
-                <input type="submit" value="Ingresar" class="btn-login login-button">
-
-                <a href="forget_usuario.html">Olvide mi contraseña</a>
-            </form>
+                <h1 class="title">Crear una nueva Contraseña</h1>
+                <p class="subtitle">Ingrese una nueva contraseña a su cuenta</p>
         
-              <a href="registro_usuario.html" class="btn-login-secondary signup-button">Crear Cuenta</a>
+                <form action="/" class="form-forget" onsubmit="modificarPass(event)">
+                    <label for="pass" class="label-login-password">Nueva Contraseña</label>
+                    <input type="password" id="pass" placeholder="*********" class="input input-password">
+        
+                    <label for="new-pass" class="label-login-password">Repetir Contraseña</label>
+                    <input type="password" id="new-pass" placeholder="*********" class="input input-password">
+                    <span class="error-message" style="display:none;"></span>
+                    <input type="submit" value="Confirmar" class="btn-login login-button">
+                </form>
             </div>
-          </div>
+        </div>
     </div>
-
-
 </main>
 
     <footer class="footer">
         <p>Rapsodia Artesanias</p>
     </footer>
+
     <script src="js/scriptsMenu.js"></script>
     <script src="js/contacto.js"></script>
     <script src="js/catalogo.js"></script>
 </body>
+
 </html>

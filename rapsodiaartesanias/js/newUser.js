@@ -259,3 +259,62 @@ function ocultarError(campo) {
     }
     campo.classList.remove('error');
 }
+
+
+function ingresarCuenta(event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("pass").value;
+    var usuarioEncontrado = usuario.find(user => user.email === email && user.password === password);
+    var errorMessage = document.querySelector('.error-message');
+
+    if (usuarioEncontrado) {
+        console.log("Usuario encontrado:", usuarioEncontrado); // Mensaje de depuración
+        // Guardar el usuario en el almacenamiento de sesión en un storage
+        sessionStorage.setItem('usuario', JSON.stringify(usuarioEncontrado));
+        
+        // Redireccionar a la página de inicio
+        window.location.href = "index.html";
+    } else {
+        console.error("Usuario o contraseña incorrectos"); // Mensaje de error en consola
+        errorMessage.textContent = "Usuario o contraseña incorrectos";
+        errorMessage.style.display = 'block';
+    }
+}
+
+
+function modificarPass(event) {
+    event.preventDefault(); 
+
+    var pass = document.getElementById("pass").value;
+    var pass2 = document.getElementById("new-pass").value;
+    var errorMessage = document.querySelector('.error-message');
+
+    if (pass === pass2) {
+        var usuario = JSON.parse(sessionStorage.getItem('usuario'));
+
+        if (usuario) {
+            usuario.password = pass;
+            sessionStorage.setItem('usuario', JSON.stringify(usuario));
+            
+            // Limpiar campos
+            document.getElementById("pass").value = "";
+            document.getElementById("new-pass").value = "";
+            
+            // Limpiar storage
+            sessionStorage.clear();
+            
+            alert("Contraseña modificada correctamente");
+            
+            // Redireccionar a la página login
+            window.location.href = "login.html";
+        } else {
+            errorMessage.textContent = "No hay usuario en sesión";
+            errorMessage.style.display = 'block';
+        }
+    } else {
+        errorMessage.textContent = "Las contraseñas no coinciden";
+        errorMessage.style.display = 'block';
+    }
+}
