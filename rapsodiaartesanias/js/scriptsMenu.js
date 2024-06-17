@@ -8,7 +8,7 @@ const menuDesplegable=document.querySelector('.menu-chico');
 ////Menu carrito
 const menuCarritoIcon = document.querySelector('.nav-compra-carrito');
 const asideCarrito = document.querySelector('.producto-detail');
-
+const cartCount = document.getElementById('cart-count'); // Contador del carrito
 
 
 /*Eventos*/
@@ -56,18 +56,18 @@ function toggleCarritoMenu() {
 
 const productListCarrito = [
     {
-        name: 'Cartera',
-        price: 30,
+        name: 'Cartera Tejida',
+        price: 35000,
         image: 'img/cartera1.jpg',
     },
     {
-        name: 'Bike',
-        price: 30,
+        name: 'Libreta',
+        price: 1500,
         image: 'img/libreta1.jpg',
     },
     {
-        name: 'Bike',
-        price: 30,
+        name: 'Bolso p/Asado',
+        price: 25000,
         image: 'img/bolso_asado1.jpg',
     }
 ];
@@ -142,6 +142,9 @@ function updateCar() {
     checkoutButton.textContent = 'Finalizar Compra';
 
     orderContent.appendChild(checkoutButton);
+
+    // Actualizar contador del carrito
+    cartCount.textContent = productListCarrito.length;
 }
 
 function addToCart(prodNombre, prodPrice, prodImg) {
