@@ -1,0 +1,46 @@
+<!-- TODO:
+- Ejecutar en browser
+- Modificar la Tabla
+- Listar las filas y celdas en orden inverso
+-
+ -->
+<html>
+<head>
+<script type="text/javascript">
+function cell()
+{
+var tabla=document.getElementById('myTable');
+var x=tabla.rows;
+var row;
+alert("Cantidad de Rows (filas)= "+x.length+"\n"+tabla.innerHTML);
+for (i=0;i<x.length;i++){
+	row=x[i].cells;
+	alert("Cantidad de Celdas de la fila "+i+"= "+row.length+"\n"+x[i].innerHTML);
+  	for(j=0;j<row.length;j++){
+  		row[j].style.backgroundColor="#888888";
+  		alert("Contenido de la Celda "+j+" de la fila "+i+"\n"+row[j].innerHTML);
+  		row[j].style.backgroundColor="";
+  	}
+}
+}
+</script>
+</head>
+<body>
+
+<table id="myTable" border="1">
+<tr>
+<td >cell 1</td>
+<td>cell 2</td>
+</tr>
+<tr>
+<td>cell 3</td>
+<td>cell 4</td>
+</tr>
+
+
+</table>
+<br />
+<input type="button" onclick="cell()" value="Listar contenido de la Tabla">
+
+</body>
+</html>

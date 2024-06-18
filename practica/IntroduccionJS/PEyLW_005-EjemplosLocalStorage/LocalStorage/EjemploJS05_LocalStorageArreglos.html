@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almacenar Varios Nombres en localStorage</title>
+    <script src="js/funcionesLS.js"></script>
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Almacenar Nombres en localStorage</h1>
+    <input type="text" id="nombreInput" placeholder="Ingresa un nombre">
+    <button onclick="agregarNombre()">Agregar Nombre</button>
+    <h2>Lista de Nombres</h2>
+    <table id="nombresTable">
+        <thead>
+            <tr>
+                <th>Nombres</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los nombres se agregarán aquí -->
+        </tbody>
+    </table>
+
+    <br>
+    <button onclick="limpiarLocalStorage();mostrarNombres();">Limpiar Local Storage</button>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', mostrarNombres);
+    </script>
+    
+</body>
+</html>

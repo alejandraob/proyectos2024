@@ -1,0 +1,73 @@
+<!-- TODO:
+- Ejecutar en browser
+- Agregar nuevos Registros a la tabla desde el array
+- Agregar nuevos registros a la tabla desde el browser
+ -->
+<html>
+<head>
+<script type="text/javascript">
+function cell(){
+	var tabla=document.getElementById('myTable');
+	var x=tabla.rows;
+	var row;
+	alert("Cantidad de Rows (filas)= "+x.length+"\n"+tabla.innerHTML);
+	for (i=0;i<x.length;i++){
+		row=x[i].cells;
+		alert("Cantidad de Celdas de la fila "+i+"= "+row.length+"\n"+x[i].innerHTML);
+  		for(j=0;j<row.length;j++){
+  			row[j].style.backgroundColor="#888888";
+  			alert("Contenido de la Celda "+j+" de la fila "+i+"\n"+row[j].innerHTML);
+  			row[j].style.backgroundColor="";
+  		}
+	}
+}
+function iniciarTabla(){
+	var datosIniciales = new Array();
+	datosIniciales[0]=["Juan Perez","44845889"];
+	datosIniciales[1]=["Tito Lecture","58468512"];
+	var myTable=document.getElementById('myTable');
+	for(i in datosIniciales){
+		insertarRow(datosIniciales[i][0],datosIniciales[i][1]);
+	}
+
+}
+function insertarRow(Nombre,Telefono){
+		var myTable=document.getElementById("myTable");
+		var row=myTable.insertRow(myTable.rows.length);
+		var cel0=row.insertCell(0);
+		var cel1=row.insertCell(1);
+		var cel2=row.insertCell(2);
+		cel0.innerHTML=Nombre;
+		cel1.innerHTML=Telefono;
+		cel2.innerHTML="<a href='#' onclick='borrarRow(this.parentNode.parentNode.rowIndex)'>borrar</a>";
+}
+function borrarRow(Numero){
+		var myTable=document.getElementById("myTable");
+		myTable.deleteRow(Numero);
+}
+
+</script>
+</head>
+<body onload="iniciarTabla()">
+
+<table id="myTable" border="1">
+<thead>
+	<tr>
+		<th id="celda">Nombre</th>
+		<th>Telefono</th>
+		<th>Operacion</th>
+	</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<br />
+<input type="button" onclick="cell()"
+	value="Listar contenido de la Tabla">
+<form action="#">
+nombre <input type="text" id="nombre"><br/>
+telefono <input type="text" id="telefono"><br/>
+<input value="insertar Fila" type="button" onclick="insertarRow(document.getElementById('nombre').value,document.getElementById('telefono').value);">
+</form>
+</body>
+</html>

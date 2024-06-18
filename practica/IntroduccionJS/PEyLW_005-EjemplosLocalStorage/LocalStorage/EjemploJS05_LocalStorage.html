@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ejemplo Local Storage</title>
+    
+    <script type="text/javascript" src="js/funcionesLS.js">// librería de funciones que son utilizadas en varias páginas
+        </script>
+       
+
+       
+    <script type="text/javascript">
+        function guardarNombreyApellido()
+        {
+            let nombre=document.getElementById('nombre').value;
+            let apellido=document.getElementById('apellido').value;
+
+            setEntry('nombre', nombre);
+            setEntry('apellido', apellido);
+        }
+
+        function obtenerNombreyApellido()
+        {
+            /*Obtengo una por una las claver*/
+            alert(localStorage.getItem('nombre'));
+            alert(localStorage.getItem('apellido'));
+
+            /*o recorro el arreglo de claves con un for*/
+            for(let i=0; i<localStorage.length; i++) {
+                let key = localStorage.key(i);
+                alert(`${key}: ${localStorage.getItem(key)}`);
+            }
+            
+        }
+
+        function eliminarNombre()
+        {
+            localStorage.removeItem('nombre');
+        }
+
+    </script>
+
+</head>
+<body>
+    <h1>Ejemplo LocalStorage</h1>
+    
+    <table>
+        <tr>
+            <td>Nombre: </td>
+            <td><input type="text" id="nombre" name="nombre"> </td>
+        </tr>
+        <tr>
+            <td>Apellido: </td>
+            <td><input type="text" id="apellido" name="apellido"> </td>
+        </tr>
+        <tr>
+            
+            <td><button type="button" id="btnGuardarLS" name="btnGuardarLS" onclick="guardarNombreyApellido()">Guardar en LocalStorage</button></td>
+
+            <td><button type="button" id="btnObtenerLS" name="btnObtenerLS" onclick="obtenerNombreyApellido()">Obtener LocalStorage</button></td></td>
+
+            <td><button type="button" id="btnBorrarKey" name="btnBorrarKey" onclick="eliminarNombre()">Borrar Clave Nombre</button></td></td>
+        </tr>
+    </table>
+
+
+</body>
+</html>

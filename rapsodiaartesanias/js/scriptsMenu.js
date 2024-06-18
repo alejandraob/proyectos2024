@@ -196,3 +196,25 @@ document.getElementById('editLink').addEventListener('click', function (e) {
     sessionStorage.setItem('usuario', JSON.stringify(usuario[0]));
     window.location.href = 'edit_usuario.html';
 });
+
+
+
+
+//////Modal
+// Función para abrir el modal
+function openModal() {
+    document.getElementById("orderModal").style.display = "block";
+}
+
+// Función para cerrar el modal
+function closeModal() {
+    document.getElementById("orderModal").style.display = "none";
+}
+
+// Cerrar el modal si el usuario hace clic fuera del modal
+window.onclick = function(event) {
+    const modal = document.getElementById("orderModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}

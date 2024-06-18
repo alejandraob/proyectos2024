@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ejemplo Cookies</title>
+    
+    <script type="text/javascript" src="js/funcionesCookies.js">
+        // librería de funciones que son utilizadas en varias páginas
+        </script>
+       
+    <script>
+        // Almacenar la cookie al cargar la página
+        window.onload = function() {
+            setCookie("username", "JohnDoe", 7); // Guarda una cookie llamada "username" con el valor "JohnDoe" que expira en 7 días
+
+            // Leer la cookie
+            const username = getCookie("username");
+            if (username) {
+                console.log("Username:", username); // Imprimir el valor de la cookie "username"
+            } else {
+                console.log("No username cookie found");
+            }
+        };
+
+
+    </script>
+</head>
+<body>
+    <h1>Cookie Example</h1>
+    
+    <table>
+        <tr>
+            <td>Nombre de Usuario: </td>
+            <td><input type="text" id="nombreUsuario" name="nombreUsuario"> </td>
+            <td><button type="button" id="btnGuardarCookie" name="btnGuardarCookie" onclick="setCookieUsername(document.getElementById('nombreUsuario').value)">Guardar Cookie</button></td>
+        </tr>
+        <tr>
+            <td><button type="button" id="btnObtenerNombreUsuario" name="btnObtenerNombreUsuario" onclick="alert(getCookie('username'))">Obtener Cookie</button></td></td>
+        </tr>
+    </table>
+
+    
+
+</body>
+</html>

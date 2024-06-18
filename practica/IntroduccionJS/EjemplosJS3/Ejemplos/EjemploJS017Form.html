@@ -1,0 +1,54 @@
+<!-- TODO:
+- Imprimir en la fecha en formato dd/mm/aa
+ -->
+<html>
+<head>
+<script type="text/javascript">
+	function accionForm(){
+		//referencia al input text tx1
+		var tx1=document.getElementById("tx1");
+		//referencia al div salida
+		var salida=document.getElementById("salida");
+		//al contenido del div salida se le agrega lo siguiente
+		salida.innerHTML+="Usted ingreso el texto "+tx1.value+"<br>";
+		//se elimina el contenido de tx1
+		tx1.value="";
+		//se posiciona el cursor sobre tx1
+		tx1.focus();
+		//referencia al radio r1
+		var r1=document.getElementById("r1");
+		//referencia al radio r2
+		var r2=document.getElementById("r2");
+		//si r1 está checked se checked r2 caso contrario se checked r1
+		if (r1.checked){
+			r2.checked=true;
+		}else{
+			r1.checked=true;
+		}
+		//referencia al select se1
+		var se1=document.getElementById("se1");
+		//referencia al option seleccionado
+		var op=se1.options[se1.selectedIndex];
+		alert("tiene seleccionada la opcion "+op.value);
+	}
+</script>
+</head>
+<body>
+<h2>Formulario</h2>
+<hr>
+<form>input text <input type="text" id="tx1"><br>
+radio 1<input type="radio" name="radio" id="r1">
+radio 2<input type="radio" name="radio" id="r2"><br>
+
+para que se modifique hacer click en el checkbox<input type="checkbox" onclick="accionForm();" id="ch4"><br>
+<select id="se1">
+	<option>Uno</option>
+	<option>Dos</option>
+	<option>Tres</option>
+	<option>Cuatro</option>
+</select>
+
+</form>
+<div id="salida"></div>
+</body>
+</html>
