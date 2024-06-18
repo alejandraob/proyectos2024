@@ -1,0 +1,75 @@
+<!--
+Desarrollar una página que pida al usuario que ingrese un mensaje y sea escrito en 
+pantalla en:
+ Mayúscula.
+ Minúscula.
+ Solo el sub-mensaje que comienza el la posición 5 y de largo 10.
+ Si la palabra hola está incluida dentro del mensaje escribir por pantalla 
+“hola que tal”.
+ El mismo mensaje pero sin espacios en blanco. Y eliminado la palabra 
+hola.
+ El mismo mensaje pero traduciendo al ingles las palabras: my por mi, 
+hello por hola, name por nombre, …. Etc.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 1 - TP 3</title>
+    <script>
+        function manipularMensaje() {
+            // Obtener el mensaje ingresado por el usuario
+            const mensaje = document.getElementById('mensaje').value;
+
+            // Mostrar el mensaje en mayúsculas
+            document.getElementById('mayusculas').innerText = mensaje.toUpperCase();
+
+            // Mostrar el mensaje en minúsculas
+            document.getElementById('minusculas').innerText = mensaje.toLowerCase();
+
+            // Mostrar sub-mensaje que comienza en la posición 5 y tiene una longitud de 10
+            document.getElementById('submensaje').innerText = mensaje.substring(5, 15);
+
+            // Verificar si el mensaje contiene "hola"
+            if (mensaje.toLowerCase().includes('hola')) {
+                document.getElementById('contiene-hola').innerText = 'hola que tal';
+            } else {
+                document.getElementById('contiene-hola').innerText = '';
+            }
+
+            // Mostrar el mensaje sin espacios y sin la palabra "hola"
+            const sinEspacios = mensaje.replace(/\s+/g, '');
+            const sinHola = sinEspacios.replace(/hola/gi, '');
+            document.getElementById('sin-espacios').innerText = sinHola;
+
+            // Traducir algunas palabras al inglés
+            const traducciones = {
+                'mi': 'my',
+                'hola': 'hello',
+                'nombre': 'name',
+                'es': 'is'
+                // Puedes agregar más traducciones aquí
+            };
+
+            const traducido = mensaje.split(' ').map(palabra => {
+                const palabraLimpia = palabra.toLowerCase().replace(/[^a-zA-Z0-9]/g, ''); // Remover puntuaciones
+                return traducciones[palabraLimpia] || palabra;
+            }).join(' ');
+
+            document.getElementById('traducido').innerText = traducido;
+        }
+    </script>
+</head>
+<body>
+    <h1>Manipulación de Mensaje</h1>
+    <label for="mensaje">Ingrese un mensaje:</label>
+    <input type="text" id="mensaje" oninput="manipularMensaje()">
+    <h2>Resultados:</h2>
+    <p><strong>Mayúsculas:</strong> <span id="mayusculas"></span></p>
+    <p><strong>Minúsculas:</strong> <span id="minusculas"></span></p>
+    <p><strong>Sub-mensaje (posición 5, longitud 10):</strong> <span id="submensaje"></span></p>
+    <p><strong>Contiene "hola":</strong> <span id="contiene-hola"></span></p>
+    <p><strong>Sin espacios y sin "hola":</strong> <span id="sin-espacios"></span></p>
+    <p><strong>Traducción al inglés:</strong> <span id="traducido"></span></p>
+</body>
