@@ -1,0 +1,38 @@
+<!-- 
+Ejercicio 2 tp 2
+a- Desarrollar una página que tenga el mismo contenido que el ejercicio 1 tp 1, pero que 
+antes de mostrar los datos personales le solicite una contraseña. Si la contraseña 
+ingresada es ‘minombre’ mostrar los datos personales, si no mostrar el mensaje 
+de ‘contraseña incorrecta’.
+
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio 2 - TP 2</title>
+   
+</head>
+<body>
+    <script>
+        const password = prompt("Ingrese la contraseña");
+        var nombre="Juan";
+        var apellido="Perez";
+        var edad=30;
+        var fechaNacimiento="01/01/1990";
+        var estadoCivil="Soltero";
+        var edad=44;
+        var dni=33333333;
+        var datosPersonales = ["</br>  Nombre:"+nombre, "</br> Apellido:"+apellido, "</br> Edad:" +edad,"</br> Fecha Nacimeinto"+ fechaNacimiento, 
+        "</br> Estado Civil:"+ estadoCivil, "</br> DNI:"+ dni];
+
+       if(password==="minombre"){
+        document.write(datosPersonales);
+       }else{
+        document.write("Contraseña incorrecta");
+       }
+    </script>
+</body>
+</html>

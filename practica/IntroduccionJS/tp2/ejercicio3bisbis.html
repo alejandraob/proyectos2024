@@ -1,0 +1,25 @@
+<!--
+c- Desarrollar una página que muestre dentro de un div los primeros 100 números de la función f(x) = 3 * x + 5 – x²
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio 3 c - TP 2</title>
+</head>
+<body>
+    <div id="primeros100NumerosFuncion"></div>
+    <script>
+        function cargarPagina() {
+            let primeros100NumerosFuncion = "";
+            for (let i = 0; i < 100; i++) { // 100 es el límite superior de los primeros 100 números de la función f(x) = 3 * x + 5 – x²
+                primeros100NumerosFuncion += (3 * i + 5 - Math.pow(i, 2)) + " ";// Agrego un espacio para separar los números
+            }
+            document.getElementById("primeros100NumerosFuncion").innerHTML = primeros100NumerosFuncion;
+        }
+        window.onload = cargarPagina;
+    </script>
+    
+</body>
+</html>

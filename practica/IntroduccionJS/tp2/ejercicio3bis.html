@@ -1,0 +1,31 @@
+<!--
+b- Desarrollar página que muestre dentro de un div todos los números pares menores que 500
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 3 b - TP 2</title>
+    <script>
+        function cargarPagina() {
+            let numerosParesMenores500 = "";
+            let contador = 0;
+            for (let i = 0; i < 500; i++) { // 500 es el límite superior de los números pares menores que 500 
+                if (i % 2 === 0) { // Si el número es par lo agrego a la cadena de texto que se mostrará en el div 
+                    numerosParesMenores500 += i + " "; // Agrego un espacio para separar los números pares
+                    contador++; // Incremento el contador para saber cuando se llega a 25 números
+                    if (contador % 25 === 0) {// Si se llega a 25 números se agrega un salto de línea
+                        numerosParesMenores500 += "<br>";// Agrego un salto de línea
+                    }
+                }
+            }
+            document.getElementById("numerosParesMenores500").innerHTML = numerosParesMenores500; // Muestro los números pares menores que 500 en el div
+        }
+        window.onload = cargarPagina; // Llamo a la función cargarPagina cuando se carga la página 
+    </script>
+</head>
+<body>
+    <div id="numerosParesMenores500"></div>
+</body>
+</html>

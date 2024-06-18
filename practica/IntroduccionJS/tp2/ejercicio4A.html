@@ -1,0 +1,61 @@
+<!--
+a- Desarrollar una página con una lista no ordenada:
+Blanco
+Negro
+Azul
+Rojo
+Amarillo
+Capturar el evento cuando el Mouse pasa por encima de cada item y llamar a una 
+función que modifique el color de fondo de la lista, por el color sobre el cual está
+posicionado el Mouse.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio 4 a - TP2</title>
+    <script>
+       function cambiarColor(element) {
+            var color = element.innerHTML.toLowerCase(); // Obtener el texto del elemento y convertirlo a minúsculas
+            switch (color) {
+                case "blanco":
+                    colorFondo = "white";
+                    colorLetra="black";
+                    break;
+                case "negro":
+                colorFondo = "black";
+                colorLetra="White";
+                    break;
+                case "azul":
+                colorFondo = "blue";
+                colorLetra="White";
+                    break;
+                case "rojo":
+                colorFondo = "red";
+                colorLetra="White";
+                    break;
+                case "amarillo":
+                colorFondo = "yellow";
+                colorLetra="black";
+                    break;
+            }
+            element.parentElement.style.backgroundColor = colorFondo; //cambiamos el color de fondo
+            element.parentElement.style.color = colorLetra; //cambiamos el color de la letras
+        }
+
+        function restaurarColor(element) {
+            element.parentElement.style.backgroundColor = ''; //quitamos los colores
+        }
+    </script>
+</head>
+<body>
+    <ul>
+        <li onmouseover="cambiarColor(this)" onmouseout="restaurarColor(this)">Blanco</li>
+        <li onmouseover="cambiarColor(this)" onmouseout="restaurarColor(this)">Negro</li>
+        <li onmouseover="cambiarColor(this)" onmouseout="restaurarColor(this)">Azul</li>
+        <li onmouseover="cambiarColor(this)" onmouseout="restaurarColor(this)">Rojo</li>
+        <li onmouseover="cambiarColor(this)" onmouseout="restaurarColor(this)">Amarillo</li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!--
+b- Tratar la siguiente lista no ordenada como un árbol desplegable.
+ Las ciudades de una provincia se pueden ocultar haciendo clic sobre el ‘-’ al 
+lado de la provincia.
+ Si una provincia tiene las ciudades ocultas, la provincia se debe mostrar en 
+subrayado.
+ Haciendo clic sobre una provincia en subrayado se deben mostrar todas sus 
+ciudades y la Provincia tiene que pasar a estar sin subrayar.
+Neuquén -
+o Neuquén
+o Zapala
+o San Martin
+o Junin
+Rio Negro -
+o Cipolletti
+o Fernandez Oro
+o Roca
+o Cinco Saltos
+o Allen
+Buenos Aires -
+o La Plata
+o Mar del Plata
+o Necochea
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 4 B - TP 2</title>
+    <style>
+        .subrayado {
+            text-decoration: underline;
+        }
+        .oculto {
+            display: none;
+        }
+        .expandir {
+            cursor: pointer;
+        }
+    </style>
+    <script>
+ document.addEventListener('DOMContentLoaded', function () {
+            var expandirElements = document.querySelectorAll('.expandir');
+            expandirElements.forEach(function (expandirElement) {
+                expandirElement.addEventListener('click', function () {
+                    var ciudadesList = this.nextElementSibling;
+                    var provinciaElement = this.parentElement;
+                    
+                    if (ciudadesList.classList.contains('oculto')) {
+                        // Mostrar las ciudades
+                        ciudadesList.classList.remove('oculto');
+                        provinciaElement.classList.remove('subrayado');
+                    } else {
+                        // Ocultar las ciudades
+                        ciudadesList.classList.add('oculto');
+                        provinciaElement.classList.add('subrayado');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <ul id="lista-contnedora-prov">
+        <li class="provincia">
+            Neuquén <span class="expandir">+-</span>
+            <ul class="ciudades">
+                <li>Neuquén</li>
+                <li>Zapala</li>
+                <li>San Matin</li>
+                <li>Junin</li>
+            </ul>
+        </li>
+        <li class="provincia">
+            Río Negro <span class="expandir">+-</span>
+            <ul class="ciudades">
+                <li>Cipolleti</li>
+                <li>Fernandez Oro</li>
+                <li>Grl Roca</li>
+                <li>Cinco Saltos</li>
+                <li>Allen</li>
+            </ul>
+        </li>
+        <li class="provincia">
+            Buenos Aires <span class="expandir">+-</span>
+            <ul class="ciudades">
+                <li>La Plata</li>
+                <li>Mar del Plata</li>
+                <li>Necochea</li>
+            </ul>
+        </li>
+    </ul>
+    
+</body>
+</html>

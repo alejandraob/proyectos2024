@@ -1,0 +1,63 @@
+<!--
+Ejercicio 5: Funciones
+a- Desarrollar una librería javascript EjJavaScript005.js con las funciones de 
+suma(X,Y), resta(X,Y), división(X,Y), multiplicación(X,Y), potencia(X,Y), 
+cuadrado(X). 
+b- Desarrollar una página que tenga la funcionalidad de una calculadora que utilice 
+la librería del ejercicio anterior. Debe contener un botón por cada operación. Al 
+hacer clic sobre cada botón debe pedirle al usuario los parámetros de la función, 
+llamar a la función y luego imprimir el resultado en un textarea como se muestra 
+en la figura.
+c- Desarrollar una página de Título conversor monetario. Te tenga la funcionalidad 
+de convertir:
+ de pesos a dólares
+ de dólares a pesos
+ de pesos a reales
+ de reales a pesos
+ de pesos a euros
+ de euros a pes
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio 1 - TP 2</title>
+    <script src="JavaScript01.js"></script>
+    <script src="js02.js"></script><script src="js3.js"></script>
+</head>
+<body>
+    <h1>Calculadora</h1>
+    <button onclick="suma()">Suma</button>
+    <button onclick="resta()">Resta</button>
+    <button onclick="multiplicacion()">Multiplicación</button>
+    <button onclick="division()">División</button>
+    <button onclick="potencia()">Potencia</button>
+    <button onclick="raizCuadrada()">Cuadrado</button>
+    <button onclick="valorSleccionado()">Selecione Valor</button>
+    <button onclick="valorSleccionado()">Sacar Factorial</button>
+    <br>
+    <label>Resultados</label>
+    <br>
+    <textarea id="resultado" cols="30" rows="10">
+        
+    </textarea>
+    <button onclick="limpiar()">Limpiar</button>
+    <br>
+    <h1>Conversor Monetario</h1>
+    <button onclick="pesoADolar()">Peso a Dolares</button>
+    <button onclick="dolarAPeso()">Dolares a Peso</button>
+    <button onclick="pesosAReales()">Pesos a Reales</button>
+    <button onclick="realesAPesos()">Reales a Pesos</button>
+    <button onclick="pesosAEuros()">Pesos a Euros</button>
+    <button onclick="eurosAPesos()">Euros a Pesos</button>
+    <br>
+    <label>Resultados</label>
+    <br>
+    <textarea id="resultadoc" cols="30" rows="10">
+        
+    </textarea>
+    <button onclick="limpiar()">Limpiar</button>
+</body>
+</html>

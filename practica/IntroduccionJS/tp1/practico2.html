@@ -1,0 +1,63 @@
+<!--
+
+a- Hacer otra página que tenga el mismo funcionamiento, pero que el código 
+javascript se encuentre en el head.
+b- Hacer otra página que tenga el mismo funcionamiento, pero que el código 
+javascript se encuentre en un archivo externo EjJavaScript002.js.
+c- ¿En qué casos utilizaría cada una de las tres formas de incluir código 
+javascript?
+
+    En línea (en el body):
+
+Ventajas:
+Rápido y fácil de usar para scripts muy pequeños.
+No requiere configuración adicional.
+Desventajas:
+Difícil de mantener para scripts más grandes.
+No es modular.
+Uso recomendado: Para scripts simples y específicos de una página pequeña.
+
+    En el head:
+
+Ventajas:
+Centraliza el código JavaScript en una sección del documento.
+Permite cargar scripts antes de que se cargue el contenido del body.
+Desventajas:
+Puede retrasar la carga de la página si el script es grande.
+Uso recomendado: Para scripts que necesitan ejecutarse antes de que la página cargue completamente, como configuraciones iniciales.
+
+
+    En archivo externo:
+
+Ventajas:
+Facilita la reutilización del código.
+Mejora el mantenimiento y la organización del código.
+Permite el uso de caché del navegador para scripts estáticos.
+Desventajas:
+Requiere una llamada HTTP adicional (aunque puede ser mitigado por caché).
+Uso recomendado: Para proyectos más grandes y complejos donde el código JavaScript se reutiliza en múltiples páginas.
+
+
+
+
+
+
+d- Hacer otra página que tenga el mismo funcionamiento, pero que imprima por 
+pantalla el mensaje: “El browser no tiene habilitada la ejecución de código 
+javascript” si esto realmente es así.
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 2 - TP 1</title>
+</head>
+<body>
+    <script type="text/javascript">
+        document.write("Hola Mundo");
+    </script>
+    
+</body>
+</html>

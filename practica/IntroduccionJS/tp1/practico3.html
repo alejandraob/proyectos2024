@@ -1,0 +1,43 @@
+<!--
+Ejercicio 3: variables
+a- Hacer una página web con código javascript que inicialice una variable por cada 
+uno sus datos personales. Y luego las muestre en la página en el formato del 
+Ejercicio 1.
+b- Hacer una página web con código javascript que inicialice una variable array 
+con los valores de cada uno sus datos personales. Y luego las imprima en el 
+formato del Ejercicio 1.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio 3 - TP 1</title>
+    <script>
+        var nombre="Juan";
+        var apellido="Perez";
+        var edad=30;
+        var fechaNacimiento="01/01/1990";
+        var estadoCivil="Soltero";
+        var edad=44;
+        var dni=33333333;
+    
+        document.write("Variables con los Datos Personales: <br>");
+        document.write("Nombre: "+nombre+"<br>");
+        document.write("Apellido: "+apellido+"<br>");
+        document.write("Edad: "+edad+"<br>");
+        document.write("Fecha de Nacimiento: "+fechaNacimiento+"<br>");
+        document.write("Estado Civil: "+estadoCivil+"<br>");
+        document.write("DNI: "+dni+"<br>");
+
+        var datosPersonales = ["</br>  Nombre:"+nombre, "</br> Apellido:"+apellido, "</br> Edad:" +edad,"</br> Fecha Nacimeinto"+ fechaNacimiento, 
+       "</br> Estado Civil:"+ estadoCivil, "</br> DNI:"+ dni];
+        document.write("<br>Array con los datos personales: "+datosPersonales);
+
+    </script>
+
+</head>
+<body>
+    
+</body>
+</html>

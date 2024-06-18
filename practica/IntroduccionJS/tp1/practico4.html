@@ -1,0 +1,85 @@
+<!--
+Ejercicio 4: alert(), prompt(), confirm()
+a- Hacer una página web con código javascript que le pida al usuario sus datos 
+personales y luego los imprima en el formato del Ejercicio 1. Al finalizar debe 
+mostrar un cuadro de dialogo con el mensaje “Sus datos han sido impresos”. 
+b- Hacer una página web con código javascript que le pida al usuario dos números 
+y muestre en pantalla el resultado de la suma, resta, multiplicación y división.
+c- Modificar el ejercicio 4-a para que solicite una confirmación por parte del 
+usuario antes de mostrar su datos personales en la página
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio 4 - TP 1</title>
+</head>
+<body>
+    <script>
+        //Se declaran las variables y se utiliza el prompt para que el usuario ingrese sus datos personales
+        var nombre = prompt("Ingrese su nombre");
+        var apellido = prompt("Ingrese su apellido");
+        var edad = prompt("Ingrese su edad");
+        var fechaNacimiento = prompt("Ingrese su fecha de nacimiento");
+        var estadoCivil = prompt("Ingrese su estado civil");
+        var dni = prompt("Ingrese su DNI");
+
+        //Se crea un array con los datos personales
+        var datosPersonales = ["</br>  Nombre:"+nombre, "</br> Apellido:"+apellido, "</br> Edad:" +edad,"</br> Fecha Nacimeinto"+ fechaNacimiento, 
+        "</br> Estado Civil:"+ estadoCivil, "</br> DNI:"+ dni];
+        //Se muestra en pantalla los datos personales y se utiliza confirm para que el usuario confirme si desea imprimir sus datos personales
+        var confirmacion = confirm("¿Desea imprimir sus datos personales?");
+        //Si el usuario confirma se muestran los datos personales en pantalla y se muestra un alert con el mensaje "Sus datos han sido impresos"
+        if(confirmacion){
+            document.write("Datos Personales: <br>");
+            document.write("Nombre: "+nombre+"<br>");
+            document.write("Apellido: "+apellido+"<br>");
+            document.write("Edad: "+edad+"<br>");
+            document.write("Fecha de Nacimiento: "+fechaNacimiento+"<br>");
+            document.write("Estado Civil: "+estadoCivil+"<br>");
+            document.write("DNI: "+dni+"<br>");
+            alert("Sus datos han sido impresos");
+        }else{
+            alert("No se han impreso sus datos personales");
+        }
+    </script>
+</body>
+</html>
+<!--
+prompt()
+Descripción: Muestra un cuadro de diálogo con un mensaje y un campo de texto donde el usuario puede ingresar un valor.
+Sintaxis: prompt(mensaje, valorPorDefecto)
+mensaje: El texto que se muestra al usuario.
+valorPorDefecto: (Opcional) Un valor predefinido que aparecerá en el campo de texto.
+Uso: Se usa cuando necesitas obtener información del usuario.
+
+alert()
+Descripción: Muestra un cuadro de diálogo con un mensaje y un botón "Aceptar". No devuelve ningún valor.
+Sintaxis: alert(mensaje)
+mensaje: El texto que se muestra al usuario.
+Uso: Se usa para mostrar información al usuario o para notificarle de algo.
+
+confirm()
+Descripción: Muestra un cuadro de diálogo con un mensaje y dos botones: "Aceptar" y "Cancelar". Devuelve true si el usuario hace clic en "Aceptar" y false si hace clic en "Cancelar".
+Sintaxis: confirm(mensaje)
+mensaje: El texto que se muestra al usuario.
+Uso: Se usa para hacer preguntas de sí/no al usuario o para confirmar una acción.
+
+Diferencias y Usos
+prompt()
+
+Diferencia: Solicita al usuario que ingrese un valor.
+Uso: Cuando necesitas recopilar información del usuario, como su nombre, edad, etc.
+alert()
+
+Diferencia: Solo muestra un mensaje y no requiere ninguna acción del usuario más allá de cerrar el cuadro de diálogo.
+Uso: Para mostrar mensajes informativos o notificaciones que el usuario debe leer.
+`confirm()
+
+Diferencia: Pregunta al usuario una pregunta de sí/no y devuelve un valor booleano basado en su respuesta.
+Uso: Para confirmar acciones que pueden tener consecuencias importantes, como eliminar datos o salir de una página sin guardar cambios.
+
+
+-->
