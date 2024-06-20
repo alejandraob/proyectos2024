@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Parcial JS </title>
+  <link href="default.css" rel="stylesheet" type="text/css" />
+
+  <script>
+
+//Creamos arrays para guardar los numeros que van encontrando las jugadoras
+    const cantidadEncontradoLaura = [];
+    const cantidadEncontradoJorgelina = [];
+    const cantidadEncontradoAlejandra = [];
+
+    function numeroAletorio() {
+      //creamos una funcion para obtener un numero aleatorio
+      function getRandomInt(max) {
+        //Utilizamos random para conseguir el numero aletorio y lo mostratmos en pantalla en el div ultimaBolilla
+        return Math.floor(Math.random() * max);
+      }
+      //Ejecutamos la funcion del numero aleatorio en una variable asignandole el 99 como maximo
+      bolilla = getRandomInt(99);
+      //con esta forma cambiamos el valor del div ultimaBolilla por el numero aleatorio
+      document.getElementById("ultimaBolilla").innerHTML = bolilla;
+
+      //Obtenemos los numeros de las tiras de las jugadoras, usamos el children para obtener los elementos hijos que tienen los div declarados con las tiras-nombre de jugadora
+      var tiraLaura = document.getElementById("tira-laura").children;
+      var tiraJorgelina = document.getElementById("tira-jorgelina").children;
+      var tiraAlejandra = document.getElementById("tira-alejandra").children;
+
+
+
+      //Verificamos si el numero que salio se encuentra en algunas de las tiras, creando una variable ya establecida en false, en caso de encontrar el numero se cambia a true
+      var encontroLaura = false;
+      var encontroJorgelina = false;
+      var encontroAlejandra = false;
+
+      //Recorremos los div de las tiras de las jugadoras
+      //vamos compar el numero de la bolilla con el numero de la tira de la primera jugadora
+      for (var i = 0; i < tiraLaura.length; i++) {
+        if (tiraLaura[i].innerHTML == bolilla) {
+          if (!cantidadEncontradoLaura.includes(bolilla)) { //verificamos que en numero ya no lo habiamos encontrado antes para no repetirlo
+            cantidadEncontradoLaura.push(bolilla); //logramos insertar el numero encontrado que no se encontraba en nuestro array
+            tiraLaura[i].style.backgroundColor = "blue"; //pintamos la bolita del carton de un color que nos gusto!
+            encontroLaura = true; 
+            //Como debemos darle un fin al juego sino sera tedioso, comprobamos que la cantidad de los numeros que encontramos sean igual a 10 (que son los numeros en total de nuestra tira)
+            //si es así, deshabilitamos el boton de jugar y le ponemos otro color para entender que esto ya no va mas
+            if (cantidadEncontradoLaura.length === 10) {
+              document.getElementsByClassName("button")[0].disabled = true;
+              document.getElementsByClassName("button")[0].style.backgroundColor = "DimGray";
+            }
+          }
+        }
+      }
+//Se repite funcionales para las demas jugadoras
+      for (var i = 0; i < tiraJorgelina.length; i++) {
+        if (tiraJorgelina[i].innerHTML == bolilla) {
+          if (!cantidadEncontradoJorgelina.includes(bolilla)) {
+            cantidadEncontradoJorgelina.push(bolilla);
+            tiraJorgelina[i].style.backgroundColor = "yellow";
+            encontroJorgelina = true;
+            if (cantidadEncontradoLaura.length === 10) {
+            document.getElementsByClassName("button")[0].disabled = true;
+            document.getElementsByClassName("button")[0].style.backgroundColor = "DimGray";
+          }
+          }
+  
+        }
+      }
+    
+    for (var i = 0; i < tiraAlejandra.length; i++) {
+      if (tiraAlejandra[i].innerHTML == bolilla) {
+        if (!cantidadEncontradoAlejandra.includes(bolilla)) {
+          cantidadEncontradoAlejandra.push(bolilla);
+          tiraAlejandra[i].style.backgroundColor = "orange";
+          encontroAlejandra = true;
+          if (cantidadEncontradoLaura.length === 10) {
+            document.getElementsByClassName("button")[0].disabled = true;
+            document.getElementsByClassName("button")[0].style.backgroundColor = "DimGray";
+          }
+        }
+      }
+    }
+    //Verificamos quien va ganando en el bingo y vamos mostrando en pantalla, asignamos color y detalle a nuestro cartel
+    if (cantidadEncontradoLaura.length > cantidadEncontradoJorgelina.length && cantidadEncontradoLaura.length > cantidadEncontradoAlejandra.length) {
+      document.getElementById("vaGanando").style.backgroundColor = "green";
+      document.getElementById("vaGanando").style.borderStyle = "dotted";
+      document.getElementById("vaGanando").style.borderColor = "yellow";
+      document.getElementById("vaGanando").style.color = "white";
+      document.getElementById("vaGanando").innerHTML = "Gana Laura";
+    } else if (cantidadEncontradoJorgelina.length > cantidadEncontradoLaura.length && cantidadEncontradoJorgelina.length > cantidadEncontradoAlejandra.length) {
+      document.getElementById("vaGanando").style.backgroundColor = "green";
+      document.getElementById("vaGanando").style.borderStyle = "dotted";
+      document.getElementById("vaGanando").style.borderColor = "yellow";
+      document.getElementById("vaGanando").style.color = "white";
+      document.getElementById("vaGanando").innerHTML = "Gana Jorgelina";
+
+    } else if (cantidadEncontradoAlejandra.length > cantidadEncontradoLaura.length && cantidadEncontradoAlejandra.length > cantidadEncontradoJorgelina.length) {
+      document.getElementById("vaGanando").style.backgroundColor = "green";
+      document.getElementById("vaGanando").style.borderStyle = "dotted";
+      document.getElementById("vaGanando").style.borderColor = "yellow";
+      document.getElementById("vaGanando").style.color = "white";
+      document.getElementById("vaGanando").innerHTML = "Gana Alejandra";
+    }
+    else if (cantidadEncontradoLaura.length == cantidadEncontradoJorgelina.length && cantidadEncontradoLaura.length > cantidadEncontradoAlejandra.length) {
+      document.getElementById("vaGanando").style.backgroundColor = "green";
+      document.getElementById("vaGanando").style.borderStyle = "dotted";
+      document.getElementById("vaGanando").style.borderColor = "yellow";
+      document.getElementById("vaGanando").style.color = "white";
+      document.getElementById("vaGanando").innerHTML = "Ganan Laura y Jorgelina";
+    }
+    else if (cantidadEncontradoLaura.length == cantidadEncontradoAlejandra.length && cantidadEncontradoLaura.length > cantidadEncontradoJorgelina.length) {
+      document.getElementById("vaGanando").style.backgroundColor = "green";
+      document.getElementById("vaGanando").style.borderStyle = "dotted";
+      document.getElementById("vaGanando").style.borderColor = "yellow";
+      document.getElementById("vaGanando").style.color = "white";
+      document.getElementById("vaGanando").innerHTML = "Ganan Laura y Alejandra";
+    }
+    else if (cantidadEncontradoJorgelina.length == cantidadEncontradoAlejandra.length && cantidadEncontradoJorgelina.length > cantidadEncontradoLaura.length) {
+      document.getElementById("vaGanando").style.backgroundColor = "green";
+      document.getElementById("vaGanando").style.borderStyle = "dotted";
+      document.getElementById("vaGanando").style.borderColor = "yellow";
+      document.getElementById("vaGanando").style.color = "white";
+      document.getElementById("vaGanando").innerHTML = "Ganan Jorgelina y Alejandra";
+    }else{
+      document.getElementById("vaGanando").style.backgroundColor = "lightgreen";
+      document.getElementById("vaGanando").style.borderStyle = "dotted";
+      document.getElementById("vaGanando").style.borderColor = "yellow";
+      document.getElementById("vaGanando").style.color = "black";
+      document.getElementById("vaGanando").innerHTML = "Empate";
+    }
+      
+    }
+  </script>
+
+
+</head>
+
+<body>
+  <div id="header">
+    <div id="logo" style="margin-left: 15px">
+      <h1><a href="#">Programación Estática y Laboratorio Web</a></h1>
+      <h2><a href="#">Recuperatorio JS Ejercicio 1</a></h2>
+    </div>
+  </div>
+  <div id="menu">
+    <ul>
+      <li><a href="Ej1_Consigna.html">Consigna</a></li>
+      <li><a href="Ej1_Resolucion.html">HOJA Ejercicio</a></li>
+    </ul>
+  </div>
+  <div id="content;width: 100%;">
+
+    <table style="width: 60%;margin: auto;">
+      <tr>
+        <td>
+          <div style="text-align: center;">
+            <br><br>
+            <div class="square" id="ultimaBolilla">0</div>
+
+            <br />
+            <button class="button" onclick="numeroAletorio()">Jugar</button>
+
+          </div>
+          <br />
+          <div id="vaGanando"
+            style="font-size: 48px;background-color: lightgreen; border: 1px solid black;padding: 10px;text-align: center;">
+            Empate
+          </div>
+          <br /><br />
+        </td>
+
+
+        <td>
+
+          <div class="tira-container">
+            <div class="titulo">Bingo Laura</div>
+            <div class="tira-numeros" id="tira-laura">
+              <div class="cuadrado">07</div>
+              <div class="cuadrado">22</div>
+              <div class="cuadrado">35</div>
+              <div class="cuadrado">49</div>
+              <div class="cuadrado">58</div>
+              <div class="cuadrado">63</div>
+              <div class="cuadrado">71</div>
+              <div class="cuadrado">85</div>
+              <div class="cuadrado">89</div>
+              <div class="cuadrado">91</div>
+            </div>
+          </div>
+
+          <div class="tira-container">
+            <div class="titulo">Bingo Jorgelina</div>
+            <div class="tira-numeros" id="tira-jorgelina">
+              <div class="cuadrado">05</div>
+              <div class="cuadrado">18</div>
+              <div class="cuadrado">27</div>
+              <div class="cuadrado">35</div>
+              <div class="cuadrado">44</div>
+              <div class="cuadrado">52</div>
+              <div class="cuadrado">69</div>
+              <div class="cuadrado">78</div>
+              <div class="cuadrado">85</div>
+              <div class="cuadrado">91</div>
+            </div>
+          </div>
+
+          <div class="tira-container">
+            <div class="titulo">Bingo Alejandra</div>
+            <div class="tira-numeros" id="tira-alejandra">
+              <div class="cuadrado">02</div>
+              <div class="cuadrado">13</div>
+              <div class="cuadrado">24</div>
+              <div class="cuadrado">39</div>
+              <div class="cuadrado">49</div>
+              <div class="cuadrado">57</div>
+              <div class="cuadrado">66</div>
+              <div class="cuadrado">78</div>
+              <div class="cuadrado">89</div>
+              <div class="cuadrado">91</div>
+            </div>
+          </div>
+
+
+
+        </td>
+      </tr>
+    </table>
+
+
+
+
+  </div>
+  <div id="footer" style="margin-top: 240px;">
+    <p id="legal">Copyright &copy; AtomoHost. All Rights Reserved.
+      Designed by <a href="http://www.freecsstemplates.org/">Free CSS
+        Templates</a>.</p>
+    <p id="links"><a href="#">Privacy Policy</a> | <a href="#">Terms
+        of Use</a></p>
+  </div>
+  <br />
+  <br />
+</body>
+
+</html>
