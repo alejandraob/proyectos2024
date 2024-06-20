@@ -1,5 +1,3 @@
-
-
 /*DECLARAMOS NUESTRAS VARIABLES PARA PODER CREAR LAS FUNCIONES NECESARIAS PARA LAS ACCIONES DE NUESTRO MENU */
 ///ACCION PARA ABRIR Y CERRAR MENU DE MI CUENTA
 const miCuenta=document.querySelector('.miCuenta');
@@ -12,18 +10,11 @@ const menuCarritoIcon = document.querySelector('.nav-compra-carrito');
 const asideCarrito = document.querySelector('.producto-detail');
 const cartCount = document.getElementById('cart-count'); // Contador del carrito
 
-//Cerrar el detelle del producto
-//const infoProducto = document.querySelector('.product-detailInfo');
-//const closeProductDetailAsideButton = document.querySelector('.product-detailInfo-close');
-
 
 /*Eventos*/
 miCuenta.addEventListener('click', toogleMenuCuenta);
 menuHamIcon.addEventListener('click',toogleMenuDesplegable);
 menuCarritoIcon.addEventListener('click', toggleCarritoMenu);
-
-
-
 
 
 /*Funciones*/
@@ -228,5 +219,3 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
-
-

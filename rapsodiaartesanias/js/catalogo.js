@@ -1,7 +1,6 @@
 
-
+/////Ponemos aqui lo del catalogo porque me esta doliendo un ov.... y la mitad del otro, no funcion al huevada cuando todo estaba ok
 const cardsContainer = document.querySelector('.cards-container');
-
 
 //////Array + objeto para construir el producto
 const productList = [];
@@ -156,8 +155,6 @@ for (product of productList) {
     const productStock = document.createElement('span');
     productStock.innerText = 'Stock: ' + product.stock;
 
-
-
     productInfoDiv.appendChild(productPrice);
     productInfoDiv.appendChild(productNAme);
     productInfoDiv.appendChild(productStock);
@@ -174,14 +171,6 @@ for (product of productList) {
         productImgCard.style.display = 'none'; // Oculta el botón cuando no hay stock
     }
 
-
-    // Agregamos un evento de clic al botón de agregar al carrito
-    /*productImgCard.addEventListener('click', () => {
-        // Aquí puedes agregar la lógica para añadir el producto al carrito
-        // Por ejemplo: addToCart(product);
-        addToCart(product.name,product.price,product.image);
-        alert('Producto agregado al carrito: ' + product.name);
-    });*/
 
     // Usamos una función de fábrica para capturar el producto actual en el bucle
     (function(product) {
@@ -275,9 +264,9 @@ function openProductDetailAside(productName) {
 
 
 } 
-
 function productDetailAsideClose() {
     const aside = document.querySelector('#aside');
-    aside.style.display = 'none';
+    if (aside) {
+        aside.style.display = 'none';
+    }
 }
-
