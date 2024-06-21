@@ -36,7 +36,7 @@ productList.push(
         name: 'Bolso p/Asado',
         price: 25000,
         image: 'img/bolso_asado1.jpg',
-        stock: 0,
+        stock: 1,
         detalle:'Bolso de cuero para transportar utensillos de asado, con compartimentos'
     });
 

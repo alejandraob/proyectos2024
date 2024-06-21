@@ -60,16 +60,22 @@ const productListCarrito = [
         name: 'Cartera Tejida',
         price: 35000,
         image: 'img/cartera1.jpg',
+        stock: 3,
+        detalle:'Cartera de cuero y tejiada a mano con diseño personalizado'
     },
     {
         name: 'Libreta',
         price: 1500,
         image: 'img/libreta1.jpg',
+        stock: 3,
+        detalle:'Libreta de cuero con diseño personalizado y pintado a mano'
     },
     {
         name: 'Bolso p/Asado',
         price: 25000,
         image: 'img/bolso_asado1.jpg',
+        stock: 1,
+        detalle:'Bolso de cuero para transportar utensillos de asado, con compartimentos'
     }
 ];
 
@@ -141,6 +147,7 @@ function updateCar() {
     const checkoutButton = document.createElement('button');
     checkoutButton.classList.add('btncarrito');
     checkoutButton.textContent = 'Finalizar Compra';
+    checkoutButton.addEventListener('click', openModalFinalCompra);
 
     orderContent.appendChild(checkoutButton);
 
@@ -180,12 +187,14 @@ function removeFromCart(productName) {
         
         productListCarrito.splice(index, 1); // Remueve el producto del array
         updateCar(); // Actualiza la vista del carrito
+        poblarModal(); // Actualiza la vista del modal
     }
 }
 
 // Crear la lista inicial del carrito
 function creatListCarrito() {
     updateCar();
+    poblarModal(); 
 }
 
 // Inicializar la lista del carrito cuando se cargue la página
@@ -201,7 +210,7 @@ document.getElementById('editLink').addEventListener('click', function (e) {
 
 
 
-//////Modal
+//////Modal vista de vompra realizadas
 // Función para abrir el modal
 function openModal() {
     document.getElementById("orderModal").style.display = "block";
@@ -215,6 +224,143 @@ function closeModal() {
 // Cerrar el modal si el usuario hace clic fuera del modal
 window.onclick = function(event) {
     const modal = document.getElementById("orderModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+/////////////////////////////////////////Modal de finalizar compra
+
+function crearElementoProducto(producto) {
+    const contenedorProducto = document.createElement('div');
+    contenedorProducto.classList.add('product-container');
+
+    const imagenProducto = document.createElement('img');
+    imagenProducto.src = producto.image;
+    imagenProducto.alt = producto.name;
+    contenedorProducto.appendChild(imagenProducto);
+
+    const descripcionProducto = document.createElement('div');
+    descripcionProducto.classList.add('product-description');
+    descripcionProducto.innerText = producto.name;
+    contenedorProducto.appendChild(descripcionProducto);
+
+    const stockProducto = document.createElement('div');
+    stockProducto.classList.add('product-stock');
+    stockProducto.innerText = `Stock: ${producto.stock}`;
+    contenedorProducto.appendChild(stockProducto);
+
+    const contenedorCantidad = document.createElement('div');
+    contenedorCantidad.classList.add('quantity-container');
+
+    const inputCantidad = document.createElement('input');
+    inputCantidad.type = 'number';
+    inputCantidad.value = 1;
+    inputCantidad.min = 1;
+    inputCantidad.max = producto.stock;
+    contenedorCantidad.appendChild(inputCantidad);
+
+    const botonAgregar = document.createElement('button');
+    botonAgregar.innerText = '+';
+    contenedorCantidad.appendChild(botonAgregar);
+
+    // Evento para aumentar la cantidad del producto considerando el stock
+    botonAgregar.addEventListener('click', () => {
+        const cantidadActual = parseInt(inputCantidad.value);
+        if (cantidadActual < producto.stock) {
+            inputCantidad.value = cantidadActual + 1;
+        } else {
+            alert('No puedes agregar más de este producto. Stock limitado.');
+        }
+    });
+
+    contenedorProducto.appendChild(contenedorCantidad);
+
+    const precioProducto = document.createElement('div');
+    precioProducto.classList.add('product-price');
+    precioProducto.innerText = `$${producto.price}`;
+    contenedorProducto.appendChild(precioProducto);
+
+    const divBtnDelete=document.createElement('div');
+    const botonEliminar = document.createElement('img');
+    botonEliminar.classList.add('delete-button');
+    botonEliminar.src = 'img/icons/eliminar.png';
+    divBtnDelete.appendChild(botonEliminar);
+
+    // Agrega el divBtnDelete al contenedorProducto antes de agregar el evento
+    contenedorProducto.appendChild(divBtnDelete);
+
+    // Agregar evento de clic después de asegurarse de que el botón está en el DOM
+    botonEliminar.addEventListener('click', () => {
+        console.log(`Intentando eliminar: ${producto.name}`);
+        removeFromCart(producto.name);
+    });
+
+    return contenedorProducto;
+}
+
+function poblarModal() {
+    const contenedorProductosModal = document.querySelector('.contendor-productos-Modal');
+    contenedorProductosModal.innerHTML = '';
+
+    productListCarrito.forEach(producto => {
+        const elementoProducto = crearElementoProducto(producto);
+        contenedorProductosModal.appendChild(elementoProducto);
+    });
+
+    const contenedorAcciones = document.querySelector('.contenedor-btn-finalizar-Compra');
+    contenedorAcciones.innerHTML = '';
+
+    const botonContinuar = document.createElement('button');
+    botonContinuar.classList.add('btncontinuarCompra');
+    botonContinuar.innerText = 'Continuar Compra';
+    contenedorAcciones.appendChild(botonContinuar);
+
+    const botonCancelar = document.createElement('button');
+    botonCancelar.classList.add('btndeleteCompra');
+    botonCancelar.innerText = 'Cancelar Compra';
+    botonCancelar.addEventListener('click', limpiarCarrito); // Añadir evento para cerrar el modal
+    contenedorAcciones.appendChild(botonCancelar);
+}
+
+
+//Limpiar el carrito por completo al cancelar la compra
+function limpiarCarrito() {
+    productListCarrito.forEach(producto => {
+        const productoEnCatalogo = productList.find(product => product.name === producto.name);
+        if (productoEnCatalogo) {
+            productoEnCatalogo.stock += producto.stock;
+        }
+    });
+
+    productListCarrito.length = 0;
+    updateCar();
+    poblarModal(); 
+    closeModalFinalCompra();
+}
+
+// Función para abrir el modal
+function openModalFinalCompra() {
+    poblarModal();
+    const modal = document.getElementById("finalCompraModal");
+    if (modal) {
+        modal.style.display = "block";
+    } else {
+        console.error("Modal no encontrado en el DOM");
+    }
+}
+
+function closeModalFinalCompra() {
+    const modal = document.getElementById("finalCompraModal");
+    if (modal) {
+        modal.style.display = "none";
+    } else {
+        console.error("Modal no encontrado en el DOM");
+    }
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("finalCompraModal");
     if (event.target == modal) {
         modal.style.display = "none";
     }
