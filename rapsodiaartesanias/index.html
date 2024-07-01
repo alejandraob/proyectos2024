@@ -157,10 +157,7 @@
                 </div>
                 <p>Disponemos varios medios de pagos</p>
             </section>
-        </div>
-    
-
-        
+        </div>        
     </main>
 
 
@@ -168,6 +165,7 @@
         <p>Rapsodia Artesanias</p>
     </footer> 
     <script src="js/scriptsMenu.js"></script>
+
     <!--Vamos a crear un mobile para finalizar nustra compra-->
     <div class="mobileCompra" id="finalCompraModal">
         <div class="contenedor-grl-pModal">
@@ -176,10 +174,9 @@
         </div>
     </div>
 
-<div class="confirmarCompra" id="confirmarCompra">
+<div class="confirmarCompra mobileCompra inactive" id="confirmarCompra">
     <div class="contenedor dos-columnas">
-
-        <form class="formulario__edit-Usuario" id="formEditUsuario">
+        <form class="formulario__edit-Usuario" id="formConfirmarCompra">
             <div class="campo">
                 <label class="campo__label" for="nombre">Nombre</label>
                 <input type="text" id="nombre" placeholder="Tu nombre" class="campo__field" required>
@@ -226,22 +223,71 @@
                 <textarea id="mensaje" class="campo__field campo__field--textarea"></textarea>
             </div>
             <div class="campo">
-                <input type="submit" value="Confirmar Compra" id="btnEditar" class="btn-form boton-secundario">
-                <input type="submit" value="Cancelar" class="btn-form btndelete boton-secundario" >
-            
-            </div>
+                <input type="button" value="Confirmar Compra" onclick="openCartelConfirmacion()" id="btnConfirmar" class="btncontinuarCompra boton-secundario">
+                <input type="button" value="Cancelar" onclick="cerrarModalConfirmarCompra()" class="btn-form btndelete boton-secundario"> </div>
         </form>
         <aside class="producto-confirmado">
             <div class="title-contenido">
               <p class="title">Resumen de Mi compra</p>
             </div>
-            <div class="mi-orden-contenido-confirmado"></div>
+            <div class="mi-orden-contenido-confirmado">
+                <div class="my-order-content">
+
+              
+                    <div class="shopping-cart">
+                      <figure>
+                        <img src="img/cartera1.jpg" alt="cartera">
+                      </figure>
+                      <p>Cartera Tejida</p>
+                      <p>$35000,00</p>
+                      
+                    </div>
+              
+                    <div class="shopping-cart">
+                      <figure>
+                        <img src="img/libreta1.jpg" alt="libreta">
+                      </figure>
+                      <p>Libreta</p>
+                      <p>$1500,00</p>
+                      
+                    </div>
+                    <div class="shopping-cart">
+                        <figure>
+                          <img src="img/bolso_asado1.jpg" alt="bolso">
+                        
+                        </figure>
+                        <p>Bolso p/Asado</p>
+                        <p>$25000,00</p>
+                        
+                      </div>
+              
+                    <div class="order">
+                      <p>
+                        <span>Total</span>
+                      </p>
+                      <p>$61500.00</p>
+                    </div>
+
+                  </div>
             </div>
-          </aside>
+            
+        </aside>
     </div>
 </div>
 
-
+<div id="confirmationModal"  class="mobileCompra-Mensaje">
+    <div class="modal-content-Mensaje">
+        <div class="modal-btn-cerrar" onclick="closeCartelConfirmacion()">
+            <img src="img/icons/close.png">
+        </div>
+      <h1 class="title">En su mail recibirá el detalle de su compra</h1>
+      <p class="subtitle">Gracias por elegirnos</p>
+      <div class="email-image">
+    
+      <img src="img/icons/send.png" alt="Detalle de compra">
+      </div>
+    </div>
+</div>
   
 
     <script>
@@ -258,17 +304,25 @@
                 pais: "Argentina",
             }
         ];
-
-
-
+        document.addEventListener('DOMContentLoaded', function () {
+            const usuarioGuardado = JSON.parse(sessionStorage.getItem('usuario'));
+            if (usuarioGuardado) {
+                document.getElementById('nombre').value = usuarioGuardado.nombre;
+                document.getElementById('email').value = usuarioGuardado.email;
+                document.getElementById('pass').value = usuarioGuardado.password;
+                document.getElementById('telefono').value = usuarioGuardado.telefono;
+                document.getElementById('direccion').value = usuarioGuardado.direccion;
+                document.getElementById('piso').value = usuarioGuardado.piso;
+                document.getElementById('cp').value = usuarioGuardado.cp;
+                document.getElementById('provincia').value = usuarioGuardado.provincia;
+            }
+        });
         document.getElementById('editLink').addEventListener('click', function (e) {
             e.preventDefault();
             sessionStorage.setItem('usuario', JSON.stringify(usuario[0]));
             window.location.href = 'edit_usuario.html';
         });
-    </script>
-
-   
+    </script>   
     <script src="js/contacto.js"></script>
     <script src="js/newUser.js"></script>
     <script src="js/catalogo.js"></script>

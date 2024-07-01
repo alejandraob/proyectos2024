@@ -1,10 +1,10 @@
 /*DECLARAMOS NUESTRAS VARIABLES PARA PODER CREAR LAS FUNCIONES NECESARIAS PARA LAS ACCIONES DE NUESTRO MENU */
 ///ACCION PARA ABRIR Y CERRAR MENU DE MI CUENTA
-const miCuenta=document.querySelector('.miCuenta');
-const menuCuenta=document.querySelector('.menu-cuenta');
+const miCuenta = document.querySelector('.miCuenta');
+const menuCuenta = document.querySelector('.menu-cuenta');
 ///ACCION PARA ABRIR Y CERRAR MENU cuando la pantalla es muy chica
 const menuHamIcon = document.querySelector('.menu');
-const menuDesplegable=document.querySelector('.menu-chico');
+const menuDesplegable = document.querySelector('.menu-chico');
 ////Menu carrito
 const menuCarritoIcon = document.querySelector('.nav-compra-carrito');
 const asideCarrito = document.querySelector('.producto-detail');
@@ -13,24 +13,24 @@ const cartCount = document.getElementById('cart-count'); // Contador del carrito
 
 /*Eventos*/
 miCuenta.addEventListener('click', toogleMenuCuenta);
-menuHamIcon.addEventListener('click',toogleMenuDesplegable);
+menuHamIcon.addEventListener('click', toogleMenuDesplegable);
 menuCarritoIcon.addEventListener('click', toggleCarritoMenu);
 
 
 /*Funciones*/
-function toogleMenuCuenta(){
+function toogleMenuCuenta() {
 
     const isCarritoMenuClosed = asideCarrito.classList.contains('inactive');
-    if(!isCarritoMenuClosed){
+    if (!isCarritoMenuClosed) {
         asideCarrito.classList.add('inactive')
     }
-   productDetailAsideClose();
+    productDetailAsideClose();
     menuCuenta.classList.toggle('inactive');
 }
 
-function toogleMenuDesplegable(){
+function toogleMenuDesplegable() {
     const isCarritoMenuClosed = asideCarrito.classList.contains('inactive');
-    if(!isCarritoMenuClosed){
+    if (!isCarritoMenuClosed) {
         asideCarrito.classList.add('inactive')
     }
     productDetailAsideClose();
@@ -54,33 +54,33 @@ function toggleCarritoMenu() {
 }
 
 
-
 const productListCarrito = [
     {
         name: 'Cartera Tejida',
         price: 35000,
         image: 'img/cartera1.jpg',
         stock: 3,
-        detalle:'Cartera de cuero y tejiada a mano con diseño personalizado'
+        detalle: 'Cartera de cuero y tejiada a mano con diseño personalizado'
     },
     {
         name: 'Libreta',
         price: 1500,
         image: 'img/libreta1.jpg',
         stock: 3,
-        detalle:'Libreta de cuero con diseño personalizado y pintado a mano'
+        detalle: 'Libreta de cuero con diseño personalizado y pintado a mano'
     },
     {
         name: 'Bolso p/Asado',
         price: 25000,
         image: 'img/bolso_asado1.jpg',
         stock: 1,
-        detalle:'Bolso de cuero para transportar utensillos de asado, con compartimentos'
+        detalle: 'Bolso de cuero para transportar utensillos de asado, con compartimentos'
     }
 ];
 
 // Seleccionar el contenedor del detalle de la orden
 const orderContent = document.querySelector('.mi-orden-contenido');
+//const orderContentenidoConfirmado = document.querySelector('.mi-orden-contenido-confirmado');
 
 function createCartItem(product) {
     // Crear un elemento para cada producto
@@ -121,6 +121,7 @@ function createCartItem(product) {
 function updateCar() {
     // Limpiar contenido existente dentro del contenedor
     orderContent.innerHTML = '';
+    //  orderContentenidoConfirmado.innerHTML= '';
 
     // Iterar sobre cada producto en el array y agregarlo al contenedor
     productListCarrito.forEach(product => {
@@ -153,6 +154,7 @@ function updateCar() {
 
     // Actualizar contador del carrito
     cartCount.textContent = productListCarrito.length;
+
 }
 
 function addToCart(prodNombre, prodPrice, prodImg) {
@@ -176,7 +178,7 @@ function addToCart(prodNombre, prodPrice, prodImg) {
 function removeFromCart(productName) {
     // Encuentra el índice del producto en el carrito
     const index = productListCarrito.findIndex(item => item.name === productName);
-    
+
     // Si el producto está en el carrito, remuévelo
     if (index !== -1) {
         // Incrementar el stock del producto eliminado del carrito
@@ -184,7 +186,7 @@ function removeFromCart(productName) {
         if (removedProduct) {
             removedProduct.stock++;
         }
-        
+
         productListCarrito.splice(index, 1); // Remueve el producto del array
         updateCar(); // Actualiza la vista del carrito
         poblarModal(); // Actualiza la vista del modal
@@ -194,7 +196,7 @@ function removeFromCart(productName) {
 // Crear la lista inicial del carrito
 function creatListCarrito() {
     updateCar();
-    poblarModal(); 
+    poblarModal();
 }
 
 // Inicializar la lista del carrito cuando se cargue la página
@@ -222,7 +224,7 @@ function closeModal() {
 }
 
 // Cerrar el modal si el usuario hace clic fuera del modal
-window.onclick = function(event) {
+window.onclick = function (event) {
     const modal = document.getElementById("orderModal");
     if (event.target == modal) {
         modal.style.display = "none";
@@ -281,7 +283,7 @@ function crearElementoProducto(producto) {
     precioProducto.innerText = `$${producto.price}`;
     contenedorProducto.appendChild(precioProducto);
 
-    const divBtnDelete=document.createElement('div');
+    const divBtnDelete = document.createElement('div');
     const botonEliminar = document.createElement('img');
     botonEliminar.classList.add('delete-button');
     botonEliminar.src = 'img/icons/eliminar.png';
@@ -316,6 +318,10 @@ function poblarModal() {
     botonContinuar.innerText = 'Continuar Compra';
     contenedorAcciones.appendChild(botonContinuar);
 
+    //evento para levantarl el modal confirmarCompra
+    botonContinuar.addEventListener('click', abrirModalConfirmarCompra);
+
+
     const botonCancelar = document.createElement('button');
     botonCancelar.classList.add('btndeleteCompra');
     botonCancelar.innerText = 'Cancelar Compra';
@@ -335,7 +341,7 @@ function limpiarCarrito() {
 
     productListCarrito.length = 0;
     updateCar();
-    poblarModal(); 
+    poblarModal();
     closeModalFinalCompra();
 }
 
@@ -345,6 +351,8 @@ function openModalFinalCompra() {
     const modal = document.getElementById("finalCompraModal");
     if (modal) {
         modal.style.display = "block";
+        asideCarrito.classList.toggle('inactive');
+       // menuCuenta.classList.toggle('inactive');
     } else {
         console.error("Modal no encontrado en el DOM");
     }
@@ -359,9 +367,49 @@ function closeModalFinalCompra() {
     }
 }
 
-window.onclick = function(event) {
+window.onclick = function (event) {
     const modal = document.getElementById("finalCompraModal");
     if (event.target == modal) {
         modal.style.display = "none";
     }
 }
+/////////////////////////////////////confirmacion de la cosa esta
+function abrirModalConfirmarCompra() {
+    const modal = document.getElementById("confirmarCompra");
+    if (modal) {
+        modal.style.display = "block";
+        closeModalFinalCompra();
+    } else {
+        console.error("Modal no encontrado en el DOM");
+    }
+}
+function cerrarModalConfirmarCompra() {
+    const modal = document.getElementById("confirmarCompra");
+    if (modal) {
+        modal.style.display = "none";
+    } else {
+        console.error("Modal no encontrado en el DOM");
+    }
+}
+
+
+function openCartelConfirmacion() {
+    const cartelFinal = document.getElementById('confirmationModal');
+    if (cartelFinal) {
+        cartelFinal.style.display = 'block';
+        cerrarModalConfirmarCompra();
+        limpiarCarrito();
+    } else {
+        console.error("Modal no encontrado en el DOM");
+    }
+}
+function closeCartelConfirmacion() {
+    const cartelFinal = document.getElementById('confirmationModal');
+    if (cartelFinal) {
+        cartelFinal.style.display = 'none';
+        
+    } else {
+        console.error("Modal no encontrado en el DOM");
+    }
+}
+

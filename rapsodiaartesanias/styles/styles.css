@@ -945,12 +945,13 @@ margin-top: 0.5rem; /* Espacio entre el input y el mensaje de error */
   padding: 10px;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
+ 
 }
 
 .btncontinuarCompra, .btndeleteCompra{
   font-weight: bold;
   color: var(--white);
+  cursor: pointer;
 }
 .btncontinuarCompra {
   background-color: var(--emerald);
@@ -959,10 +960,45 @@ margin-top: 0.5rem; /* Espacio entre el input y el mensaje de error */
   background-color: var(--bright-pink-crayola);
 }
 
+.mobileCompra-Mensaje{
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width:75rem;
+  
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
+.email-image{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.email-image img{
+  width: 150px;
+  height: 150px;
+}
+.modal-btn-cerrar{
+  cursor: pointer;
+  position: absolute;
+  right: 38px;
+  top: 28px;
+}
 
-
-
+.modal-content-Mensaje{
+  background-color: #fefefe;
+    margin: 8% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    height: 30rem;
+}
 
 
 
