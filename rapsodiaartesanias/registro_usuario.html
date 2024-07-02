@@ -291,22 +291,13 @@
       </div>
     </div>
 </div>
-  
+   
+    <script src="js/contacto.js"></script>
+    <script src="js/newUser.js"></script>
+    <script src="js/catalogo.js"></script>
+
 
     <script>
-        const usuario = [
-            {
-                nombre: "Juan Perez",
-                email: "jperez@gmail.com",
-                password: "123456",
-                telefono: "1234567890",
-                direccion: "Calle Falsa 123",
-                piso: "",
-                cp: "1234",
-                provincia: "Springfield",
-                pais: "Argentina",
-            }
-        ];
         document.addEventListener('DOMContentLoaded', function () {
             const usuarioGuardado = JSON.parse(sessionStorage.getItem('usuario'));
             if (usuarioGuardado) {
@@ -325,11 +316,7 @@
             sessionStorage.setItem('usuario', JSON.stringify(usuario[0]));
             window.location.href = 'edit_usuario.html';
         });
-    </script>   
-    <script src="js/contacto.js"></script>
-    <script src="js/newUser.js"></script>
-    <script src="js/catalogo.js"></script>
-
+    </script>  
 
 </body>
 

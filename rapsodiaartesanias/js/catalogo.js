@@ -1,8 +1,10 @@
+const productList = [];
+function crearCardsContainer(){
 /////Ponemos aqui lo del catalogo porque me esta doliendo un ov.... y la mitad del otro, no funcion al huevada cuando todo estaba ok
-const cardsContainer = document.querySelector(".cards-container");
+var cardsContainer = document.querySelector(".cards-container");
 
 //////Array + objeto para construir el producto
-const productList = [];
+
 productList.push({
     name: "Adorno",
     price: 1500,
@@ -165,7 +167,7 @@ for (product of productList) {
     productCard.appendChild(productInfo);
     cardsContainer.appendChild(productCard);
 }
-
+}
 //Funcion para generar el detalle del producto, debemos crear un aside con la informacion del producto, por suerte ya tenemos en nuestra variable todos los datos necesarios
 function openProductDetailAside(productName) {
     const product = productList.find((p) => p.name === productName);
@@ -213,7 +215,7 @@ function openProductDetailAside(productName) {
     btnAdd.innerText = "Agregar al carrito";
     //agregamos un evento de clic al boton
     btnAdd.addEventListener("click", () =>
-        addToCart(product.name, product.price, product.image)
+        addToCart(product.name, product.price, product.image, product.stock)
     );
     //Nos falta agregar la clase al div
     divInfo.classList.add("product-infoDetail");

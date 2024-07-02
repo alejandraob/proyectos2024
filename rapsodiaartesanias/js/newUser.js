@@ -1,22 +1,29 @@
-const usuario = [
-    {
-        nombre: "Juan Perez",
-        email: "jperez@gmail.com",
-        password: "123456",
-        telefono: "1234567890",
-        direccion: "Calle Falsa 123",
-        piso: "",
-        cp: "1234",
-        provincia: "Springfield",
-        pais: "Argentina",
-    }
-];
-
 var correosRegistrados = ['jperez@gmail.com', 'usuario1@mail.com', 'usuario2@mail.com'];
-//
+
+function inicializarCuenta() {
+    var usuarios = localStorage.getItem('usuarios');
+    if (!usuarios) {
+        localStorage.setItem('usuarios', JSON.stringify([{
+            nombre: "Juan Perez",
+            email: "jperez@gmail.com",
+            password: "123456",
+            telefono: "1234567890",
+            direccion: "Calle Falsa 123",
+            piso: "",
+            cp: "1234",
+            provincia: "Springfield",
+            pais: "Argentina",
+        }]));
+    }
+    // Aseguramos que usuarioActual esté bien definido
+    if (!localStorage.getItem('usuarioActual')) {
+        localStorage.setItem('usuarioActual', JSON.stringify({}));
+    }
+}
+
 function rellenarFormulario() {
-    const usuario = JSON.parse(sessionStorage.getItem('usuario'));
-    if (usuario) {
+    const usuario = JSON.parse(localStorage.getItem('usuarioActual'));
+    if (usuario && usuario.email) {
         document.getElementById("nombre").value = usuario.nombre;
         document.getElementById("email").value = usuario.email;
         document.getElementById("pass").value = usuario.password;
@@ -30,7 +37,7 @@ function rellenarFormulario() {
 }
 
 function editarCuenta(event) {
-    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+    event.preventDefault();
 
     var nombre = document.getElementById("nombre").value;
     var email = document.getElementById("email").value;
@@ -53,33 +60,54 @@ function editarCuenta(event) {
         provincia: provincia,
         pais: pais
     };
-
-    // Actualizar los datos del usuario en el array (si es necesario)
-    sessionStorage.setItem('usuario', JSON.stringify(usuarioEditado));
+    var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    usuarios = usuarios.map(u => u.email === email ? usuarioEditado : u);
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    localStorage.setItem('usuarioActual', JSON.stringify(usuarioEditado));
 
     console.log("Usuario actualizado:", usuarioEditado);
+    alert('Usuario actualizado correctamente');
 }
 
 function eliminarCuenta(event) {
-    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+    event.preventDefault();
 
     var email = document.getElementById("email").value;
-    var index = correosRegistrados.indexOf(email);
-    if (index > -1) {
-        correosRegistrados.splice(index, 1);
-        console.log("Usuario eliminado:", email);
+    var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    usuarios = usuarios.filter(user => user.email !== email);
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    localStorage.removeItem('usuarioActual');
+
+    console.log("Usuario eliminado:", email);
+    alert('Usuario eliminado correctamente');
+    window.location.href = "login.html";
+}
+
+function ingresarCuenta(event) {
+    event.preventDefault();
+    var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("pass").value;
+    var usuarioEncontrado = usuarios.find(user => user.email === email && user.password === password);
+    var errorMessage = document.querySelector('.error-message');
+
+    if (usuarioEncontrado) {
+        console.log("Usuario encontrado:", usuarioEncontrado);
+        localStorage.setItem('usuarioActual', JSON.stringify(usuarioEncontrado));
+        window.location.href = "index.html";
+    } else {
+        console.error("Usuario o contraseña incorrectos");
+        errorMessage.textContent = "Usuario o contraseña incorrectos";
+        errorMessage.style.display = 'block';
     }
 }
 
-/////////
 function newUser() {
     if (verificarDatosIngresados()) {
-        var email = document.getElementById("email").value;
+        const email = document.getElementById("email").value;
 
-        // Verificar si el correo ya está registrado
         verificarEmailRepetido(email)
             .then(() => {
-                // Si el correo no está repetido, crear el nuevo usuario
                 var nombre = document.getElementById("nombre").value;
                 var password = document.getElementById("pass").value;
                 var telefono = document.getElementById("telefono").value;
@@ -100,10 +128,14 @@ function newUser() {
                     provincia: provincia,
                     pais: pais
                 };
-                usuario.push(newUser);
-                alert("Usuario creado correctamente");
+
+                var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+                usuarios.push(newUser);
+                localStorage.setItem('usuarios', JSON.stringify(usuarios));
                 console.log("Nuevo usuario añadido:", newUser);
-                limpiarFormulario();
+
+                alert('Usuario Creado');
+                window.location.href = "login.html";
             })
             .catch((error) => {
                 mostrarError(document.getElementById("email"), error);
@@ -111,15 +143,13 @@ function newUser() {
     }
 }
 
-
-
 function verificarEmailRepetido(email) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            if (correosRegistrados.includes(email)) {
+            var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+            if (usuarios.some(user => user.email === email)) {
                 reject('El correo electrónico ya está registrado.');
             } else {
-                correosRegistrados.push(email); // Agregar el nuevo correo a la lista
                 resolve();
             }
         }, 1000);
@@ -138,7 +168,6 @@ function verificarDatosIngresados() {
     var pais = document.getElementById("pais").value.trim();
     var valid = true;
 
-    // Validación de nombre
     if (nombre === '') {
         mostrarError(document.getElementById("nombre"), 'Debe ingresar un nombre.');
         valid = false;
@@ -149,7 +178,6 @@ function verificarDatosIngresados() {
         ocultarError(document.getElementById("nombre"));
     }
 
-    // Validación de email
     if (email === '') {
         mostrarError(document.getElementById("email"), 'Por favor ingrese un email.');
         valid = false;
@@ -160,7 +188,6 @@ function verificarDatosIngresados() {
         ocultarError(document.getElementById("email"));
     }
 
-    // Validación de contraseña
     if (password === '') {
         mostrarError(document.getElementById("pass"), 'Por favor ingrese una contraseña.');
         valid = false;
@@ -168,7 +195,6 @@ function verificarDatosIngresados() {
         ocultarError(document.getElementById("pass"));
     }
 
-    // Validación de teléfono
     if (telefono === '') {
         mostrarError(document.getElementById("telefono"), 'Por favor ingrese un teléfono.');
         valid = false;
@@ -179,7 +205,6 @@ function verificarDatosIngresados() {
         ocultarError(document.getElementById("telefono"));
     }
 
-    // Validación de dirección
     if (direccion === '') {
         mostrarError(document.getElementById("direccion"), 'Por favor ingrese una dirección.');
         valid = false;
@@ -187,7 +212,6 @@ function verificarDatosIngresados() {
         ocultarError(document.getElementById("direccion"));
     }
 
-    // Validación de código postal
     if (cp === '') {
         mostrarError(document.getElementById("cp"), 'Por favor ingrese un código postal.');
         valid = false;
@@ -195,7 +219,6 @@ function verificarDatosIngresados() {
         ocultarError(document.getElementById("cp"));
     }
 
-    // Validación de provincia
     if (provincia === '') {
         mostrarError(document.getElementById("provincia"), 'Por favor ingrese una provincia.');
         valid = false;
@@ -203,7 +226,6 @@ function verificarDatosIngresados() {
         ocultarError(document.getElementById("provincia"));
     }
 
-    // Validación de país
     if (pais === '') {
         mostrarError(document.getElementById("pais"), 'Por favor ingrese un país.');
         valid = false;
@@ -225,7 +247,6 @@ function limpiarFormulario() {
     document.getElementById("provincia").value = "";
     document.getElementById("pais").value = "";
 
-    // Opcional: Restaurar clases de error y mensajes de error a su estado inicial
     var campos = document.querySelectorAll('.campo');
     campos.forEach(function(campo) {
         ocultarError(campo.querySelector('input'));
@@ -238,7 +259,7 @@ function validateEmail(email) {
 }
 
 function validatePhone(tel) {
-    const re = /^\d{10}$/; // Acepta solo números de 10 dígitos
+    const re = /^\d{10}$/;
     return re.test(tel);
 }
 
@@ -260,54 +281,25 @@ function ocultarError(campo) {
     campo.classList.remove('error');
 }
 
-
-function ingresarCuenta(event) {
-    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
-
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("pass").value;
-    var usuarioEncontrado = usuario.find(user => user.email === email && user.password === password);
-    var errorMessage = document.querySelector('.error-message');
-
-    if (usuarioEncontrado) {
-        console.log("Usuario encontrado:", usuarioEncontrado); // Mensaje de depuración
-        // Guardar el usuario en el almacenamiento de sesión en un storage
-        sessionStorage.setItem('usuario', JSON.stringify(usuarioEncontrado));
-        
-        // Redireccionar a la página de inicio
-        window.location.href = "index.html";
-    } else {
-        console.error("Usuario o contraseña incorrectos"); // Mensaje de error en consola
-        errorMessage.textContent = "Usuario o contraseña incorrectos";
-        errorMessage.style.display = 'block';
-    }
-}
-
-
 function modificarPass(event) {
-    event.preventDefault(); 
+    event.preventDefault();
 
     var pass = document.getElementById("pass").value;
     var pass2 = document.getElementById("new-pass").value;
     var errorMessage = document.querySelector('.error-message');
 
     if (pass === pass2) {
-        var usuario = JSON.parse(sessionStorage.getItem('usuario'));
+        var usuario = JSON.parse(localStorage.getItem('usuarioActual'));
+        var usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
 
-        if (usuario) {
+        if (usuario && usuario.email) {
             usuario.password = pass;
-            sessionStorage.setItem('usuario', JSON.stringify(usuario));
-            
-            // Limpiar campos
+            localStorage.setItem('usuarioActual', JSON.stringify(usuario));
+            usuarios = usuarios.map(u => u.email === usuario.email ? usuario : u);
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
             document.getElementById("pass").value = "";
             document.getElementById("new-pass").value = "";
-            
-            // Limpiar storage
-            sessionStorage.clear();
-            
             alert("Contraseña modificada correctamente");
-            
-            // Redireccionar a la página login
             window.location.href = "login.html";
         } else {
             errorMessage.textContent = "No hay usuario en sesión";
@@ -318,3 +310,7 @@ function modificarPass(event) {
         errorMessage.style.display = 'block';
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    inicializarCuenta();
+});

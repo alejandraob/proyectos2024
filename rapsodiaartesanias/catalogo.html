@@ -221,21 +221,10 @@
 
 
 <script>
-    const usuario = [
-        {
-            nombre: "Juan Perez",
-            email: "jperez@gmail.com",
-            password: "123456",
-            telefono: "1234567890",
-            direccion: "Calle Falsa 123",
-            piso: "",
-            cp: "1234",
-            provincia: "Springfield",
-            pais: "Argentina",
-        }
-    ];
+    
+   
     document.addEventListener('DOMContentLoaded', function () {
-        const usuarioGuardado = JSON.parse(sessionStorage.getItem('usuario'));
+        const usuarioGuardado = JSON.parse(localStorage.getItem('usuarioActual'));
         if (usuarioGuardado) {
             document.getElementById('nombre').value = usuarioGuardado.nombre;
             document.getElementById('email').value = usuarioGuardado.email;
@@ -246,12 +235,9 @@
             document.getElementById('cp').value = usuarioGuardado.cp;
             document.getElementById('provincia').value = usuarioGuardado.provincia;
         }
+        crearCardsContainer();
     });
-    document.getElementById('editLink').addEventListener('click', function (e) {
-        e.preventDefault();
-        sessionStorage.setItem('usuario', JSON.stringify(usuario[0]));
-        window.location.href = 'edit_usuario.html';
-    });
+   
 </script>   
 <script src="js/contacto.js"></script>
 <script src="js/newUser.js"></script>

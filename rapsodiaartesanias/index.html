@@ -231,44 +231,7 @@
               <p class="title">Resumen de Mi compra</p>
             </div>
             <div class="mi-orden-contenido-confirmado">
-                <div class="my-order-content">
-
-              
-                    <div class="shopping-cart">
-                      <figure>
-                        <img src="img/cartera1.jpg" alt="cartera">
-                      </figure>
-                      <p>Cartera Tejida</p>
-                      <p>$35000,00</p>
-                      
-                    </div>
-              
-                    <div class="shopping-cart">
-                      <figure>
-                        <img src="img/libreta1.jpg" alt="libreta">
-                      </figure>
-                      <p>Libreta</p>
-                      <p>$1500,00</p>
-                      
-                    </div>
-                    <div class="shopping-cart">
-                        <figure>
-                          <img src="img/bolso_asado1.jpg" alt="bolso">
-                        
-                        </figure>
-                        <p>Bolso p/Asado</p>
-                        <p>$25000,00</p>
-                        
-                      </div>
-              
-                    <div class="order">
-                      <p>
-                        <span>Total</span>
-                      </p>
-                      <p>$61500.00</p>
-                    </div>
-
-                  </div>
+                <!-- El contenido se generará dinámicamente aquí -->
             </div>
             
         </aside>
@@ -290,39 +253,6 @@
 </div>
   
 
-    <script>
-        const usuario = [
-            {
-                nombre: "Juan Perez",
-                email: "jperez@gmail.com",
-                password: "123456",
-                telefono: "1234567890",
-                direccion: "Calle Falsa 123",
-                piso: "",
-                cp: "1234",
-                provincia: "Springfield",
-                pais: "Argentina",
-            }
-        ];
-        document.addEventListener('DOMContentLoaded', function () {
-            const usuarioGuardado = JSON.parse(sessionStorage.getItem('usuario'));
-            if (usuarioGuardado) {
-                document.getElementById('nombre').value = usuarioGuardado.nombre;
-                document.getElementById('email').value = usuarioGuardado.email;
-                document.getElementById('pass').value = usuarioGuardado.password;
-                document.getElementById('telefono').value = usuarioGuardado.telefono;
-                document.getElementById('direccion').value = usuarioGuardado.direccion;
-                document.getElementById('piso').value = usuarioGuardado.piso;
-                document.getElementById('cp').value = usuarioGuardado.cp;
-                document.getElementById('provincia').value = usuarioGuardado.provincia;
-            }
-        });
-        document.getElementById('editLink').addEventListener('click', function (e) {
-            e.preventDefault();
-            sessionStorage.setItem('usuario', JSON.stringify(usuario[0]));
-            window.location.href = 'edit_usuario.html';
-        });
-    </script>   
     <script src="js/contacto.js"></script>
     <script src="js/newUser.js"></script>
     <script src="js/catalogo.js"></script>

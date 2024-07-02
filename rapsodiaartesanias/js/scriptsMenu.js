@@ -47,7 +47,6 @@ function toggleCarritoMenu() {
     productDetailAsideClose();
     asideCarrito.classList.toggle('inactive');
 }
-
 // Productos iniciales
 const initialProducts = [
     {
@@ -147,15 +146,16 @@ function updateCar() {
 
     saveCart();
 }
-
-function addToCart(prodNombre, prodPrice, prodImg) {
+// Función para agregar productos al carrito
+function addToCart(prodNombre, prodPrice, prodImg, prodstock) {
     const productToAdd = productList.find(product => product.name === prodNombre);
     if (productToAdd && productToAdd.stock > 0) {
         productToAdd.stock--;
         productListCarrito.push({
             name: prodNombre,
             price: prodPrice,
-            image: prodImg
+            image: prodImg,
+            stock: prodstock
         });
         updateCar();
         poblarModal(); // Asegurarse de actualizar el modal también
@@ -164,7 +164,7 @@ function addToCart(prodNombre, prodPrice, prodImg) {
         alert('No hay suficiente stock disponible.');
     }
 }
-
+// Función para eliminar productos del carrito
 function removeFromCart(productName) {
     const index = productListCarrito.findIndex(item => item.name === productName);
 
@@ -211,6 +211,8 @@ window.onclick = function (event) {
 }
 
 /////////////////////////////////////////Modal de finalizar compra
+// Función para crear los elementos del producto en el carrito
+
 function crearElementoProducto(producto) {
     const contenedorProducto = document.createElement('div');
     contenedorProducto.classList.add('product-container');
@@ -244,6 +246,7 @@ function crearElementoProducto(producto) {
     botonAgregar.innerText = '+';
     contenedorCantidad.appendChild(botonAgregar);
 
+    // Evento para aumentar la cantidad del producto considerando el stock
     botonAgregar.addEventListener('click', () => {
         const cantidadActual = parseInt(inputCantidad.value);
         if (cantidadActual < producto.stock) {
@@ -257,7 +260,7 @@ function crearElementoProducto(producto) {
 
     const precioProducto = document.createElement('div');
     precioProducto.classList.add('product-price');
-    precioProducto.innerText = `$${producto.price}`;
+    precioProducto.innerText = `$${producto.price.toFixed(2)}`;
     contenedorProducto.appendChild(precioProducto);
 
     const divBtnDelete = document.createElement('div');
@@ -276,6 +279,7 @@ function crearElementoProducto(producto) {
     return contenedorProducto;
 }
 
+// Función para poblar el modal del carrito
 function poblarModal() {
     const contenedorProductosModal = document.querySelector('.contendor-productos-Modal');
     contenedorProductosModal.innerHTML = '';
@@ -344,6 +348,21 @@ window.onclick = function (event) {
 }
 
 function abrirModalConfirmarCompra() {
+    const usuario = JSON.parse(localStorage.getItem('usuarioActual'));
+
+    if (usuario) {
+        document.getElementById("nombre").value = usuario.nombre || '';
+        document.getElementById("email").value = usuario.email || '';
+        document.getElementById("pass").value = usuario.password || '';
+        document.getElementById("telefono").value = usuario.telefono || '';
+        document.getElementById("direccion").value = usuario.direccion || '';
+        document.getElementById("piso").value = usuario.piso || '';
+        document.getElementById("cp").value = usuario.cp || '';
+        document.getElementById("provincia").value = usuario.provincia || '';
+    }
+
+    poblarResumenCompra();
+
     const modal = document.getElementById("confirmarCompra");
     if (modal) {
         modal.style.display = "block";
@@ -353,6 +372,7 @@ function abrirModalConfirmarCompra() {
     }
 }
 
+// Función para cerrar el modal de confirmación de compra
 function cerrarModalConfirmarCompra() {
     const modal = document.getElementById("confirmarCompra");
     if (modal) {
@@ -398,3 +418,84 @@ function addToCartFromCatalog(product) {
         alert('No hay suficiente stock disponible.');
     }
 }
+
+// Crear un elemento del resumen de compra
+function createSummaryItem(product) {
+    const shoppingCart = document.createElement('div');
+    shoppingCart.classList.add('shopping-cart');
+
+    const productImg = document.createElement('figure');
+    const img = document.createElement('img');
+    img.src = product.image;
+    img.alt = product.name;
+    productImg.appendChild(img);
+
+    const productName = document.createElement('p');
+    productName.textContent = product.name;
+
+    const productPrice = document.createElement('p');
+    productPrice.textContent = `$${product.price.toFixed(2)}`;
+
+    shoppingCart.appendChild(productImg);
+    shoppingCart.appendChild(productName);
+    shoppingCart.appendChild(productPrice);
+
+    return shoppingCart;
+}
+
+// Poblar el modal de resumen de compra
+function poblarResumenCompra() {
+    const contenedorResumen = document.querySelector('.mi-orden-contenido-confirmado');
+    contenedorResumen.innerHTML = '';
+
+    const resumenContent = document.createElement('div');
+    resumenContent.classList.add('my-order-content');
+
+    productListCarrito.forEach(product => {
+        const summaryItem = createSummaryItem(product);
+        resumenContent.appendChild(summaryItem);
+    });
+
+    const total = productListCarrito.reduce((acc, product) => acc + product.price, 0);
+    const orderTotal = document.createElement('div');
+    orderTotal.classList.add('order');
+
+    const totalText = document.createElement('p');
+    totalText.innerHTML = '<span>Total</span>';
+    const totalPrice = document.createElement('p');
+    totalPrice.textContent = `$${total.toFixed(2)}`;
+
+    orderTotal.appendChild(totalText);
+    orderTotal.appendChild(totalPrice);
+
+    resumenContent.appendChild(orderTotal);
+    contenedorResumen.appendChild(resumenContent);
+}
+
+// Función para abrir el modal de finalizar compra
+function openModalFinalCompra() {
+    poblarModal();
+    const modal = document.getElementById("finalCompraModal");
+    if (modal) {
+        modal.style.display = "block";
+        asideCarrito.classList.toggle('inactive');
+    } else {
+        console.error("Modal no encontrado en el DOM");
+    }
+}
+
+// Función para cerrar el modal de finalizar compra
+function closeModalFinalCompra() {
+    const modal = document.getElementById("finalCompraModal");
+    if (modal) {
+        modal.style.display = "none";
+    } else {
+        console.error("Modal no encontrado en el DOM");
+    }
+}
+
+// Inicializar el carrito y los datos del usuario
+document.addEventListener('DOMContentLoaded', function() {
+    inicializarCuenta();
+    creatListCarrito();
+});
