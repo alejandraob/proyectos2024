@@ -1,8 +1,8 @@
+// Función para validar los campos del formulario
 function validarCampos() {
-
-    var nombre = document.getElementById("nombre");
-    var email = document.getElementById("email");
-    var tel = document.getElementById("telefono");
+    var nombre = document.getElementById("nombre"); // Campo de nombre
+    var email = document.getElementById("email"); // Campo de email
+    var tel = document.getElementById("telefono"); // Campo de teléfono
 
     let valid = true;
 
@@ -42,35 +42,37 @@ function validarCampos() {
     return valid;
 }
 
+// Función para mostrar un mensaje de error junto a un campo
 function mostrarError(campo, mensaje) {
-    var errorSpan = campo.nextElementSibling;
-    errorSpan.innerText = mensaje;
-    errorSpan.style.display = 'block';
-    campo.classList.add('error');
+    var errorSpan = campo.nextElementSibling; // Obtener el span de error adyacente al campo
+    errorSpan.innerText = mensaje; // Mostrar el mensaje de error
+    errorSpan.style.display = 'block'; // Mostrar el span de error
+    campo.classList.add('error'); // Agregar clase de error al campo
 }
 
+// Función para ocultar el mensaje de error de un campo
 function ocultarError(campo) {
-    var errorSpan = campo.nextElementSibling;
+    var errorSpan = campo.nextElementSibling; // Obtener el span de error adyacente al campo
     if (errorSpan && errorSpan.classList.contains('error-message')) {
-        errorSpan.innerText = '';
-        errorSpan.style.display = 'none';
+        errorSpan.innerText = ''; // Limpiar el mensaje de error
+        errorSpan.style.display = 'none'; // Ocultar el span de error
     }
-    campo.classList.remove('error');
+    campo.classList.remove('error'); // Remover clase de error del campo
 }
-
+// Función para validar el formato del email
 function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;// Expresión regular para validar email
     return re.test(String(email).toLowerCase());
 }
-
+// Función para validar el formato del teléfono
 function validatePhone(tel) {
     const re = /^\d{10}$/; // Acepta solo números de 10 dígitos
     return re.test(String(tel));
 }
-
+// Función para enviar el formulario si los campos son válidos
 function enviar() {
     if (!validarCampos()) {
-        return;
+        return; // Detener el envío si hay campos inválidos
     }
 
     var nombre = document.getElementById("nombre").value;
@@ -78,9 +80,9 @@ function enviar() {
     var tel = document.getElementById("telefono").value;
     var motivo = document.getElementById("motivo").value;
     var mensaje = document.getElementById("mensaje").value;
-
+// Crear el cuerpo del email
     var body = `Nombre: ${nombre}\nTeléfono: ${tel}\nMotivo: ${motivo}\nMensaje: ${mensaje}`;
     var mailtoLink = `mailto:${email}?subject=${encodeURIComponent(motivo)}&body=${encodeURIComponent(body)}`;
-
+ // Redirigir para abrir el cliente de email con los datos prellenados
     window.location.href = mailtoLink;
 }

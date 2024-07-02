@@ -1,9 +1,10 @@
 var correosRegistrados = ['jperez@gmail.com', 'usuario1@mail.com', 'usuario2@mail.com'];
-
+// Función para inicializar la cuenta con datos predeterminados
 function inicializarCuenta() {
     var usuarios = localStorage.getItem('usuarios');
+    // Si no hay usuarios registrados, se agrega un usuario predeterminado
     if (!usuarios) {
-        localStorage.setItem('usuarios', JSON.stringify([{
+        localStorage.setItem('usuarios', JSON.stringify([{ //JSON.stringify que es un metodo de JS que se usa para convertir un objeto JavaScript o un valor en una cadena de texto JSON 
             nombre: "Juan Perez",
             email: "jperez@gmail.com",
             password: "123456",
@@ -20,7 +21,7 @@ function inicializarCuenta() {
         localStorage.setItem('usuarioActual', JSON.stringify({}));
     }
 }
-
+// Función para rellenar el formulario con los datos del usuario actual
 function rellenarFormulario() {
     const usuario = JSON.parse(localStorage.getItem('usuarioActual'));
     if (usuario && usuario.email) {
@@ -35,9 +36,9 @@ function rellenarFormulario() {
         document.getElementById("pais").value = usuario.pais;
     }
 }
-
+// Función para editar la cuenta del usuario actual
 function editarCuenta(event) {
-    event.preventDefault();
+    event.preventDefault(); //Es un evento de JS que se utiliza para prevenir el comportamiento por defecto de un evento.
 
     var nombre = document.getElementById("nombre").value;
     var email = document.getElementById("email").value;
@@ -60,6 +61,7 @@ function editarCuenta(event) {
         provincia: provincia,
         pais: pais
     };
+     // Actualizar el usuario en la lista de usuarios
     var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
     usuarios = usuarios.map(u => u.email === email ? usuarioEditado : u);
     localStorage.setItem('usuarios', JSON.stringify(usuarios));
@@ -68,7 +70,7 @@ function editarCuenta(event) {
     console.log("Usuario actualizado:", usuarioEditado);
     alert('Usuario actualizado correctamente');
 }
-
+// Función para eliminar la cuenta del usuario actual
 function eliminarCuenta(event) {
     event.preventDefault();
 
@@ -82,7 +84,7 @@ function eliminarCuenta(event) {
     alert('Usuario eliminado correctamente');
     window.location.href = "login.html";
 }
-
+// Función para ingresar a la cuenta
 function ingresarCuenta(event) {
     event.preventDefault();
     var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
@@ -101,7 +103,7 @@ function ingresarCuenta(event) {
         errorMessage.style.display = 'block';
     }
 }
-
+// Función para registrar un nuevo usuario
 function newUser() {
     if (verificarDatosIngresados()) {
         const email = document.getElementById("email").value;
@@ -142,7 +144,7 @@ function newUser() {
             });
     }
 }
-
+// Función para verificar si el email ya está registrado
 function verificarEmailRepetido(email) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -155,7 +157,7 @@ function verificarEmailRepetido(email) {
         }, 1000);
     });
 }
-
+// Función para verificar los datos ingresados en el formulario
 function verificarDatosIngresados() {
     var nombre = document.getElementById("nombre").value.trim();
     var email = document.getElementById("email").value.trim();
@@ -168,74 +170,83 @@ function verificarDatosIngresados() {
     var pais = document.getElementById("pais").value.trim();
     var valid = true;
 
-    if (nombre === '') {
-        mostrarError(document.getElementById("nombre"), 'Debe ingresar un nombre.');
-        valid = false;
-    } else if (nombre.length < 3) {
-        mostrarError(document.getElementById("nombre"), 'El nombre debe tener al menos 3 caracteres.');
-        valid = false;
-    } else {
-        ocultarError(document.getElementById("nombre"));
-    }
+   // Validación del nombre
+   if (nombre === '') {
+    mostrarError(document.getElementById("nombre"), 'Debe ingresar un nombre.');
+    valid = false;
+} else if (nombre.length < 3) {
+    mostrarError(document.getElementById("nombre"), 'El nombre debe tener al menos 3 caracteres.');
+    valid = false;
+} else {
+    ocultarError(document.getElementById("nombre"));
+}
 
-    if (email === '') {
-        mostrarError(document.getElementById("email"), 'Por favor ingrese un email.');
-        valid = false;
-    } else if (!validateEmail(email)) {
-        mostrarError(document.getElementById("email"), 'Por favor ingrese un email válido (usuario@mail.com).');
-        valid = false;
-    } else {
-        ocultarError(document.getElementById("email"));
-    }
+// Validación del email
+if (email === '') {
+    mostrarError(document.getElementById("email"), 'Por favor ingrese un email.');
+    valid = false;
+} else if (!validateEmail(email)) {
+    mostrarError(document.getElementById("email"), 'Por favor ingrese un email válido (usuario@mail.com).');
+    valid = false;
+} else {
+    ocultarError(document.getElementById("email"));
+}
 
-    if (password === '') {
-        mostrarError(document.getElementById("pass"), 'Por favor ingrese una contraseña.');
-        valid = false;
-    } else {
-        ocultarError(document.getElementById("pass"));
-    }
+// Validación de la contraseña
+if (password === '') {
+    mostrarError(document.getElementById("pass"), 'Por favor ingrese una contraseña.');
+    valid = false;
+} else {
+    ocultarError(document.getElementById("pass"));
+}
 
-    if (telefono === '') {
-        mostrarError(document.getElementById("telefono"), 'Por favor ingrese un teléfono.');
-        valid = false;
-    } else if (!validatePhone(telefono)) {
-        mostrarError(document.getElementById("telefono"), 'Por favor ingrese un teléfono válido (ej. 2990000000).');
-        valid = false;
-    } else {
-        ocultarError(document.getElementById("telefono"));
-    }
+// Validación del teléfono
+if (telefono === '') {
+    mostrarError(document.getElementById("telefono"), 'Por favor ingrese un teléfono.');
+    valid = false;
+} else if (!validatePhone(telefono)) {
+    mostrarError(document.getElementById("telefono"), 'Por favor ingrese un teléfono válido (ej. 2990000000).');
+    valid = false;
+} else {
+    ocultarError(document.getElementById("telefono"));
+}
 
-    if (direccion === '') {
-        mostrarError(document.getElementById("direccion"), 'Por favor ingrese una dirección.');
-        valid = false;
-    } else {
-        ocultarError(document.getElementById("direccion"));
-    }
+// Validación de la dirección
+if (direccion === '') {
+    mostrarError(document.getElementById("direccion"), 'Por favor ingrese una dirección.');
+    valid = false;
+} else {
+    ocultarError(document.getElementById("direccion"));
+}
 
-    if (cp === '') {
-        mostrarError(document.getElementById("cp"), 'Por favor ingrese un código postal.');
-        valid = false;
-    } else {
-        ocultarError(document.getElementById("cp"));
-    }
+// Validación del código postal
+if (cp === '') {
+    mostrarError(document.getElementById("cp"), 'Por favor ingrese un código postal.');
+    valid = false;
+} else {
+    ocultarError(document.getElementById("cp"));
+}
 
-    if (provincia === '') {
-        mostrarError(document.getElementById("provincia"), 'Por favor ingrese una provincia.');
-        valid = false;
-    } else {
-        ocultarError(document.getElementById("provincia"));
-    }
+// Validación de la provincia
+if (provincia === '') {
+    mostrarError(document.getElementById("provincia"), 'Por favor ingrese una provincia.');
+    valid = false;
+} else {
+    ocultarError(document.getElementById("provincia"));
+}
 
-    if (pais === '') {
-        mostrarError(document.getElementById("pais"), 'Por favor ingrese un país.');
-        valid = false;
-    } else {
-        ocultarError(document.getElementById("pais"));
-    }
+// Validación del país
+if (pais === '') {
+    mostrarError(document.getElementById("pais"), 'Por favor ingrese un país.');
+    valid = false;
+} else {
+    ocultarError(document.getElementById("pais"));
+}
+
 
     return valid;
 }
-
+// Función para limpiar el formulario
 function limpiarFormulario() {
     document.getElementById("nombre").value = "";
     document.getElementById("email").value = "";
@@ -252,17 +263,17 @@ function limpiarFormulario() {
         ocultarError(campo.querySelector('input'));
     });
 }
-
+// Función para validar el formato del email
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
 }
-
+// Función para validar el formato del teléfono
 function validatePhone(tel) {
     const re = /^\d{10}$/;
     return re.test(tel);
 }
-
+// Función para mostrar un mensaje de error junto a un campo
 function mostrarError(campo, mensaje) {
     var errorSpan = campo.nextElementSibling;
     if (errorSpan && errorSpan.classList.contains('error-message')) {
@@ -271,7 +282,7 @@ function mostrarError(campo, mensaje) {
     }
     campo.classList.add('error');
 }
-
+// Función para ocultar el mensaje de error de un campo
 function ocultarError(campo) {
     var errorSpan = campo.nextElementSibling;
     if (errorSpan && errorSpan.classList.contains('error-message')) {
@@ -280,7 +291,7 @@ function ocultarError(campo) {
     }
     campo.classList.remove('error');
 }
-
+// Función para modificar la contraseña del usuario actual
 function modificarPass(event) {
     event.preventDefault();
 
@@ -289,14 +300,15 @@ function modificarPass(event) {
     var errorMessage = document.querySelector('.error-message');
 
     if (pass === pass2) {
-        var usuario = JSON.parse(localStorage.getItem('usuarioActual'));
+        //Utilizaremos JSON.parse para convertir una cadena de texto en un objeto JavaScript
+        var usuario = JSON.parse(localStorage.getItem('usuarioActual')); //Utilizamos localStorage.getItem que es un metodo de JS para acceder a un valor almacenado en almacenamineto local del navegador
         var usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
 
         if (usuario && usuario.email) {
             usuario.password = pass;
-            localStorage.setItem('usuarioActual', JSON.stringify(usuario));
+            localStorage.setItem('usuarioActual', JSON.stringify(usuario));//Aquí utilizamos localStorage.setItem que es un metodo de JS para almacenar datos en el almacenamiento local del navegador
             usuarios = usuarios.map(u => u.email === usuario.email ? usuario : u);
-            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            localStorage.setItem('usuarios', JSON.stringify(usuarios)); //y lo que hacemos aqui es usar JSON.stringify que es un metodo de JS que se usa para convertir un objeto JavaScript o un valor en una cadena de texto JSON 
             document.getElementById("pass").value = "";
             document.getElementById("new-pass").value = "";
             alert("Contraseña modificada correctamente");
@@ -310,7 +322,7 @@ function modificarPass(event) {
         errorMessage.style.display = 'block';
     }
 }
-
+// Inicializar la cuenta cuando se carga el documento
 document.addEventListener('DOMContentLoaded', function() {
     inicializarCuenta();
 });

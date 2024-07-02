@@ -1,8 +1,9 @@
+// Array para almacenar la lista de productos
 const productList = [];
+// Función para crear el contenedor de las tarjetas de productos
 function crearCardsContainer(){
-/////Ponemos aqui lo del catalogo porque me esta doliendo un ov.... y la mitad del otro, no funcion al huevada cuando todo estaba ok
-var cardsContainer = document.querySelector(".cards-container");
 
+var cardsContainer = document.querySelector(".cards-container");
 //////Array + objeto para construir el producto
 
 productList.push({
@@ -112,15 +113,13 @@ productList.push({
     detalle: "Reloj de madera reciclada con diseño personalizado",
 });
 
-///Construccion de un Elemento DIV para crear una CARDPRODUCTO
+///Construccion de un Elemento DIV para crear una CARDPRODUCTO o para definirlo mejor Construcción de las tarjetas de productos
 
 for (product of productList) {
     const productCard = document.createElement("div");
     productCard.classList.add("product-card");
     const productImg = document.createElement("img");
-    //product={name, price, image}->product.image
     productImg.setAttribute("src", product.image);
-    // productImg.addEventListener('click', () => openProductDetailAside(product.name));
     const productInfo = document.createElement("div");
     productInfo.classList.add("product-info");
 
@@ -143,6 +142,7 @@ for (product of productList) {
     const productImgCard = document.createElement("img");
     productImgCard.setAttribute("src", "img/icons/add-to-cart.png");
 
+     // Si el producto no tiene stock, mostrar mensaje y ocultar botón de agregar al carrito
     if (product.stock === 0) {
         productStock.style.color = "white";
         productStock.style.backgroundColor = "red";
@@ -232,11 +232,14 @@ function openProductDetailAside(productName) {
     aside.appendChild(imgproduct);
     aside.appendChild(divInfo);
     aside.style.display = "block";
+    
+     // Ocultamos otros elementos del menú cuando mostramos el detalle del producto
 
     asideCarrito.classList.add("inactive");
     menuDesplegable.classList.toggle("inactive");
     menuCuenta.classList.add("inactive");
 }
+// Función para cerrar el detalle del producto
 function productDetailAsideClose() {
     const aside = document.querySelector("#aside");
     if (aside) {

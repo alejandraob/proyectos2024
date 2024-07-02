@@ -313,7 +313,7 @@
     });
     document.getElementById('editLink').addEventListener('click', function (e) {
         e.preventDefault();
-        sessionStorage.setItem('usuario', JSON.stringify(usuario[0]));
+        sessionStorage.setItem('usuario', JSON.stringify(usuario[0])); //JSON.stringify que es un metodo de JS que se usa para convertir un objeto JavaScript o un valor en una cadena de texto JSON 
         window.location.href = 'edit_usuario.html';
     });
 </script>   

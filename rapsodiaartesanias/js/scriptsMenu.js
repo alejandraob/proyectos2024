@@ -11,19 +11,26 @@ const asideCarrito = document.querySelector('.producto-detail');
 const cartCount = document.getElementById('cart-count'); // Contador del carrito
 
 /*Eventos*/
+
+// Evento para abrir/cerrar menú de cuenta
 miCuenta.addEventListener('click', toogleMenuCuenta);
+// Evento para abrir/cerrar menú desplegable
 menuHamIcon.addEventListener('click', toogleMenuDesplegable);
+// Evento para abrir/cerrar menú de carrito
 menuCarritoIcon.addEventListener('click', toggleCarritoMenu);
 
 /*Funciones*/
+
+// Función para abrir/cerrar el menú de cuenta
 function toogleMenuCuenta() {
-    const isCarritoMenuClosed = asideCarrito.classList.contains('inactive');
+    const isCarritoMenuClosed = asideCarrito.classList.contains('inactive'); //utilizamos el classList.contains para comprobar si tiene una clase especifica
     if (!isCarritoMenuClosed) {
-        asideCarrito.classList.add('inactive')
+        asideCarrito.classList.add('inactive')//y utilizamos el classList.add porque este me agrega una o más clases a un elemento DOM
     }
     productDetailAsideClose();
-    menuCuenta.classList.toggle('inactive');
+    menuCuenta.classList.toggle('inactive'); //entonces usamos classList.toggle porque este añade la clase si no está presente, o la elimina si ya está presente.
 }
+// Función para abrir/cerrar el menú desplegable
 
 function toogleMenuDesplegable() {
     const isCarritoMenuClosed = asideCarrito.classList.contains('inactive');
@@ -33,7 +40,7 @@ function toogleMenuDesplegable() {
     productDetailAsideClose();
     menuDesplegable.classList.toggle('inactive');
 }
-
+// Función para abrir/cerrar el menú de carrito
 function toggleCarritoMenu() {
     const isMenuCuentaClosed = menuCuenta.classList.contains('inactive');
     const isMenuDesplegableClosed = menuDesplegable.classList.contains('inactive');
@@ -83,6 +90,7 @@ function saveCart() {
     localStorage.setItem('cart', JSON.stringify(productListCarrito));
 }
 
+// Crear un elemento del carrito con la información del producto
 function createCartItem(product) {
     const shoppingCart = document.createElement('div');
     shoppingCart.classList.add('shopping-cart');
@@ -113,6 +121,7 @@ function createCartItem(product) {
     return shoppingCart;
 }
 
+// Actualizar el carrito y el contador
 function updateCar() {
     orderContent.innerHTML = '';
 
@@ -180,6 +189,7 @@ function removeFromCart(productName) {
     }
 }
 
+// Crear y actualizar el carrito al cargar la página
 function creatListCarrito() {
     updateCar();
     poblarModal();
@@ -188,21 +198,25 @@ function creatListCarrito() {
 document.addEventListener('DOMContentLoaded', creatListCarrito);
 
 //////////
+// Evento para redirigir a la página de edición de usuario
 document.getElementById('editLink').addEventListener('click', function (e) {
     e.preventDefault();
     sessionStorage.setItem('usuario', JSON.stringify(usuario[0]));
     window.location.href = 'edit_usuario.html';
 });
+///////////
 
 //////Modal vista de vompra realizadas
+
+// Función para abrir el modal de ordenes
 function openModal() {
     document.getElementById("orderModal").style.display = "block";
 }
-
+// Función para cerrar el modal de ordenes
 function closeModal() {
     document.getElementById("orderModal").style.display = "none";
 }
-
+// Cerrar el modal de ordenes si se hace clic fuera de él
 window.onclick = function (event) {
     const modal = document.getElementById("orderModal");
     if (event.target == modal) {
@@ -210,9 +224,9 @@ window.onclick = function (event) {
     }
 }
 
-/////////////////////////////////////////Modal de finalizar compra
-// Función para crear los elementos del producto en el carrito
+/////////////////////////////////////////Modal de finalizar compra////////////////
 
+// Función para crear los elementos del producto en el carrito
 function crearElementoProducto(producto) {
     const contenedorProducto = document.createElement('div');
     contenedorProducto.classList.add('product-container');
@@ -270,7 +284,7 @@ function crearElementoProducto(producto) {
     divBtnDelete.appendChild(botonEliminar);
 
     contenedorProducto.appendChild(divBtnDelete);
-
+    // Evento para eliminar el producto del carrito
     botonEliminar.addEventListener('click', () => {
         console.log(`Intentando eliminar: ${producto.name}`);
         removeFromCart(producto.name);
@@ -305,7 +319,7 @@ function poblarModal() {
     botonCancelar.addEventListener('click', limpiarCarrito);
     contenedorAcciones.appendChild(botonCancelar);
 }
-
+// Función para limpiar el carrito
 function limpiarCarrito() {
     productListCarrito.forEach(producto => {
         const productoEnCatalogo = productList.find(product => product.name === producto.name);
@@ -319,7 +333,7 @@ function limpiarCarrito() {
     poblarModal();
     closeModalFinalCompra();
 }
-
+// Función para abrir el modal de finalizar compra
 function openModalFinalCompra() {
     poblarModal();
     const modal = document.getElementById("finalCompraModal");
@@ -330,7 +344,7 @@ function openModalFinalCompra() {
         console.error("Modal no encontrado en el DOM");
     }
 }
-
+// Función para cerrar el modal de finalizar compra
 function closeModalFinalCompra() {
     const modal = document.getElementById("finalCompraModal");
     if (modal) {
@@ -339,7 +353,7 @@ function closeModalFinalCompra() {
         console.error("Modal no encontrado en el DOM");
     }
 }
-
+// Cerrar el modal de finalizar compra si se hace clic fuera de él
 window.onclick = function (event) {
     const modal = document.getElementById("finalCompraModal");
     if (event.target == modal) {
@@ -347,6 +361,7 @@ window.onclick = function (event) {
     }
 }
 
+// Abrir el modal de confirmar compra con datos del usuario
 function abrirModalConfirmarCompra() {
     const usuario = JSON.parse(localStorage.getItem('usuarioActual'));
 
@@ -381,7 +396,7 @@ function cerrarModalConfirmarCompra() {
         console.error("Modal no encontrado en el DOM");
     }
 }
-
+// Función para cerrar el modal de confirmación de compra
 function openCartelConfirmacion() {
     const cartelFinal = document.getElementById('confirmationModal');
     if (cartelFinal) {
@@ -392,7 +407,7 @@ function openCartelConfirmacion() {
         console.error("Modal no encontrado en el DOM");
     }
 }
-
+// Función para cerrar el cartel de confirmación
 function closeCartelConfirmacion() {
     const cartelFinal = document.getElementById('confirmationModal');
     if (cartelFinal) {
@@ -401,6 +416,7 @@ function closeCartelConfirmacion() {
         console.error("Modal no encontrado en el DOM");
     }
 }
+// Agregar producto al carrito desde el catálogo
 function addToCartFromCatalog(product) {
     const productToAdd = productList.find(p => p.name === product.name);
     if (productToAdd && productToAdd.stock > 0) {
@@ -495,7 +511,7 @@ function closeModalFinalCompra() {
 }
 
 // Inicializar el carrito y los datos del usuario
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() { //DOMContentLoaded es un veneto para asegurar que el DOM esta construido y accesible antes de intentar manipularlo
     inicializarCuenta();
     creatListCarrito();
 });
