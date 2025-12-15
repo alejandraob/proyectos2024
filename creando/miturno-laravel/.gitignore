@@ -1,0 +1,39 @@
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+
+# Bootstrap cache (regenerado automáticamente)
+/bootstrap/cache/packages.php
+/bootstrap/cache/services.php
+
+# Storage (archivos generados en runtime)
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*.php
+/storage/logs/*.log
+!/storage/framework/cache/data/.gitignore
+!/storage/framework/sessions/.gitignore
+
+# Archivos de sistema
+nul
+Thumbs.db
+.DS_Store
+
+# Logs genéricos
+*.log
