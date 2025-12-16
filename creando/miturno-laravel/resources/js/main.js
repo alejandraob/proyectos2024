@@ -6,6 +6,7 @@ import ConfirmationService from 'primevue/confirmationservice'
 import Aura from '@primevue/themes/aura'
 import App from './App.vue'
 import router from './router'
+import i18n from './i18n'
 
 // Importar estilos globales
 import '../css/app.css'
@@ -27,6 +28,7 @@ const app = createApp(App)
 // Usar plugins
 app.use(createPinia())  // Estado global
 app.use(router)         // Rutas
+app.use(i18n)           // Internacionalización
 app.use(PrimeVue, {
     theme: {
         preset: Aura,

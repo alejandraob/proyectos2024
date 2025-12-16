@@ -7,7 +7,7 @@
                 <div class="card-body">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-muted mb-1">Turnos hoy</p>
+                            <p class="text-sm text-muted mb-1">{{ $t('dashboard.todayAppointments') }}</p>
                             <p class="text-lg font-bold">{{ stats.turnosHoy }}</p>
                         </div>
                         <div class="text-info">
@@ -24,7 +24,7 @@
                 <div class="card-body">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-muted mb-1">Pendientes</p>
+                            <p class="text-sm text-muted mb-1">{{ $t('agenda.pending') }}</p>
                             <p class="text-lg font-bold text-warning">{{ stats.pendientes }}</p>
                         </div>
                         <div class="text-warning">
@@ -41,7 +41,7 @@
                 <div class="card-body">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-muted mb-1">Clientes</p>
+                            <p class="text-sm text-muted mb-1">{{ $t('nav.clients') }}</p>
                             <p class="text-lg font-bold">{{ stats.clientes }}</p>
                         </div>
                         <div class="text-secondary">
@@ -58,7 +58,7 @@
                 <div class="card-body">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-muted mb-1">Este mes</p>
+                            <p class="text-sm text-muted mb-1">{{ $t('dashboard.monthAppointments') }}</p>
                             <p class="text-lg font-bold text-success">{{ stats.esteMes }}</p>
                         </div>
                         <div class="text-success">
@@ -74,9 +74,9 @@
         <!-- Próximos turnos -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Próximos turnos</h3>
+                <h3 class="card-title">{{ $t('dashboard.nextAppointments') }}</h3>
                 <router-link to="/agenda" class="btn btn-sm btn-outline">
-                    Ver agenda
+                    {{ $t('nav.agenda') }}
                 </router-link>
             </div>
 
@@ -85,19 +85,19 @@
             </div>
 
             <div v-else-if="proximosTurnos.length === 0" class="card-body text-center text-muted">
-                <p>No hay turnos próximos</p>
+                <p>{{ $t('dashboard.noAppointments') }}</p>
                 <router-link to="/agenda" class="btn btn-primary mt-3">
-                    Crear turno
+                    {{ $t('agenda.newAppointment') }}
                 </router-link>
             </div>
 
             <table v-else class="table">
                 <thead>
                     <tr>
-                        <th>Hora</th>
-                        <th>Cliente</th>
-                        <th>Motivo</th>
-                        <th>Estado</th>
+                        <th>{{ $t('agenda.time') }}</th>
+                        <th>{{ $t('agenda.client') }}</th>
+                        <th>{{ $t('agenda.notes') }}</th>
+                        <th>{{ $t('agenda.status') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,11 +106,11 @@
                             <span class="font-semibold">{{ formatHora(turno.fecha_inicio) }}</span>
                             <span class="text-muted text-sm"> - {{ formatHora(turno.fecha_fin) }}</span>
                         </td>
-                        <td>{{ turno.client?.nombre || 'Sin cliente' }}</td>
+                        <td>{{ turno.client?.nombre || $t('app.noData') }}</td>
                         <td>{{ turno.motivo || '-' }}</td>
                         <td>
                             <span :class="'badge badge-' + turno.estado">
-                                {{ turno.estado }}
+                                {{ $t('agenda.' + turno.estado) }}
                             </span>
                         </td>
                     </tr>

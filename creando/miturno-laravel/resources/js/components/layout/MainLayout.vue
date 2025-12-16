@@ -7,6 +7,9 @@
             @click="closeSidebar"
         ></div>
 
+        <!-- Menú de usuario (PrimeVue) -->
+        <Menu ref="userMenu" :model="userMenuItems" :popup="true" class="user-popup-menu" />
+
         <!-- Sidebar -->
         <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen, 'sidebar-hidden': isMobile && !sidebarOpen }">
             <!-- Logo -->
@@ -28,45 +31,45 @@
             <!-- Navegación -->
             <nav class="sidebar-nav">
                 <div class="sidebar-section">
-                    <span class="sidebar-text">Principal</span>
+                    <span class="sidebar-text">{{ $t('nav.main') }}</span>
                 </div>
 
                 <router-link to="/dashboard" class="sidebar-link" active-class="active" @click="closeSidebarOnMobile">
                     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                     </svg>
-                    <span class="sidebar-text">Dashboard</span>
+                    <span class="sidebar-text">{{ $t('nav.dashboard') }}</span>
                 </router-link>
 
                 <router-link to="/agenda" class="sidebar-link" active-class="active" @click="closeSidebarOnMobile">
                     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
                     </svg>
-                    <span class="sidebar-text">Agenda</span>
+                    <span class="sidebar-text">{{ $t('nav.agenda') }}</span>
                 </router-link>
 
                 <router-link to="/clientes" class="sidebar-link" active-class="active" @click="closeSidebarOnMobile">
                     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                     </svg>
-                    <span class="sidebar-text">Clientes</span>
+                    <span class="sidebar-text">{{ $t('nav.clients') }}</span>
                 </router-link>
 
                 <div class="sidebar-section">
-                    <span class="sidebar-text">Configuración</span>
+                    <span class="sidebar-text">{{ $t('nav.settings') }}</span>
                 </div>
 
                 <router-link to="/configuracion" class="sidebar-link" active-class="active" @click="closeSidebarOnMobile">
                     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
                     </svg>
-                    <span class="sidebar-text">Configuración</span>
+                    <span class="sidebar-text">{{ $t('nav.settings') }}</span>
                 </router-link>
             </nav>
 
             <!-- Footer del Sidebar -->
             <div class="sidebar-footer">
-                <div class="sidebar-user">
+                <button @click="toggleUserMenu" class="sidebar-user-btn" aria-haspopup="true">
                     <div class="sidebar-avatar">
                         {{ userInitials }}
                     </div>
@@ -74,12 +77,9 @@
                         <div class="text-sm font-medium">{{ userName }}</div>
                         <div class="text-xs text-muted">{{ businessName }}</div>
                     </div>
-                </div>
-                <button @click="handleLogout" class="btn btn-ghost btn-sm w-full mt-3">
-                    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                    <svg class="sidebar-chevron" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                        <path d="M7 10l5 5 5-5z"/>
                     </svg>
-                    <span class="sidebar-text">Cerrar sesión</span>
                 </button>
             </div>
         </aside>
@@ -99,7 +99,7 @@
                 </div>
                 <div class="header-actions">
                     <!-- Toggle Dark Mode -->
-                    <button @click.stop.prevent="toggleDarkMode" class="btn-icon" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'" type="button">
+                    <button @click.stop.prevent="toggleDarkMode" class="btn-icon" :title="isDarkMode ? $t('nav.lightMode') : $t('nav.darkMode')" type="button">
                         <!-- Sol (modo claro) -->
                         <svg v-if="isDarkMode" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
                             <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
@@ -125,10 +125,14 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
+import { useI18n } from 'vue-i18n'
+import { setLocale, getLocale } from '../../i18n'
+import Menu from 'primevue/menu'
 
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
+const { t } = useI18n()
 
 // Estados del sidebar
 const sidebarCollapsed = ref(false)
@@ -137,6 +141,57 @@ const isMobile = ref(window.innerWidth < 768)
 
 // Estado del dark mode
 const isDarkMode = ref(false)
+
+// Menú de usuario
+const userMenu = ref()
+const userMenuItems = ref([])
+
+// Construir menú de usuario con traducciones
+const buildUserMenu = () => {
+    const currentLang = getLocale()
+    userMenuItems.value = [
+        {
+            label: t('nav.language'),
+            icon: 'pi pi-globe',
+            items: [
+                { label: 'Español', icon: currentLang === 'es' ? 'pi pi-check' : null, command: () => changeLanguage('es') },
+                { label: 'English', icon: currentLang === 'en' ? 'pi pi-check' : null, command: () => changeLanguage('en') },
+                { label: 'Português', icon: currentLang === 'pt' ? 'pi pi-check' : null, command: () => changeLanguage('pt') }
+            ]
+        },
+        { separator: true },
+        {
+            label: t('nav.upgradePlan'),
+            icon: 'pi pi-star',
+            command: () => router.push('/planes')
+        },
+        {
+            label: t('nav.billing'),
+            icon: 'pi pi-credit-card',
+            command: () => router.push('/facturacion')
+        },
+        {
+            label: t('nav.myIncome'),
+            icon: 'pi pi-wallet',
+            command: () => router.push('/ingresos')
+        },
+        { separator: true },
+        {
+            label: t('nav.logout'),
+            icon: 'pi pi-sign-out',
+            command: () => handleLogout()
+        }
+    ]
+}
+
+const toggleUserMenu = (event) => {
+    userMenu.value.toggle(event)
+}
+
+const changeLanguage = (lang) => {
+    setLocale(lang)
+    buildUserMenu()
+}
 
 // Datos del usuario
 const userName = computed(() => authStore.userName)
@@ -219,6 +274,9 @@ onMounted(() => {
         isDarkMode.value = savedDarkMode === 'true'
     }
     updateDarkMode()
+
+    // Inicializar menú de usuario con traducciones
+    buildUserMenu()
 
     // Detectar tamaño de pantalla
     checkMobile()
@@ -324,5 +382,46 @@ onUnmounted(() => {
     inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 99;
+}
+
+/* Botón de usuario en sidebar */
+.sidebar-user-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--color-white);
+    transition: background-color var(--transition-fast);
+    text-align: left;
+}
+
+.sidebar-user-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-chevron {
+    margin-left: auto;
+    opacity: 0.7;
+    transition: transform var(--transition-fast);
+}
+
+.sidebar-user-btn:hover .sidebar-chevron {
+    opacity: 1;
+}
+
+/* Ocultar elementos en sidebar colapsado */
+.sidebar-collapsed .sidebar-user-info,
+.sidebar-collapsed .sidebar-chevron {
+    display: none;
+}
+
+.sidebar-collapsed .sidebar-user-btn {
+    justify-content: center;
+    padding: var(--spacing-sm);
 }
 </style>

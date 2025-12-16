@@ -1628,3 +1628,56 @@ html.dark-mode body {
 .dark-mode .auth-footer {
     border-color: #3f3f46;
 }
+
+/* ============================================
+   19. PRIMEVUE MENU POPUP (Usuario)
+   ============================================ */
+
+.user-popup-menu {
+    min-width: 220px;
+    z-index: 1000;
+}
+
+.user-popup-menu .p-menuitem-link {
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--color-text);
+    transition: background-color var(--transition-fast);
+}
+
+.user-popup-menu .p-menuitem-link:hover {
+    background-color: var(--color-bg-light);
+}
+
+.user-popup-menu .p-menuitem-icon {
+    color: var(--color-text-muted);
+    margin-right: var(--spacing-sm);
+}
+
+.user-popup-menu .p-menuitem-text {
+    color: var(--color-text);
+}
+
+.user-popup-menu .p-submenu-header {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+/* Dark mode para el menú */
+.dark-mode .user-popup-menu {
+    background-color: #27272a;
+    border-color: #3f3f46;
+}
+
+.dark-mode .user-popup-menu .p-menuitem-link:hover {
+    background-color: #3f3f46;
+}
+
+.dark-mode .user-popup-menu .p-menuitem-text,
+.dark-mode .user-popup-menu .p-menuitem-icon {
+    color: #e4e4e7;
+}
+
+.dark-mode .user-popup-menu .p-submenu-header {
+    color: var(--color-info);
+}

@@ -17,6 +17,115 @@
 
 ### 16 de Diciembre 2025
 
+#### Sesión 9: Multi-idioma (i18n)
+**Duración:** ~1 hora
+
+**Trabajo realizado:**
+
+**Sistema de Internacionalización (Feature #033):**
+- Instalación de vue-i18n@9 (Composition API mode)
+- Configuración de i18n con locale persistente en localStorage
+- Helpers: setLocale(), getLocale() para cambio de idioma
+
+**Archivos de traducción:**
+- resources/js/i18n/es.js - Español (default)
+- resources/js/i18n/en.js - English
+- resources/js/i18n/pt.js - Português
+
+**Traducciones completas para:**
+- Navegación (sidebar, menú usuario)
+- Dashboard (stats, tabla de turnos)
+- Agenda (estados, acciones, formularios)
+- Clientes (CRUD, historial)
+- Configuración
+- Planes (FREE/PRO/PREMIUM, features)
+- Facturación (historial de pagos)
+- Ingresos (cobros, métodos de pago)
+- Página pública de reservas
+- Días y meses
+- Mensajes del sistema
+
+**Páginas traducidas:**
+- MainLayout.vue (sidebar, menú, tooltips)
+- Dashboard.vue (stats, tabla)
+- Planes.vue (cards, features, badges)
+- Facturacion.vue (plan actual, historial)
+- Ingresos.vue (stats, filtros, modal)
+
+**Funcionalidad del selector de idioma:**
+- Submenu en menú de usuario (ES/EN/PT)
+- Checkmark (✓) indica idioma actual
+- Cambio instantáneo sin recargar página
+- Persistencia en localStorage
+
+**Archivos creados:**
+- resources/js/i18n/index.js (configuración)
+- resources/js/i18n/es.js
+- resources/js/i18n/en.js
+- resources/js/i18n/pt.js
+
+**Archivos modificados:**
+- resources/js/main.js (plugin i18n)
+- resources/js/components/layout/MainLayout.vue
+- resources/js/pages/Dashboard.vue
+- resources/js/pages/Planes.vue
+- resources/js/pages/Facturacion.vue
+- resources/js/pages/Ingresos.vue
+
+**Estado:** i18n funcional para las páginas principales
+
+---
+
+#### Sesión 8: Sistema de Suscripciones y Menú de Usuario
+**Duración:** ~1 hora
+
+**Trabajo realizado:**
+
+**Menú Desplegable de Usuario (Feature #029):**
+- Botón clickeable en sidebar footer con avatar y nombre
+- PrimeVue Menu popup con opciones:
+  - Idioma (submenu ES/EN/PT)
+  - Mejorar plan
+  - Facturación
+  - Mis Ingresos
+  - Cerrar sesión
+- Estilos para light y dark mode
+
+**Página de Planes (Feature #030):**
+- Ruta /planes con 3 cards de planes
+- Plan FREE: $0 - 30 turnos/mes, sin recordatorios
+- Plan PRO: $3.500 - Turnos ilimitados, email
+- Plan PREMIUM: $7.000 - WhatsApp, múltiples profesionales
+- Diseño responsive con hover effects
+
+**Página de Facturación (Feature #031):**
+- Ruta /facturacion
+- Muestra plan actual y próxima facturación
+- Historial de pagos (tabla)
+- Botones: Cambiar plan, Cancelar suscripción
+
+**Página Mis Ingresos (Feature #032):**
+- Ruta /ingresos
+- Stats: Hoy, Esta semana, Este mes
+- Filtros por fecha y método de pago
+- CRUD de cobros a clientes
+- Métodos: Efectivo, Transferencia, Tarjeta, MercadoPago
+- Modal para registrar nuevo cobro
+
+**Archivos creados:**
+- resources/js/pages/Planes.vue
+- resources/js/pages/Facturacion.vue
+- resources/js/pages/Ingresos.vue
+
+**Archivos modificados:**
+- resources/js/components/layout/MainLayout.vue (menú usuario)
+- resources/js/router/index.js (rutas nuevas)
+- resources/css/app.css (estilos menú popup)
+
+**Estado:** Frontend de suscripciones listo, pendiente backend + MercadoPago
+
+---
+
 #### Sesión 7: Calendario, Servicios, Exportaciones, Recordatorios y WhatsApp
 **Duración:** ~4 horas
 
@@ -308,7 +417,7 @@
 11. [x] ~~Dark mode~~
 
 ### Post-MVP (Opcionales)
-12. [ ] Multi-idioma (i18n)
+12. [x] ~~Multi-idioma (i18n)~~
 13. [ ] Pagos online (MercadoPago/Stripe)
 14. [ ] App móvil (PWA)
 15. [ ] Reportes avanzados y analytics
@@ -333,8 +442,10 @@
 | Exportación PDF/Excel | ✅ Completo | 100% |
 | Notificaciones Email | ✅ Completo (recordatorios) | 100% |
 | Integración WhatsApp | ✅ Completo (Twilio sandbox) | 100% |
+| Multi-idioma (i18n) | ✅ Completo (ES/EN/PT) | 100% |
 
 **Progreso Total del MVP:** 100% ✅
+**Features Post-MVP:** 1/5 completados
 
 ---
 

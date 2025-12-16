@@ -71,6 +71,24 @@ const routes = [
         component: () => import('../pages/Configuracion.vue'),
         meta: { requiresAuth: true },
     },
+    {
+        path: '/planes',
+        name: 'planes',
+        component: () => import('../pages/Planes.vue'),
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/facturacion',
+        name: 'facturacion',
+        component: () => import('../pages/Facturacion.vue'),
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/ingresos',
+        name: 'ingresos',
+        component: () => import('../pages/Ingresos.vue'),
+        meta: { requiresAuth: true },
+    },
 
     /* ============================================
        RUTA 404
