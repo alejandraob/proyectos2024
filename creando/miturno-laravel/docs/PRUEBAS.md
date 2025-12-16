@@ -171,12 +171,12 @@
 
 ---
 
-### Endpoints Pendientes de Probar
+### Endpoints Probados (16/12/2025)
 
-- [ ] POST /api/appointments (crear turno desde panel)
-- [ ] PUT /api/appointments/{id} (actualizar turno)
-- [ ] POST /api/appointments/{id}/cancel (cancelar turno)
-- [ ] POST /api/negocio/{slug}/turno (reserva pública)
-- [ ] PUT /api/business (actualizar negocio)
-- [ ] PUT /api/business/settings (actualizar config)
-- [ ] CRUD completo de clientes
+- [x] POST /api/appointments (crear turno desde panel)
+- [x] PUT /api/appointments/{id} (actualizar turno)
+- [x] POST /api/appointments/{id}/cancel (cancelar turno)
+- [x] POST /api/negocio/{slug}/turno (reserva pública)
+- [x] PUT /api/business (actualizar negocio)
+- [x] PUT /api/business/settings (actualizar config)
+- [x] CRUD completo de clientes

@@ -15,7 +15,156 @@
 
 ## Registro Diario
 
+### 16 de Diciembre 2025
+
+#### Sesión 7: Calendario, Servicios, Exportaciones, Recordatorios y WhatsApp
+**Duración:** ~4 horas
+
+**Trabajo realizado:**
+
+**FullCalendar Integration (Feature #023):**
+- Instalación de @fullcalendar/vue3 y plugins (daygrid, timegrid, interaction)
+- Vista de calendario completo en Agenda.vue
+- Visualización de turnos por día, semana y mes
+- Colores por estado (pendiente, confirmado, cancelado, completado)
+- Click en evento abre modal de detalles/edición
+- Click en slot vacío permite crear nuevo turno
+
+**Sistema de Servicios (Feature #024):**
+- Migración: create_services_table (nombre, duración, precio, descripción)
+- Modelo Service con relación a Business
+- Controller ServiceController con CRUD completo
+- Integración en formulario de turnos (selector de servicio)
+- Servicios opcionales - el campo servicio no es requerido
+
+**Historial de Cliente (Feature #025):**
+- Modal de historial al hacer click en cliente
+- Lista de todos los turnos del cliente
+- Filtros por estado y fecha
+- Estadísticas: total turnos, completados, cancelados
+
+**Exportación PDF/Excel (Feature #026):**
+- Instalación de maatwebsite/excel y barryvdh/laravel-dompdf
+- Endpoint GET /api/appointments/export?format=pdf|excel
+- Filtros: fecha_desde, fecha_hasta, estado
+- PDF con diseño profesional (logo, tabla, totales)
+- Excel con columnas: fecha, cliente, servicio, estado, etc.
+
+**Recordatorios Automáticos (Feature #027):**
+- Mail RecordatorioTurnoMail con template HTML
+- Comando artisan turnos:enviar-recordatorios
+- Busca turnos de mañana y envía email a clientes
+- Configuración en settings: notificaciones_email toggle
+- Programable en Scheduler para ejecutar diariamente
+
+**Integración WhatsApp con Twilio (Feature #028):**
+- Instalación de twilio/sdk
+- Configuración en .env y config/services.php
+- Servicio WhatsAppService.php con métodos:
+  - sendMessage() - envío genérico
+  - notifyNewAppointment() - notifica al profesional
+  - notifyAppointmentConfirmed() - notifica al cliente
+  - notifyAppointmentCancelled() - notifica cancelación
+  - sendReminder() - recordatorio 24h antes
+- Integración en AppointmentController (crear, confirmar, cancelar)
+- Integración en SendAppointmentReminders (recordatorios WhatsApp)
+- Fix SSL para desarrollo Windows (CurlClient sin verificación)
+- Toggle funcional en Configuración.vue
+
+**Archivos creados:**
+- app/Services/WhatsAppService.php
+- app/Mail/RecordatorioTurnoMail.php
+- app/Console/Commands/SendAppointmentReminders.php
+- app/Exports/AppointmentsExport.php
+- database/migrations/xxxx_create_services_table.php
+- resources/views/emails/recordatorio-turno.blade.php
+
+**Archivos modificados:**
+- app/Http/Controllers/AppointmentController.php (WhatsApp)
+- config/services.php (Twilio config)
+- resources/js/pages/Agenda.vue (FullCalendar)
+- resources/js/pages/Configuracion.vue (toggle WhatsApp)
+- .env (credenciales Twilio)
+
+**Twilio Sandbox:**
+- Credenciales configuradas en .env (no subir al repo)
+- Nota: En sandbox, cada destinatario debe enviar "join <código>" primero
+
+**Estado al finalizar:** MVP 100% completo
+
+---
+
 ### 15 de Diciembre 2025
+
+#### Sesión 6: Página Pública de Reservas
+**Duración:** ~1 hora
+
+**Trabajo realizado:**
+
+**Página Reservar.vue (Feature #021):**
+- Creación de página pública para clientes finales
+- Diseño básico sin personalización (Opción A del MVP)
+- Wizard de 3 pasos: Fecha → Horario → Datos
+- Header con nombre del negocio, rubro y dirección
+- Muestra días de atención del negocio
+
+**Funcionalidades implementadas:**
+- Selector de fecha con validación de días laborales
+- Grid de slots disponibles (filtrado por disponibilidad)
+- Formulario: nombre, teléfono, email (opcional), motivo (opcional)
+- Confirmación visual con mensaje de éxito
+- Botón "Reservar otro turno" para reiniciar
+
+**Validaciones:**
+- No permite seleccionar días que el negocio no atiende
+- Notificación Toast cuando se selecciona día inválido
+- Validación de campos requeridos en formulario
+
+**Link de reservas en Configuración (Feature #022):**
+- Sección "Link de reservas" en datos del negocio
+- Input readonly con URL completa (ej: /reservar/peluqueria-ana-1)
+- Botón copiar al portapapeles con notificación
+- Botón "Ver" que abre en nueva pestaña
+- Estilos CSS para .url-publica
+
+**Archivos creados/modificados:**
+- resources/js/pages/Reservar.vue (nuevo)
+- resources/js/router/index.js (ruta /reservar/:slug)
+- resources/js/pages/Configuracion.vue (link de reservas)
+- resources/css/app.css (estilos .url-publica)
+
+**Estado al finalizar:** Página pública de reservas funcional, MVP 95%
+
+---
+
+#### Sesión 5: Optimizaciones y Mejoras UI
+**Duración:** ~1 hora
+
+**Trabajo realizado:**
+
+**Optimización Dashboard:**
+- Dashboard conectado a endpoint /api/business/stats (Feature #019)
+- Reducción de llamadas API: de 3 a 2 (stats + turnos del día)
+- Agregado método getStats() a businessService en api.js
+
+**Mejoras Clientes.vue:**
+- Botones de acción actualizados a PrimeVue Button con iconos
+- Iconos: pi-pencil (editar) y pi-trash (eliminar)
+- Estilo consistente con página de Agenda
+- Tooltips agregados a los botones
+
+**Fix UI:**
+- Fix #020: Botón "Cerrar sesión" invisible en tema default
+- Causa: .btn-ghost usaba --color-text (oscuro) sobre sidebar oscuro
+- Solución: CSS específico para .sidebar-footer .btn con color blanco
+
+**Problema resuelto:**
+- Error de caché Vite (ENOENT vue-router)
+- Solución: rm -rf node_modules/.vite && npm run dev
+
+**Estado al finalizar:** Dashboard optimizado, UI consistente
+
+---
 
 #### Sesión 4: Frontend Completo
 **Duración:** ~3 horas
@@ -53,14 +202,24 @@
 - SpeedDial para acciones en tabla de turnos (Fix #008)
 - Instalación de PrimeIcons
 - Menú dinámico según estado del turno
+- Sidebar colapsable con botón hamburguesa
+- Dark mode con toggle y persistencia en localStorage
+- Sistema de temas de colores personalizables (5 temas)
+
+**Autenticación:**
+- Página de recuperar contraseña (Feature #010)
+- Link en login cuando hay error de credenciales
+- Tema de colores por usuario en BD (Fix #011)
 
 **Problemas encontrados:**
 - Responsive de horarios cortado (Fix #006)
 - Import en terminal de Windows (Fix #007)
 - Falta de botón editar en agenda (arreglado)
 - Flujo de estados incompleto (arreglado)
+- Dark mode button abría sidebar en móvil (Fix #009)
+- Tema compartido entre usuarios (Fix #011)
 
-**Estado al finalizar:** Frontend MVP funcional
+**Estado al finalizar:** Frontend MVP funcional + Personalización de temas + Recuperar contraseña
 
 ---
 
@@ -136,17 +295,24 @@
 2. [x] ~~Implementar autenticación en Vue (login/register)~~
 3. [x] ~~Crear layout principal con sidebar~~
 4. [x] ~~Implementar vista de Agenda~~
-5. [ ] Crear página pública de reservas (/reservar/:slug)
+5. [x] ~~Crear página pública de reservas (/reservar/:slug)~~
 
 ### Prioridad Media
 6. [x] ~~CRUD de clientes en frontend~~
 7. [x] ~~Configuración de negocio en frontend~~
-8. [ ] Calendario visual (FullCalendar)
+8. [x] ~~Calendario visual (FullCalendar)~~
 
 ### Prioridad Baja
-9. [ ] Notificaciones por email
-10. [ ] Integración WhatsApp
-11. [ ] Dark mode
+9. [x] ~~Notificaciones por email (envío real)~~
+10. [x] ~~Integración WhatsApp (Twilio)~~
+11. [x] ~~Dark mode~~
+
+### Post-MVP (Opcionales)
+12. [ ] Multi-idioma (i18n)
+13. [ ] Pagos online (MercadoPago/Stripe)
+14. [ ] App móvil (PWA)
+15. [ ] Reportes avanzados y analytics
+16. [ ] WhatsApp Business API (producción)
 
 ---
 
@@ -156,14 +322,19 @@
 |--------|--------|------------|
 | Backend API | ✅ Completo | 100% |
 | Autenticación Frontend | ✅ Completo | 100% |
-| Dashboard | ✅ Completo | 100% |
-| Agenda (CRUD) | ✅ Completo | 100% |
-| Clientes (CRUD) | ✅ Completo | 100% |
-| Configuración | ✅ Completo | 100% |
-| Página Pública | 📋 Pendiente | 0% |
-| Notificaciones Email | 📋 Pendiente | 0% |
+| Dashboard | ✅ Optimizado (endpoint stats) | 100% |
+| Agenda (CRUD) | ✅ Completo + FullCalendar | 100% |
+| Clientes (CRUD) | ✅ Completo + Historial | 100% |
+| Configuración | ✅ Completo + Link de reservas | 100% |
+| Recuperar Contraseña | ✅ Completo (simulado) | 100% |
+| Temas por Usuario | ✅ Completo | 100% |
+| Página Pública | ✅ Completo (wizard 3 pasos) | 100% |
+| Sistema de Servicios | ✅ Completo (CRUD) | 100% |
+| Exportación PDF/Excel | ✅ Completo | 100% |
+| Notificaciones Email | ✅ Completo (recordatorios) | 100% |
+| Integración WhatsApp | ✅ Completo (Twilio sandbox) | 100% |
 
-**Progreso Total del MVP:** ~85%
+**Progreso Total del MVP:** 100% ✅
 
 ---
 
@@ -195,4 +366,6 @@ npm run build                        # Build para producción
 
 **Slug del negocio:** `peluqueria-ana-1`
 
-**URL pública:** `http://localhost:8000/api/negocio/peluqueria-ana-1`
+**URL pública (API):** `http://localhost:8000/api/negocio/peluqueria-ana-1`
+
+**URL reservas (Frontend):** `http://localhost:8000/reservar/peluqueria-ana-1`

@@ -10,14 +10,26 @@ class ClientController extends Controller
     /**
      * Listar todos los clientes del negocio
      *
-     * Retorna: Lista de clientes con sus turnos
+     * Query params opcionales:
+     * - buscar: Buscar por nombre o teléfono
+     *
+     * Retorna: Lista de clientes con cantidad de turnos
      */
     public function index(Request $request)
     {
-        $clients = $request->user()->business->clients()
-            ->withCount('appointments') // Agrega cantidad de turnos
-            ->orderBy('nombre')
-            ->get();
+        $query = $request->user()->business->clients()
+            ->withCount('appointments');
+
+        // Búsqueda por nombre o teléfono
+        if ($request->has('buscar') && $request->buscar) {
+            $buscar = $request->buscar;
+            $query->where(function ($q) use ($buscar) {
+                $q->where('nombre', 'like', "%{$buscar}%")
+                  ->orWhere('telefono', 'like', "%{$buscar}%");
+            });
+        }
+
+        $clients = $query->orderBy('nombre')->get();
 
         return response()->json($clients);
     }
@@ -51,12 +63,15 @@ class ClientController extends Controller
     /**
      * Mostrar un cliente específico
      *
-     * Retorna: Cliente con historial de turnos
+     * Retorna: Cliente con historial de turnos (incluyendo servicio)
      */
     public function show(Request $request, $id)
     {
         $client = $request->user()->business->clients()
-            ->with('appointments')
+            ->with(['appointments' => function ($query) {
+                $query->with('service')
+                    ->orderBy('fecha_inicio', 'desc');
+            }])
             ->findOrFail($id);
 
         return response()->json($client);

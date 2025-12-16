@@ -10,6 +10,11 @@
             <!-- Alerta de error -->
             <div v-if="error" class="alert alert-danger">
                 {{ error }}
+                <p v-if="showRecoveryLink" class="mt-2">
+                    <router-link to="/forgot-password" class="alert-link">
+                        ¿Olvidaste tu contraseña? Recuperala aquí
+                    </router-link>
+                </p>
             </div>
 
             <!-- Formulario -->
@@ -79,12 +84,14 @@ const form = reactive({
 const loading = ref(false)
 const error = ref(null)
 const errors = ref({})
+const showRecoveryLink = ref(false)
 
 // Enviar formulario
 const handleSubmit = async () => {
     loading.value = true
     error.value = null
     errors.value = {}
+    showRecoveryLink.value = false
 
     const result = await authStore.login(form)
 
@@ -95,6 +102,10 @@ const handleSubmit = async () => {
         error.value = result.error
         if (result.errors) {
             errors.value = result.errors
+        }
+        // Mostrar link de recuperación si es error de credenciales (401)
+        if (result.status === 401) {
+            showRecoveryLink.value = true
         }
     }
 

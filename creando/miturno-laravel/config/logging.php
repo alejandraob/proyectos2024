@@ -126,6 +126,14 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        // Canal personalizado para debug de turnos
+        'turnos' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/turnos.log'),
+            'level' => 'debug',
+            'replace_placeholders' => true,
+        ],
     ],
 
 ];

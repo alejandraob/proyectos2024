@@ -14,6 +14,7 @@ class Setting extends Model
         'notificaciones_whatsapp',
         'notificaciones_email',
         'intervalo_turnos',
+        'color_theme',
     ];
 
     protected $casts = [

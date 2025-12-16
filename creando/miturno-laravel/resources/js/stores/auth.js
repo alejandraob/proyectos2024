@@ -93,13 +93,19 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem('user', JSON.stringify(user))
                 localStorage.setItem('business', JSON.stringify(user.business))
 
+                // Aplicar tema del usuario
+                const colorTheme = user.business?.setting?.color_theme || 'default'
+                document.documentElement.setAttribute('data-theme', colorTheme)
+                localStorage.setItem('colorTheme', colorTheme)
+
                 return { success: true, errors: {} }
 
             } catch (error) {
                 const message = error.response?.data?.message || 'Error al iniciar sesión'
                 const errors = error.response?.data?.errors || {}
+                const status = error.response?.status || 500
                 this.error = message
-                return { success: false, error: message, errors }
+                return { success: false, error: message, errors, status }
 
             } finally {
                 this.loading = false
@@ -167,6 +173,10 @@ export const useAuthStore = defineStore('auth', {
             localStorage.removeItem('token')
             localStorage.removeItem('user')
             localStorage.removeItem('business')
+
+            // Resetear tema a default
+            document.documentElement.setAttribute('data-theme', 'default')
+            localStorage.setItem('colorTheme', 'default')
         },
 
 

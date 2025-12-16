@@ -221,6 +221,325 @@ npm install primeicons
 
 ---
 
+## Fix #009 - Dark mode abre sidebar en móvil (15/12/2025)
+
+### Problema
+En dispositivos móviles (probado con Responsively App en iPhone 12), al tocar el botón de dark mode (sol/luna) en el header, se abría el sidebar en lugar de cambiar el tema.
+
+### Causa
+Múltiples factores contribuían al problema:
+1. **Áreas táctiles superpuestas**: Los botones de 40x40px eran más pequeños que el mínimo recomendado de 44x44px para iOS
+2. **Propagación de eventos**: Los eventos de click podían propagarse entre elementos
+3. **Compresión de layout**: En pantallas pequeñas, el título de la página empujaba los elementos causando superposición
+
+### Solución
+1. **Aumentar tamaño de botones** a 44x44px (estándar iOS):
+```css
+.btn-hamburger, .btn-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+}
+```
+
+2. **Prevenir propagación de eventos** en Vue:
+```vue
+<button @click.stop.prevent="toggleDarkMode" type="button">
+<button @click.stop.prevent="toggleSidebar" type="button">
+```
+
+3. **Optimizar para touch** en CSS:
+```css
+-webkit-tap-highlight-color: transparent;
+touch-action: manipulation;
+position: relative;
+z-index: 10;
+```
+
+4. **Evitar compresión de elementos**:
+```css
+.header-left, .header-actions {
+    flex-shrink: 0;
+}
+
+/* En móviles pequeños */
+.page-title {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+```
+
+### Archivos modificados
+- `resources/js/components/layout/MainLayout.vue` (botones con .stop.prevent, estilos scoped)
+- `resources/css/app.css` (media query 480px para header)
+
+---
+
+## Feature #010 - Recuperar contraseña (15/12/2025)
+
+### Descripción
+Implementación de funcionalidad "Olvidé mi contraseña" para mejorar la experiencia cuando un usuario no recuerda sus credenciales.
+
+### Funcionalidad
+1. **Login mejorado**: Cuando hay error 401 (credenciales inválidas), se muestra un link "¿Olvidaste tu contraseña? Recuperala aquí".
+
+2. **Página de recuperación** (`/forgot-password`): Formulario para ingresar email y solicitar recuperación.
+
+3. **Seguridad**: El backend siempre responde con éxito (no revela si el email existe en el sistema).
+
+4. **Nota**: El envío real de email está pendiente (marcado con TODO). Por ahora solo se loguea la solicitud.
+
+### Archivos creados/modificados
+- `resources/js/pages/ForgotPassword.vue` (nueva página)
+- `resources/js/pages/Login.vue` (link a recuperar cuando hay error 401)
+- `resources/js/router/index.js` (ruta /forgot-password)
+- `resources/js/services/api.js` (método forgotPassword)
+- `resources/js/stores/auth.js` (devuelve status en error de login)
+- `resources/css/app.css` (estilo .alert-link)
+- `app/Http/Controllers/AuthController.php` (método forgotPassword)
+- `routes/api.php` (ruta POST /forgot-password)
+
+---
+
+## Fix #011 - Tema de colores compartido entre usuarios (15/12/2025)
+
+### Problema
+Al cambiar de usuario, el tema de colores se mantenía del usuario anterior. Por ejemplo: Ana tenía tema "Atardecer", cerraba sesión, Lautaro iniciaba sesión y veía el tema "Atardecer" en lugar de su propio tema "Default".
+
+### Causa
+El tema de colores se guardaba únicamente en `localStorage` del navegador, sin asociarlo al usuario. Todos los usuarios del mismo navegador compartían el mismo tema.
+
+### Solución
+1. **Nueva migración** para agregar campo `color_theme` a tabla `settings`:
+```php
+$table->string('color_theme', 50)->default('default');
+```
+
+2. **Backend**: Modificar `updateSettings` para aceptar `color_theme` y validar valores permitidos.
+
+3. **Login**: Cargar el tema del usuario al autenticarse:
+```javascript
+const colorTheme = user.business?.setting?.color_theme || 'default'
+document.documentElement.setAttribute('data-theme', colorTheme)
+```
+
+4. **Logout**: Resetear tema a default al cerrar sesión.
+
+5. **Configuración**: Guardar tema en backend cuando el usuario lo cambia.
+
+### Archivos modificados
+- `database/migrations/2025_12_15_170254_add_color_theme_to_settings_table.php` (nueva migración)
+- `app/Models/Setting.php` (agregado color_theme a fillable)
+- `app/Http/Controllers/BusinessController.php` (updateSettings acepta color_theme)
+- `app/Http/Controllers/AuthController.php` (login carga business.setting)
+- `resources/js/stores/auth.js` (aplica tema en login, resetea en logout)
+- `resources/js/pages/Configuracion.vue` (guarda tema en backend)
+
+---
+
+## Fix #012 - Validación de client_id en AppointmentController (15/12/2025)
+
+### Problema (Vulnerabilidad de seguridad)
+Al crear un turno, se validaba que el `client_id` existiera en la tabla `clients`, pero NO se verificaba que perteneciera al negocio del usuario autenticado.
+
+### Escenario de ataque
+1. Ana tiene cliente ID 1 (María) en su negocio
+2. Lautaro descubre que existe el cliente ID 1
+3. Lautaro crea un turno con `client_id: 1`
+4. El turno se crea asociado a María (cliente de otro negocio)
+
+### Solución
+Agregar validación explícita antes de crear el turno:
+```php
+if ($request->client_id) {
+    $clienteValido = $business->clients()->where('id', $request->client_id)->exists();
+    if (!$clienteValido) {
+        return response()->json([
+            'message' => 'El cliente no pertenece a tu negocio',
+        ], 403);
+    }
+}
+```
+
+### Archivos modificados
+- `app/Http/Controllers/AppointmentController.php` (método store)
+
+---
+
+## Feature #013 - Rate limiting en autenticación (15/12/2025)
+
+### Descripción
+Protección contra ataques de fuerza bruta en las rutas de autenticación.
+
+### Implementación
+Aplicado middleware `throttle:5,1` a las rutas de autenticación:
+- `/api/login` - 5 intentos por minuto
+- `/api/register` - 5 intentos por minuto
+- `/api/forgot-password` - 5 intentos por minuto
+
+```php
+Route::middleware('throttle:5,1')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+});
+```
+
+Si se excede el límite, Laravel retorna automáticamente un error 429 (Too Many Requests).
+
+### Archivos modificados
+- `routes/api.php`
+
+---
+
+## Fix #014 - Validación de fechas futuras para turnos (15/12/2025)
+
+### Problema
+Se podían crear turnos con fechas pasadas, lo cual no tiene sentido para un sistema de reservas.
+
+### Solución
+Agregar validación `after_or_equal:today` en los métodos `store` y `storePublic`:
+
+```php
+'fecha_inicio' => 'required|date|after_or_equal:today',
+```
+
+Esto asegura que solo se puedan crear turnos para hoy o fechas futuras.
+
+### Archivos modificados
+- `app/Http/Controllers/AppointmentController.php` (métodos store y storePublic)
+
+---
+
+## Feature #015 - Endpoint de estadísticas del negocio (15/12/2025)
+
+### Descripción
+Nuevo endpoint para obtener estadísticas del negocio, útil para dashboards y reportes.
+
+### Endpoint
+`GET /api/business/stats`
+
+### Respuesta
+```json
+{
+    "turnos_hoy": 5,
+    "turnos_pendientes": 3,
+    "total_clientes": 25,
+    "turnos_mes": 45,
+    "turnos_completados_mes": 30,
+    "turnos_cancelados_mes": 5
+}
+```
+
+### Archivos modificados
+- `app/Http/Controllers/BusinessController.php` (método stats)
+- `routes/api.php` (ruta GET /business/stats)
+
+---
+
+## Feature #016 - Búsqueda de clientes por nombre/teléfono (15/12/2025)
+
+### Descripción
+El endpoint de listar clientes ahora soporta búsqueda por nombre o teléfono.
+
+### Uso
+`GET /api/clients?buscar=María`
+`GET /api/clients?buscar=1155`
+
+### Implementación
+```php
+if ($request->has('buscar') && $request->buscar) {
+    $buscar = $request->buscar;
+    $query->where(function ($q) use ($buscar) {
+        $q->where('nombre', 'like', "%{$buscar}%")
+          ->orWhere('telefono', 'like', "%{$buscar}%");
+    });
+}
+```
+
+### Archivos modificados
+- `app/Http/Controllers/ClientController.php` (método index)
+
+---
+
+## Feature #017 - Filtro de turnos por cliente (15/12/2025)
+
+### Descripción
+El endpoint de listar turnos ahora soporta filtrar por cliente específico.
+
+### Uso
+`GET /api/appointments?client_id=5`
+
+Se puede combinar con otros filtros existentes:
+`GET /api/appointments?client_id=5&estado=confirmado&desde=2025-12-01`
+
+### Archivos modificados
+- `app/Http/Controllers/AppointmentController.php` (método index)
+
+---
+
+## Feature #018 - Soft deletes para turnos cancelados (15/12/2025)
+
+### Descripción
+Los turnos cancelados ahora utilizan soft deletes, manteniéndose en la base de datos pero ocultos de las consultas normales. Esto permite mantener historial para reportes.
+
+### Implementación
+1. **Nueva migración**: Agrega columna `deleted_at` a tabla appointments
+2. **Modelo Appointment**: Usa trait `SoftDeletes`
+3. **Método cancel**: Aplica soft delete después de marcar como cancelado
+
+### Comportamiento
+- Al cancelar un turno: se marca como `cancelado` y se aplica soft delete
+- Las consultas normales no muestran turnos cancelados
+- Para ver turnos eliminados: `Appointment::withTrashed()->get()`
+- Para restaurar: `$appointment->restore()`
+
+### Archivos creados/modificados
+- `database/migrations/2025_12_15_173542_add_soft_deletes_to_appointments_table.php`
+- `app/Models/Appointment.php` (trait SoftDeletes)
+- `app/Http/Controllers/AppointmentController.php` (método cancel)
+
+---
+
+## Feature #019 - Dashboard conectado a endpoint de estadísticas (15/12/2025)
+
+### Descripción
+El Dashboard ahora usa el endpoint `/api/business/stats` para obtener las estadísticas, en lugar de calcularlas en el frontend con múltiples llamadas a la API.
+
+### Mejora de rendimiento
+- **Antes**: 3 llamadas a la API (turnos de hoy, clientes, turnos del mes)
+- **Después**: 1 llamada a `/business/stats` + 1 para turnos de hoy (tabla)
+
+### Archivos modificados
+- `resources/js/services/api.js` (método getStats en businessService)
+- `resources/js/pages/Dashboard.vue` (usa businessService.getStats)
+
+---
+
+## Fix #020 - Botón "Cerrar sesión" invisible en tema default (15/12/2025)
+
+### Problema
+En el tema default, el texto "Cerrar sesión" del sidebar no era visible porque el color del texto era casi negro sobre fondo oscuro.
+
+### Causa
+La clase `.btn-ghost` definía `color: var(--color-text)` que en el tema default es `#121012` (casi negro), igual que el fondo del sidebar.
+
+### Solución
+Agregar regla CSS específica para botones dentro del sidebar-footer:
+```css
+.sidebar-footer .btn {
+    color: var(--color-white);
+    background-color: transparent;
+}
+```
+
+### Archivos modificados
+- `resources/css/app.css`
+
+---
+
 ## Template para nuevos fixes
 
 ```markdown

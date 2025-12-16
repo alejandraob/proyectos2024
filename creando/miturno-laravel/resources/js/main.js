@@ -11,6 +11,16 @@ import router from './router'
 import '../css/app.css'
 import 'primeicons/primeicons.css'
 
+// Cargar tema de colores guardado
+const savedTheme = localStorage.getItem('colorTheme') || 'default'
+document.documentElement.setAttribute('data-theme', savedTheme)
+
+// Cargar dark mode guardado
+const savedDarkMode = localStorage.getItem('darkMode')
+if (savedDarkMode === 'true') {
+    document.documentElement.classList.add('dark-mode')
+}
+
 // Crear la aplicación
 const app = createApp(App)
 

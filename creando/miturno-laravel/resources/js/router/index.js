@@ -31,6 +31,18 @@ const routes = [
         component: () => import('../pages/Register.vue'),
         meta: { guest: true },
     },
+    {
+        path: '/forgot-password',
+        name: 'forgot-password',
+        component: () => import('../pages/ForgotPassword.vue'),
+        meta: { guest: true },
+    },
+    {
+        path: '/reservar/:slug',
+        name: 'reservar',
+        component: () => import('../pages/Reservar.vue'),
+        meta: { public: true },  // Página pública para clientes
+    },
 
     /* ============================================
        RUTAS PROTEGIDAS (requieren autenticación)

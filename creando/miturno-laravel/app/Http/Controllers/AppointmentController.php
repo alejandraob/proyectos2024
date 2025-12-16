@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Business;
 use App\Models\Client;
+use App\Mail\NuevoTurnoMail;
+use App\Mail\TurnoConfirmadoMail;
+use App\Mail\TurnoCanceladoMail;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -19,10 +24,11 @@ class AppointmentController extends Controller
      * - desde: Fecha inicio del rango
      * - hasta: Fecha fin del rango
      * - estado: pendiente, confirmado, cancelado
+     * - client_id: Filtrar por cliente específico
      */
     public function index(Request $request)
     {
-        $query = $request->user()->business->appointments()->with('client');
+        $query = $request->user()->business->appointments()->with(['client', 'service']);
 
         // Filtrar por fecha específica
         if ($request->has('fecha')) {
@@ -43,6 +49,11 @@ class AppointmentController extends Controller
             $query->where('estado', $request->estado);
         }
 
+        // Filtrar por cliente
+        if ($request->has('client_id')) {
+            $query->where('client_id', $request->client_id);
+        }
+
         $appointments = $query->orderBy('fecha_inicio')->get();
 
         return response()->json($appointments);
@@ -57,15 +68,26 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'fecha_inicio' => 'required|date',
+            'fecha_inicio' => 'required|date|after_or_equal:today',
             'fecha_fin' => 'required|date|after:fecha_inicio',
             'motivo' => 'nullable|string|max:255',
-            'client_id' => 'nullable|exists:clients,id',
+            'service_id' => 'nullable|integer|exists:services,id',
+            'client_id' => 'nullable|integer',
             'nombre_cliente' => 'nullable|string|max:255',
             'telefono_cliente' => 'nullable|string|max:50',
         ]);
 
         $business = $request->user()->business;
+
+        // Validar que el cliente pertenezca al negocio del usuario
+        if ($request->client_id) {
+            $clienteValido = $business->clients()->where('id', $request->client_id)->exists();
+            if (!$clienteValido) {
+                return response()->json([
+                    'message' => 'El cliente no pertenece a tu negocio',
+                ], 403);
+            }
+        }
 
         // Verificar que no haya conflicto de horarios
         $conflicto = $this->verificarConflicto(
@@ -95,6 +117,7 @@ class AppointmentController extends Controller
         $appointment = Appointment::create([
             'business_id' => $business->id,
             'client_id' => $clientId,
+            'service_id' => $request->service_id,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin' => $request->fecha_fin,
             'motivo' => $request->motivo,
@@ -104,7 +127,7 @@ class AppointmentController extends Controller
 
         return response()->json([
             'message' => 'Turno creado correctamente',
-            'appointment' => $appointment->load('client'),
+            'appointment' => $appointment->load(['client', 'service']),
         ], 201);
     }
 
@@ -117,12 +140,13 @@ class AppointmentController extends Controller
     public function storePublic(Request $request, $slug)
     {
         $request->validate([
-            'fecha_inicio' => 'required|date',
+            'fecha_inicio' => 'required|date|after_or_equal:today',
             'fecha_fin' => 'required|date|after:fecha_inicio',
             'nombre' => 'required|string|max:255',
             'telefono' => 'nullable|string|max:50',
             'email' => 'nullable|email|max:255',
             'motivo' => 'nullable|string|max:255',
+            'service_id' => 'nullable|integer|exists:services,id',
         ]);
 
         // Buscar el negocio por slug
@@ -157,6 +181,7 @@ class AppointmentController extends Controller
         $appointment = Appointment::create([
             'business_id' => $business->id,
             'client_id' => $client->id,
+            'service_id' => $request->service_id,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin' => $request->fecha_fin,
             'motivo' => $request->motivo,
@@ -164,9 +189,13 @@ class AppointmentController extends Controller
             'estado' => 'pendiente',
         ]);
 
+        // Enviar notificaciones al profesional
+        $this->enviarEmailNuevoTurno($appointment);
+        $this->enviarWhatsAppNuevoTurno($appointment);
+
         return response()->json([
             'message' => 'Turno solicitado correctamente. Te confirmaremos pronto.',
-            'appointment' => $appointment,
+            'appointment' => $appointment->load('service'),
         ], 201);
     }
 
@@ -176,7 +205,7 @@ class AppointmentController extends Controller
     public function show(Request $request, $id)
     {
         $appointment = $request->user()->business->appointments()
-            ->with('client')
+            ->with(['client', 'service'])
             ->findOrFail($id);
 
         return response()->json($appointment);
@@ -185,7 +214,7 @@ class AppointmentController extends Controller
     /**
      * Actualizar un turno
      *
-     * Recibe: fecha_inicio, fecha_fin, motivo, estado
+     * Recibe: fecha_inicio, fecha_fin, motivo, estado, nombre_cliente, telefono_cliente
      */
     public function update(Request $request, $id)
     {
@@ -193,7 +222,10 @@ class AppointmentController extends Controller
             'fecha_inicio' => 'sometimes|date',
             'fecha_fin' => 'sometimes|date|after:fecha_inicio',
             'motivo' => 'nullable|string|max:255',
+            'service_id' => 'nullable|integer|exists:services,id',
             'estado' => 'sometimes|in:pendiente,confirmado,cancelado',
+            'nombre_cliente' => 'nullable|string|max:255',
+            'telefono_cliente' => 'nullable|string|max:50',
         ]);
 
         $appointment = $request->user()->business->appointments()->findOrFail($id);
@@ -217,32 +249,63 @@ class AppointmentController extends Controller
             }
         }
 
+        $estadoAnterior = $appointment->estado;
+
+        // Actualizar datos del turno
         $appointment->update($request->only([
             'fecha_inicio',
             'fecha_fin',
             'motivo',
+            'service_id',
             'estado',
         ]));
 
+        // Actualizar datos del cliente si se enviaron
+        if ($appointment->client && ($request->filled('nombre_cliente') || $request->filled('telefono_cliente'))) {
+            $clientData = [];
+            if ($request->filled('nombre_cliente')) {
+                $clientData['nombre'] = $request->nombre_cliente;
+            }
+            if ($request->filled('telefono_cliente')) {
+                $clientData['telefono'] = $request->telefono_cliente;
+            }
+            $appointment->client->update($clientData);
+        }
+
+        // Refrescar para obtener datos actualizados
+        $appointment->refresh();
+
+        // Si el estado cambió a confirmado, enviar notificaciones al cliente
+        if ($request->estado === 'confirmado' && $estadoAnterior !== 'confirmado') {
+            $this->enviarEmailTurnoConfirmado($appointment);
+            $this->enviarWhatsAppTurnoConfirmado($appointment);
+        }
+
         return response()->json([
             'message' => 'Turno actualizado correctamente',
-            'appointment' => $appointment->load('client'),
+            'appointment' => $appointment->load(['client', 'service']),
         ]);
     }
 
     /**
      * Cancelar un turno
      *
-     * Cambia el estado a "cancelado"
+     * Cambia el estado a "cancelado" y aplica soft delete
      */
     public function cancel(Request $request, $id)
     {
         $appointment = $request->user()->business->appointments()->findOrFail($id);
+
+        // Enviar notificaciones al cliente antes de cancelar
+        $this->enviarEmailTurnoCancelado($appointment);
+        $this->enviarWhatsAppTurnoCancelado($appointment);
+
         $appointment->update(['estado' => 'cancelado']);
+        $appointment->delete(); // Soft delete - queda en BD con deleted_at
 
         return response()->json([
             'message' => 'Turno cancelado correctamente',
-            'appointment' => $appointment,
+            'appointment' => $appointment->load(['client', 'service']),
         ]);
     }
 
@@ -365,5 +428,141 @@ class AppointmentController extends Controller
         }
 
         return $slots;
+    }
+
+    /**
+     * Enviar email al profesional cuando un cliente solicita un turno
+     */
+    private function enviarEmailNuevoTurno(Appointment $appointment)
+    {
+        $appointment->load(['client', 'business.setting', 'business.user']);
+
+        // Verificar si tiene notificaciones por email activadas
+        if (!$appointment->business->setting?->notificaciones_email) {
+            return;
+        }
+
+        $emailProfesional = $appointment->business->user->email;
+
+        try {
+            Mail::to($emailProfesional)->send(new NuevoTurnoMail($appointment));
+        } catch (\Exception $e) {
+            // Log del error pero no interrumpir el flujo
+            \Log::error('Error enviando email de nuevo turno: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Enviar email al cliente cuando su turno es confirmado
+     */
+    private function enviarEmailTurnoConfirmado(Appointment $appointment)
+    {
+        $appointment->load(['client', 'business.setting']);
+
+        // Verificar si el cliente tiene email
+        if (!$appointment->client?->email) {
+            return;
+        }
+
+        try {
+            Mail::to($appointment->client->email)->send(new TurnoConfirmadoMail($appointment));
+        } catch (\Exception $e) {
+            \Log::error('Error enviando email de turno confirmado: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Enviar email al cliente cuando su turno es cancelado
+     */
+    private function enviarEmailTurnoCancelado(Appointment $appointment)
+    {
+        $appointment->load(['client', 'business']);
+
+        // Verificar si el cliente tiene email
+        if (!$appointment->client?->email) {
+            return;
+        }
+
+        try {
+            Mail::to($appointment->client->email)->send(new TurnoCanceladoMail($appointment));
+        } catch (\Exception $e) {
+            \Log::error('Error enviando email de turno cancelado: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Enviar WhatsApp al profesional cuando un cliente solicita un turno
+     */
+    private function enviarWhatsAppNuevoTurno(Appointment $appointment)
+    {
+        $appointment->load(['client', 'business.setting', 'business.user', 'service']);
+
+        // Verificar si tiene notificaciones por WhatsApp activadas
+        if (!$appointment->business->setting?->notificaciones_whatsapp) {
+            return;
+        }
+
+        // Obtener teléfono del profesional
+        $telefonoProfesional = $appointment->business->user->telefono;
+        if (!$telefonoProfesional) {
+            return;
+        }
+
+        try {
+            $whatsapp = new WhatsAppService();
+            $whatsapp->notifyNewAppointment($appointment, $telefonoProfesional);
+        } catch (\Exception $e) {
+            \Log::error('Error enviando WhatsApp de nuevo turno: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Enviar WhatsApp al cliente cuando su turno es confirmado
+     */
+    private function enviarWhatsAppTurnoConfirmado(Appointment $appointment)
+    {
+        $appointment->load(['client', 'business.setting', 'service']);
+
+        // Verificar si tiene notificaciones por WhatsApp activadas
+        if (!$appointment->business->setting?->notificaciones_whatsapp) {
+            return;
+        }
+
+        // Verificar si el cliente tiene teléfono
+        if (!$appointment->client?->telefono) {
+            return;
+        }
+
+        try {
+            $whatsapp = new WhatsAppService();
+            $whatsapp->notifyAppointmentConfirmed($appointment);
+        } catch (\Exception $e) {
+            \Log::error('Error enviando WhatsApp de turno confirmado: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Enviar WhatsApp al cliente cuando su turno es cancelado
+     */
+    private function enviarWhatsAppTurnoCancelado(Appointment $appointment)
+    {
+        $appointment->load(['client', 'business.setting']);
+
+        // Verificar si tiene notificaciones por WhatsApp activadas
+        if (!$appointment->business->setting?->notificaciones_whatsapp) {
+            return;
+        }
+
+        // Verificar si el cliente tiene teléfono
+        if (!$appointment->client?->telefono) {
+            return;
+        }
+
+        try {
+            $whatsapp = new WhatsAppService();
+            $whatsapp->notifyAppointmentCancelled($appointment);
+        } catch (\Exception $e) {
+            \Log::error('Error enviando WhatsApp de turno cancelado: ' . $e->getMessage());
+        }
     }
 }

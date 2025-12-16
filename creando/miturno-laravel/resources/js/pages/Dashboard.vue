@@ -123,7 +123,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import MainLayout from '../components/layout/MainLayout.vue'
-import { appointmentsService, clientsService } from '../services/api'
+import { appointmentsService, businessService } from '../services/api'
 
 // Estados
 const loading = ref(true)
@@ -148,28 +148,17 @@ const fetchData = async () => {
     loading.value = true
 
     try {
-        // Obtener fecha de hoy
+        // Obtener estadísticas del backend (una sola llamada)
+        const statsRes = await businessService.getStats()
+        stats.turnosHoy = statsRes.data.turnos_hoy
+        stats.pendientes = statsRes.data.turnos_pendientes
+        stats.clientes = statsRes.data.total_clientes
+        stats.esteMes = statsRes.data.turnos_mes
+
+        // Obtener turnos de hoy para la tabla
         const hoy = new Date().toISOString().split('T')[0]
-
-        // Obtener turnos de hoy
         const turnosRes = await appointmentsService.getAll({ fecha: hoy })
-        proximosTurnos.value = turnosRes.data.slice(0, 5) // Solo los primeros 5
-
-        // Calcular estadísticas
-        stats.turnosHoy = turnosRes.data.length
-        stats.pendientes = turnosRes.data.filter(t => t.estado === 'pendiente').length
-
-        // Obtener clientes
-        const clientesRes = await clientsService.getAll()
-        stats.clientes = clientesRes.data.length
-
-        // Turnos del mes (simplificado)
-        const primerDiaMes = new Date()
-        primerDiaMes.setDate(1)
-        const turnosMesRes = await appointmentsService.getAll({
-            desde: primerDiaMes.toISOString().split('T')[0],
-        })
-        stats.esteMes = turnosMesRes.data.filter(t => t.estado === 'confirmado').length
+        proximosTurnos.value = turnosRes.data.slice(0, 5)
 
     } catch (error) {
         console.error('Error cargando dashboard:', error)

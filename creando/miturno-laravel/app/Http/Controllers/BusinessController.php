@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Business;
 use App\Models\BusinessHour;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class BusinessController extends Controller
 {
@@ -84,7 +85,7 @@ class BusinessController extends Controller
     /**
      * Actualizar configuración del negocio
      *
-     * Recibe: notificaciones_email, notificaciones_whatsapp, intervalo_turnos
+     * Recibe: notificaciones_email, notificaciones_whatsapp, intervalo_turnos, color_theme
      */
     public function updateSettings(Request $request)
     {
@@ -92,6 +93,7 @@ class BusinessController extends Controller
             'notificaciones_email' => 'sometimes|boolean',
             'notificaciones_whatsapp' => 'sometimes|boolean',
             'intervalo_turnos' => 'sometimes|integer|in:15,30,45,60',
+            'color_theme' => 'sometimes|string|in:default,esmeralda,oceano,atardecer,neon',
         ]);
 
         $setting = $request->user()->business->setting;
@@ -99,11 +101,69 @@ class BusinessController extends Controller
             'notificaciones_email',
             'notificaciones_whatsapp',
             'intervalo_turnos',
+            'color_theme',
         ]));
 
         return response()->json([
             'message' => 'Configuración actualizada correctamente',
             'setting' => $setting,
+        ]);
+    }
+
+    /**
+     * Obtener estadísticas del negocio
+     *
+     * Retorna: turnos_hoy, turnos_pendientes, total_clientes, turnos_mes
+     */
+    public function stats(Request $request)
+    {
+        $business = $request->user()->business;
+        $hoy = Carbon::today();
+        $inicioMes = Carbon::now()->startOfMonth();
+        $finMes = Carbon::now()->endOfMonth();
+
+        // Turnos de hoy (confirmados y pendientes)
+        $turnosHoy = $business->appointments()
+            ->whereDate('fecha_inicio', $hoy)
+            ->whereIn('estado', ['pendiente', 'confirmado'])
+            ->count();
+
+        // Turnos pendientes (estado pendiente, fecha futura o hoy)
+        $turnosPendientes = $business->appointments()
+            ->where('estado', 'pendiente')
+            ->whereDate('fecha_inicio', '>=', $hoy)
+            ->count();
+
+        // Total de clientes
+        $totalClientes = $business->clients()->count();
+
+        // Turnos este mes (todos los estados)
+        $turnosMes = $business->appointments()
+            ->whereDate('fecha_inicio', '>=', $inicioMes)
+            ->whereDate('fecha_inicio', '<=', $finMes)
+            ->count();
+
+        // Turnos completados este mes
+        $turnosCompletadosMes = $business->appointments()
+            ->where('estado', 'confirmado')
+            ->whereDate('fecha_inicio', '>=', $inicioMes)
+            ->whereDate('fecha_inicio', '<', $hoy)
+            ->count();
+
+        // Turnos cancelados este mes
+        $turnosCanceladosMes = $business->appointments()
+            ->where('estado', 'cancelado')
+            ->whereDate('fecha_inicio', '>=', $inicioMes)
+            ->whereDate('fecha_inicio', '<=', $finMes)
+            ->count();
+
+        return response()->json([
+            'turnos_hoy' => $turnosHoy,
+            'turnos_pendientes' => $turnosPendientes,
+            'total_clientes' => $totalClientes,
+            'turnos_mes' => $turnosMes,
+            'turnos_completados_mes' => $turnosCompletadosMes,
+            'turnos_cancelados_mes' => $turnosCanceladosMes,
         ]);
     }
 

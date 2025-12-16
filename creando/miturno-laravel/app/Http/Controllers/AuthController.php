@@ -81,8 +81,8 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // Obtener usuario con su negocio
-        $user = User::with('business')->where('email', $request->email)->first();
+        // Obtener usuario con su negocio y configuración
+        $user = User::with('business.setting')->where('email', $request->email)->first();
 
         // Generar token
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -120,5 +120,33 @@ class AuthController extends Controller
         $user = $request->user()->load('business.setting');
 
         return response()->json($user);
+    }
+
+    /**
+     * Solicitar recuperación de contraseña
+     *
+     * Recibe: email
+     * Nota: Por seguridad, siempre retorna éxito (no revela si el email existe)
+     * TODO: Implementar envío real de email cuando se configure SMTP
+     */
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+        ]);
+
+        // Verificar si el usuario existe (solo para logging interno)
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+            // TODO: Generar token y enviar email
+            // Por ahora solo logueamos que se solicitó
+            \Log::info('Solicitud de recuperación de contraseña para: ' . $request->email);
+        }
+
+        // Siempre retornar éxito por seguridad
+        return response()->json([
+            'message' => 'Si el email existe, recibirás un enlace para restablecer tu contraseña.',
+        ]);
     }
 }

@@ -177,6 +177,10 @@ export const authService = {
     me() {
         return api.get('/me')
     },
+
+    forgotPassword(email) {
+        return api.post('/forgot-password', { email })
+    },
 }
 
 // --- Business Service ---
@@ -195,6 +199,10 @@ export const businessService = {
 
     updateSettings(settings) {
         return api.put('/business/settings', settings)
+    },
+
+    getStats() {
+        return api.get('/business/stats')
     },
 
     // Público - para clientes
@@ -223,6 +231,34 @@ export const clientsService = {
 
     delete(id) {
         return api.delete(`/clients/${id}`)
+    },
+}
+
+// --- Services Service (Servicios del negocio) ---
+export const servicesService = {
+    getAll() {
+        return api.get('/services')
+    },
+
+    getOne(id) {
+        return api.get(`/services/${id}`)
+    },
+
+    create(data) {
+        return api.post('/services', data)
+    },
+
+    update(id, data) {
+        return api.put(`/services/${id}`, data)
+    },
+
+    delete(id) {
+        return api.delete(`/services/${id}`)
+    },
+
+    // Público - para clientes
+    getBySlug(slug) {
+        return api.get(`/negocio/${slug}/services`)
     },
 }
 
