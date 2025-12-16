@@ -4,12 +4,12 @@
             <!-- Datos del negocio -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Datos del negocio</h3>
+                    <h3 class="card-title">{{ $t('settings.businessData') }}</h3>
                 </div>
                 <form @submit.prevent="guardarNegocio">
                     <div class="card-body">
                         <div class="form-group">
-                            <label class="form-label">Nombre del negocio</label>
+                            <label class="form-label">{{ $t('settings.businessName') }}</label>
                             <input
                                 v-model="negocioForm.nombre_negocio"
                                 type="text"
@@ -17,26 +17,26 @@
                             />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Rubro</label>
+                            <label class="form-label">{{ $t('settings.category') }}</label>
                             <input
                                 v-model="negocioForm.rubro"
                                 type="text"
                                 class="form-input"
-                                placeholder="Ej: Peluquería, Barbería, Spa..."
+                                :placeholder="$t('settings.categoryPlaceholder')"
                             />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Dirección</label>
+                            <label class="form-label">{{ $t('settings.address') }}</label>
                             <input
                                 v-model="negocioForm.direccion"
                                 type="text"
                                 class="form-input"
-                                placeholder="Ej: Av. Corrientes 1234, CABA"
+                                :placeholder="$t('settings.addressPlaceholder')"
                             />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Link de reservas</label>
-                            <p class="text-xs text-muted mb-2">Compartí este link con tus clientes para que reserven turnos</p>
+                            <label class="form-label">{{ $t('settings.publicLink') }}</label>
+                            <p class="text-xs text-muted mb-2">{{ $t('settings.publicLinkDescription') }}</p>
                             <div class="url-publica">
                                 <input
                                     type="text"
@@ -54,7 +54,7 @@
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
                                     </svg>
-                                    Ver
+                                    {{ $t('settings.view') }}
                                 </a>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary" :disabled="savingNegocio">
                             <span v-if="savingNegocio" class="spinner"></span>
-                            <span v-else>Guardar cambios</span>
+                            <span v-else>{{ $t('settings.saveChanges') }}</span>
                         </button>
                     </div>
                 </form>
@@ -71,17 +71,17 @@
             <!-- Configuración -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Configuración de turnos</h3>
+                    <h3 class="card-title">{{ $t('settings.appointmentSettings') }}</h3>
                 </div>
                 <form @submit.prevent="guardarSettings">
                     <div class="card-body">
                         <div class="form-group">
-                            <label class="form-label">Duración de turnos</label>
+                            <label class="form-label">{{ $t('settings.appointmentDuration') }}</label>
                             <select v-model="settingsForm.intervalo_turnos" class="form-select">
-                                <option :value="15">15 minutos</option>
-                                <option :value="30">30 minutos</option>
-                                <option :value="45">45 minutos</option>
-                                <option :value="60">1 hora</option>
+                                <option :value="15">15 {{ $t('settings.minutes') }}</option>
+                                <option :value="30">30 {{ $t('settings.minutes') }}</option>
+                                <option :value="45">45 {{ $t('settings.minutes') }}</option>
+                                <option :value="60">1 {{ $t('settings.hour') }}</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -91,7 +91,7 @@
                                     type="checkbox"
                                     class="form-check-input"
                                 />
-                                <span>Recibir notificaciones por email</span>
+                                <span>{{ $t('settings.emailNotifications') }}</span>
                             </label>
                         </div>
                         <div class="form-group">
@@ -101,15 +101,15 @@
                                     type="checkbox"
                                     class="form-check-input"
                                 />
-                                <span>Recibir notificaciones por WhatsApp</span>
+                                <span>{{ $t('settings.whatsappNotifications') }}</span>
                             </label>
-                            <p class="text-xs text-muted mt-1">Notificaciones a vos cuando reservan, y a tus clientes cuando confirmas/cancelas</p>
+                            <p class="text-xs text-muted mt-1">{{ $t('settings.notificationsDescription') }}</p>
                         </div>
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary" :disabled="savingSettings">
                             <span v-if="savingSettings" class="spinner"></span>
-                            <span v-else>Guardar configuración</span>
+                            <span v-else>{{ $t('settings.saveSettings') }}</span>
                         </button>
                     </div>
                 </form>
@@ -118,14 +118,14 @@
             <!-- Servicios -->
             <div class="card" style="grid-column: span 2;">
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 class="card-title">Servicios</h3>
+                    <h3 class="card-title">{{ $t('settings.services') }}</h3>
                     <button type="button" class="btn btn-primary btn-sm" @click="nuevoServicio">
                         <i class="pi pi-plus" style="margin-right: 0.5rem;"></i>
-                        Nuevo servicio
+                        {{ $t('settings.newService') }}
                     </button>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted mb-4">Define los servicios que ofrece tu negocio. Estos aparecerán como opciones al crear turnos.</p>
+                    <p class="text-muted mb-4">{{ $t('settings.servicesDescription') }}</p>
 
                     <div v-if="loadingServices" class="text-center py-4">
                         <span class="spinner"></span>
@@ -133,17 +133,17 @@
 
                     <div v-else-if="services.length === 0" class="text-center py-4 text-muted">
                         <i class="pi pi-inbox" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                        No hay servicios configurados. Crea el primero.
+                        {{ $t('settings.noServices') }}
                     </div>
 
                     <table v-else class="table">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Duración</th>
-                                <th>Precio</th>
-                                <th>Estado</th>
-                                <th style="width: 100px;">Acciones</th>
+                                <th>{{ $t('clients.name') }}</th>
+                                <th>{{ $t('agenda.duration') }}</th>
+                                <th>{{ $t('settings.servicePrice') }}</th>
+                                <th>{{ $t('agenda.status') }}</th>
+                                <th style="width: 100px;">{{ $t('app.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -153,7 +153,7 @@
                                 <td>{{ formatPrecio(service.precio) }}</td>
                                 <td>
                                     <span :class="['badge', service.activo ? 'badge-success' : 'badge-secondary']">
-                                        {{ service.activo ? 'Activo' : 'Inactivo' }}
+                                        {{ service.activo ? $t('settings.active') : $t('settings.inactive') }}
                                     </span>
                                 </td>
                                 <td>
@@ -165,7 +165,7 @@
                                             size="small"
                                             rounded
                                             outlined
-                                            v-tooltip.top="'Editar'"
+                                            v-tooltip.top="$t('app.edit')"
                                         />
                                         <Button
                                             @click="eliminarServicio(service)"
@@ -174,7 +174,7 @@
                                             size="small"
                                             rounded
                                             outlined
-                                            v-tooltip.top="'Eliminar'"
+                                            v-tooltip.top="$t('app.delete')"
                                         />
                                     </div>
                                 </td>
@@ -188,35 +188,35 @@
             <div v-if="showServiceModal" class="modal-overlay" @click.self="showServiceModal = false">
                 <div class="modal">
                     <div class="modal-header">
-                        <h3 class="modal-title">{{ editingService ? 'Editar servicio' : 'Nuevo servicio' }}</h3>
+                        <h3 class="modal-title">{{ editingService ? $t('settings.editService') : $t('settings.newService') }}</h3>
                         <button type="button" class="modal-close" @click="showServiceModal = false">&times;</button>
                     </div>
                     <form @submit.prevent="guardarServicio">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="form-label">Nombre del servicio *</label>
+                                <label class="form-label">{{ $t('settings.serviceName') }} *</label>
                                 <input
                                     v-model="serviceForm.nombre"
                                     type="text"
                                     class="form-input"
-                                    placeholder="Ej: Corte de cabello"
+                                    :placeholder="$t('settings.serviceNamePlaceholder')"
                                     required
                                 />
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label class="form-label">Duración (minutos)</label>
+                                    <label class="form-label">{{ $t('settings.serviceDuration') }}</label>
                                     <select v-model="serviceForm.duracion" class="form-select">
                                         <option :value="15">15 min</option>
                                         <option :value="30">30 min</option>
                                         <option :value="45">45 min</option>
-                                        <option :value="60">1 hora</option>
+                                        <option :value="60">1 {{ $t('settings.hour') }}</option>
                                         <option :value="90">1h 30min</option>
-                                        <option :value="120">2 horas</option>
+                                        <option :value="120">2 {{ $t('settings.hours') }}</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Precio (opcional)</label>
+                                    <label class="form-label">{{ $t('settings.servicePrice') }} ({{ $t('settings.optional') }})</label>
                                     <input
                                         v-model="serviceForm.precio"
                                         type="number"
@@ -234,18 +234,18 @@
                                         type="checkbox"
                                         class="form-check-input"
                                     />
-                                    <span>Servicio activo</span>
+                                    <span>{{ $t('settings.serviceActive') }}</span>
                                 </label>
-                                <p class="text-xs text-muted mt-1">Los servicios inactivos no aparecen en las opciones</p>
+                                <p class="text-xs text-muted mt-1">{{ $t('settings.serviceActiveDescription') }}</p>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline" @click="showServiceModal = false">
-                                Cancelar
+                                {{ $t('app.cancel') }}
                             </button>
                             <button type="submit" class="btn btn-primary" :disabled="savingService">
                                 <span v-if="savingService" class="spinner"></span>
-                                <span v-else>{{ editingService ? 'Guardar cambios' : 'Crear servicio' }}</span>
+                                <span v-else>{{ editingService ? $t('settings.saveChanges') : $t('settings.createService') }}</span>
                             </button>
                         </div>
                     </form>
@@ -255,10 +255,10 @@
             <!-- Tema de colores -->
             <div class="card" style="grid-column: span 2;">
                 <div class="card-header">
-                    <h3 class="card-title">Tema de colores</h3>
+                    <h3 class="card-title">{{ $t('settings.colorTheme') }}</h3>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted mb-4">Personaliza la apariencia de tu entorno de trabajo</p>
+                    <p class="text-muted mb-4">{{ $t('settings.colorThemeDescription') }}</p>
                     <div class="temas-grid">
                         <div
                             v-for="tema in temas"
@@ -301,7 +301,7 @@
             <!-- Horarios -->
             <div class="card" style="grid-column: span 2;">
                 <div class="card-header">
-                    <h3 class="card-title">Horarios de atención</h3>
+                    <h3 class="card-title">{{ $t('settings.schedule') }}</h3>
                 </div>
                 <form @submit.prevent="guardarHorarios">
                     <div class="card-body">
@@ -313,7 +313,7 @@
                                         type="checkbox"
                                         class="form-check-input"
                                     />
-                                    <span>{{ dia.nombre }}</span>
+                                    <span>{{ $t('days.' + dia.key) }}</span>
                                 </label>
                                 <div class="horario-horas">
                                     <input
@@ -322,7 +322,7 @@
                                         class="form-input"
                                         :disabled="!dia.activo"
                                     />
-                                    <span class="text-muted">a</span>
+                                    <span class="text-muted">{{ $t('settings.to') }}</span>
                                     <input
                                         v-model="dia.hora_fin"
                                         type="time"
@@ -336,7 +336,7 @@
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary" :disabled="savingHorarios">
                             <span v-if="savingHorarios" class="spinner"></span>
-                            <span v-else>Guardar horarios</span>
+                            <span v-else>{{ $t('settings.saveSchedule') }}</span>
                         </button>
                     </div>
                 </form>
@@ -494,13 +494,13 @@ const settingsForm = reactive({
 
 // Días de la semana
 const dias = reactive([
-    { valor: 0, nombre: 'Domingo', activo: false, hora_inicio: '09:00', hora_fin: '18:00' },
-    { valor: 1, nombre: 'Lunes', activo: true, hora_inicio: '09:00', hora_fin: '18:00' },
-    { valor: 2, nombre: 'Martes', activo: true, hora_inicio: '09:00', hora_fin: '18:00' },
-    { valor: 3, nombre: 'Miércoles', activo: true, hora_inicio: '09:00', hora_fin: '18:00' },
-    { valor: 4, nombre: 'Jueves', activo: true, hora_inicio: '09:00', hora_fin: '18:00' },
-    { valor: 5, nombre: 'Viernes', activo: true, hora_inicio: '09:00', hora_fin: '18:00' },
-    { valor: 6, nombre: 'Sábado', activo: false, hora_inicio: '09:00', hora_fin: '13:00' },
+    { valor: 0, key: 'sunday', activo: false, hora_inicio: '09:00', hora_fin: '18:00' },
+    { valor: 1, key: 'monday', activo: true, hora_inicio: '09:00', hora_fin: '18:00' },
+    { valor: 2, key: 'tuesday', activo: true, hora_inicio: '09:00', hora_fin: '18:00' },
+    { valor: 3, key: 'wednesday', activo: true, hora_inicio: '09:00', hora_fin: '18:00' },
+    { valor: 4, key: 'thursday', activo: true, hora_inicio: '09:00', hora_fin: '18:00' },
+    { valor: 5, key: 'friday', activo: true, hora_inicio: '09:00', hora_fin: '18:00' },
+    { valor: 6, key: 'saturday', activo: false, hora_inicio: '09:00', hora_fin: '13:00' },
 ])
 
 // Cargar datos

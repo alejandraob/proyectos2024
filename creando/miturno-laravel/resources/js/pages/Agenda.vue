@@ -9,7 +9,7 @@
                         severity="success"
                         size="small"
                         outlined
-                        v-tooltip.bottom="'Exportar a Excel'"
+                        v-tooltip.bottom="$t('agenda.exportExcel')"
                     />
                     <Button
                         @click="exportarPDF"
@@ -17,15 +17,15 @@
                         severity="danger"
                         size="small"
                         outlined
-                        v-tooltip.bottom="'Exportar a PDF'"
+                        v-tooltip.bottom="$t('agenda.exportPdf')"
                     />
                 </div>
                 <button @click="toggleView" class="btn btn-outline btn-sm">
                     <i :class="vistaCalendario ? 'pi pi-list' : 'pi pi-calendar'"></i>
-                    {{ vistaCalendario ? 'Ver lista' : 'Ver calendario' }}
+                    {{ vistaCalendario ? $t('agenda.viewList') : $t('agenda.viewCalendar') }}
                 </button>
                 <button @click="openModal()" class="btn btn-primary">
-                    + Nuevo turno
+                    + {{ $t('agenda.newAppointment') }}
                 </button>
             </div>
         </template>
@@ -47,7 +47,7 @@
                 <div class="card-body">
                     <div class="flex items-center gap-4 flex-wrap">
                         <div class="form-group mb-0">
-                            <label class="form-label">Fecha</label>
+                            <label class="form-label">{{ $t('agenda.date') }}</label>
                             <input
                                 v-model="filtros.fecha"
                                 type="date"
@@ -56,12 +56,12 @@
                             />
                         </div>
                         <div class="form-group mb-0">
-                            <label class="form-label">Estado</label>
+                            <label class="form-label">{{ $t('agenda.status') }}</label>
                             <select v-model="filtros.estado" class="form-select" @change="fetchTurnos">
-                                <option value="">Todos</option>
-                                <option value="pendiente">Pendientes</option>
-                                <option value="confirmado">Confirmados</option>
-                                <option value="cancelado">Cancelados</option>
+                                <option value="">{{ $t('agenda.all') }}</option>
+                                <option value="pendiente">{{ $t('agenda.pendingPlural') }}</option>
+                                <option value="confirmado">{{ $t('agenda.confirmedPlural') }}</option>
+                                <option value="cancelado">{{ $t('agenda.cancelledPlural') }}</option>
                             </select>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
             <!-- Lista de turnos -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Turnos del {{ formatFecha(filtros.fecha) }}</h3>
+                    <h3 class="card-title">{{ $t('agenda.appointmentsOf') }} {{ formatFecha(filtros.fecha) }}</h3>
                 </div>
 
                 <div v-if="loading" class="card-body text-center p-5">
@@ -79,18 +79,18 @@
                 </div>
 
                 <div v-else-if="turnos.length === 0" class="card-body text-center p-5 text-muted">
-                    <p>No hay turnos para esta fecha</p>
+                    <p>{{ $t('agenda.noAppointmentsDate') }}</p>
                 </div>
 
                 <table v-else class="table">
                     <thead>
                         <tr>
-                            <th>Hora</th>
-                            <th>Cliente</th>
-                            <th>Teléfono</th>
-                            <th>Servicio</th>
-                            <th>Estado</th>
-                            <th style="width: 80px;">Acciones</th>
+                            <th>{{ $t('agenda.time') }}</th>
+                            <th>{{ $t('agenda.client') }}</th>
+                            <th>{{ $t('clients.phone') }}</th>
+                            <th>{{ $t('agenda.service') }}</th>
+                            <th>{{ $t('agenda.status') }}</th>
+                            <th style="width: 80px;">{{ $t('app.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,12 +99,12 @@
                                 <span class="font-semibold">{{ formatHora(turno.fecha_inicio) }}</span>
                                 <span class="text-muted"> - {{ formatHora(turno.fecha_fin) }}</span>
                             </td>
-                            <td>{{ turno.client?.nombre || 'Sin cliente' }}</td>
+                            <td>{{ turno.client?.nombre || $t('agenda.noClient') }}</td>
                             <td>{{ turno.client?.telefono || '-' }}</td>
                             <td>{{ turno.service?.nombre || turno.motivo || '-' }}</td>
                             <td>
                                 <span :class="'badge badge-' + turno.estado">
-                                    {{ turno.estado }}
+                                    {{ $t('agenda.' + turno.estado) }}
                                 </span>
                             </td>
                             <td>
@@ -128,25 +128,25 @@
         <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
             <div class="modal">
                 <div class="modal-header">
-                    <h3 class="modal-title">{{ editandoId ? 'Editar' : 'Nuevo' }} turno</h3>
+                    <h3 class="modal-title">{{ editandoId ? $t('agenda.editAppointment') : $t('agenda.newAppointment') }}</h3>
                     <button @click="closeModal" class="modal-close">&times;</button>
                 </div>
                 <form @submit.prevent="guardarTurno">
                     <div class="modal-body">
                         <div class="grid grid-cols-2 gap-3">
                             <div class="form-group">
-                                <label class="form-label">Fecha</label>
+                                <label class="form-label">{{ $t('agenda.date') }}</label>
                                 <input v-model="turnoForm.fecha" type="date" class="form-input" required />
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Hora inicio</label>
+                                <label class="form-label">{{ $t('agenda.timeStart') }}</label>
                                 <input v-model="turnoForm.hora_inicio" type="time" class="form-input" required />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Servicio</label>
+                            <label class="form-label">{{ $t('agenda.service') }}</label>
                             <select v-model="turnoForm.service_id" class="form-select" @change="onServiceChange">
-                                <option value="">-- Seleccionar servicio --</option>
+                                <option value="">{{ $t('agenda.selectService') }}</option>
                                 <option v-for="service in services" :key="service.id" :value="service.id">
                                     {{ service.nombre }} ({{ service.duracion }} min)
                                     <template v-if="service.precio"> - ${{ service.precio }}</template>
@@ -154,45 +154,45 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Duración</label>
+                            <label class="form-label">{{ $t('agenda.duration') }}</label>
                             <select v-model="turnoForm.duracion" class="form-select">
-                                <option value="15">15 minutos</option>
-                                <option value="30">30 minutos</option>
-                                <option value="45">45 minutos</option>
-                                <option value="60">1 hora</option>
+                                <option value="15">15 {{ $t('settings.minutes') }}</option>
+                                <option value="30">30 {{ $t('settings.minutes') }}</option>
+                                <option value="45">45 {{ $t('settings.minutes') }}</option>
+                                <option value="60">1 {{ $t('settings.hour') }}</option>
                                 <option value="90">1h 30min</option>
-                                <option value="120">2 horas</option>
+                                <option value="120">2 {{ $t('settings.hours') }}</option>
                             </select>
                             <p v-if="turnoForm.service_id" class="text-xs text-muted mt-1">
-                                La duración se ajusta automáticamente al seleccionar un servicio
+                                {{ $t('agenda.durationAuto') }}
                             </p>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Nombre del cliente</label>
-                            <input v-model="turnoForm.nombre_cliente" type="text" class="form-input" placeholder="Ej: María García" />
+                            <label class="form-label">{{ $t('agenda.clientName') }}</label>
+                            <input v-model="turnoForm.nombre_cliente" type="text" class="form-input" :placeholder="$t('agenda.clientNamePlaceholder')" />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Teléfono</label>
-                            <input v-model="turnoForm.telefono_cliente" type="text" class="form-input" placeholder="Ej: 1122334455" />
+                            <label class="form-label">{{ $t('clients.phone') }}</label>
+                            <input v-model="turnoForm.telefono_cliente" type="text" class="form-input" :placeholder="$t('agenda.phonePlaceholder')" />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Notas adicionales</label>
-                            <input v-model="turnoForm.motivo" type="text" class="form-input" placeholder="Opcional" />
+                            <label class="form-label">{{ $t('agenda.additionalNotes') }}</label>
+                            <input v-model="turnoForm.motivo" type="text" class="form-input" :placeholder="$t('agenda.optional')" />
                         </div>
                         <!-- Estado (solo al editar) -->
                         <div v-if="editandoId" class="form-group">
-                            <label class="form-label">Estado</label>
+                            <label class="form-label">{{ $t('agenda.status') }}</label>
                             <select v-model="turnoForm.estado" class="form-select">
-                                <option value="pendiente">Pendiente</option>
-                                <option value="confirmado">Confirmado</option>
+                                <option value="pendiente">{{ $t('agenda.pending') }}</option>
+                                <option value="confirmado">{{ $t('agenda.confirmed') }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" @click="closeModal" class="btn btn-outline">Cancelar</button>
+                        <button type="button" @click="closeModal" class="btn btn-outline">{{ $t('app.cancel') }}</button>
                         <button type="submit" class="btn btn-primary" :disabled="saving">
                             <span v-if="saving" class="spinner"></span>
-                            <span v-else>Guardar</span>
+                            <span v-else>{{ $t('app.save') }}</span>
                         </button>
                     </div>
                 </form>
@@ -203,6 +203,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import MainLayout from '../components/layout/MainLayout.vue'
 import SpeedDial from 'primevue/speeddial'
 import Button from 'primevue/button'
@@ -216,6 +217,9 @@ import { useNotify } from '../composables/useNotify'
 import * as XLSX from 'xlsx'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+
+// i18n
+const { t, locale } = useI18n()
 
 // Notificaciones
 const notify = useNotify()
@@ -256,7 +260,7 @@ const turnoForm = reactive({
 const calendarEvents = computed(() => {
     return todosLosTurnos.value.map(turno => {
         // Construir título: Cliente + Servicio
-        let title = turno.client?.nombre || 'Sin cliente'
+        let title = turno.client?.nombre || t('agenda.noClient')
         if (turno.service?.nombre) {
             title += ` - ${turno.service.nombre}`
         } else if (turno.motivo) {
@@ -292,6 +296,12 @@ const getEventColor = (estado) => {
     }
 }
 
+// Mapeo de locale para FullCalendar
+const fcLocale = computed(() => {
+    const map = { es: 'es', en: 'en', pt: 'pt-br' }
+    return map[locale.value] || 'es'
+})
+
 // Opciones del calendario
 const calendarOptions = computed(() => ({
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
@@ -301,7 +311,7 @@ const calendarOptions = computed(() => ({
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
     },
-    locale: 'es',
+    locale: fcLocale.value,
     firstDay: 1, // Lunes
     slotMinTime: horarioMin.value,
     slotMaxTime: horarioMax.value,
@@ -321,11 +331,11 @@ const calendarOptions = computed(() => ({
     eventResize: handleEventResize,
     datesSet: handleDatesSet,
     buttonText: {
-        today: 'Hoy',
-        month: 'Mes',
-        week: 'Semana',
-        day: 'Día',
-        list: 'Lista'
+        today: t('agenda.today'),
+        month: t('agenda.viewMonth'),
+        week: t('agenda.viewWeek'),
+        day: t('agenda.viewDay'),
+        list: t('agenda.list')
     },
     height: 'auto',
     contentHeight: 600,
@@ -456,7 +466,7 @@ const getAcciones = (turno) => {
     // Editar (excepto cancelados)
     if (turno.estado !== 'cancelado') {
         acciones.push({
-            label: 'Editar',
+            label: t('agenda.edit'),
             icon: 'pi pi-pencil',
             command: () => openModal(turno)
         })
@@ -465,7 +475,7 @@ const getAcciones = (turno) => {
     // Confirmar (solo pendientes)
     if (turno.estado === 'pendiente') {
         acciones.push({
-            label: 'Confirmar',
+            label: t('agenda.confirm'),
             icon: 'pi pi-check',
             command: () => cambiarEstado(turno.id, 'confirmado')
         })
@@ -474,7 +484,7 @@ const getAcciones = (turno) => {
     // Marcar pendiente (solo confirmados)
     if (turno.estado === 'confirmado') {
         acciones.push({
-            label: 'Pendiente',
+            label: t('agenda.markPending'),
             icon: 'pi pi-clock',
             command: () => cambiarEstado(turno.id, 'pendiente')
         })
@@ -483,7 +493,7 @@ const getAcciones = (turno) => {
     // Cancelar (excepto cancelados)
     if (turno.estado !== 'cancelado') {
         acciones.push({
-            label: 'Cancelar',
+            label: t('agenda.cancel'),
             icon: 'pi pi-times',
             command: () => cancelarTurno(turno.id)
         })

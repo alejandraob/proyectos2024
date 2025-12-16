@@ -2,7 +2,7 @@
     <MainLayout>
         <template #header-actions>
             <button @click="openModal()" class="btn btn-primary">
-                + Nuevo cliente
+                + {{ $t('clients.newClient') }}
             </button>
         </template>
 
@@ -13,7 +13,7 @@
                     v-model="busqueda"
                     type="text"
                     class="form-input"
-                    placeholder="Buscar por nombre o teléfono..."
+                    :placeholder="$t('clients.searchPlaceholder')"
                     @input="filtrarClientes"
                 />
             </div>
@@ -26,17 +26,17 @@
             </div>
 
             <div v-else-if="clientesFiltrados.length === 0" class="card-body text-center p-5 text-muted">
-                <p>No hay clientes</p>
+                <p>{{ $t('clients.noClients') }}</p>
             </div>
 
             <table v-else class="table">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Teléfono</th>
-                        <th>Email</th>
-                        <th>Turnos</th>
-                        <th>Acciones</th>
+                        <th>{{ $t('clients.name') }}</th>
+                        <th>{{ $t('clients.phone') }}</th>
+                        <th>{{ $t('clients.email') }}</th>
+                        <th>{{ $t('clients.appointments') }}</th>
+                        <th>{{ $t('app.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -56,7 +56,7 @@
                                     size="small"
                                     rounded
                                     outlined
-                                    v-tooltip.top="'Ver historial'"
+                                    v-tooltip.top="$t('clients.viewHistory')"
                                 />
                                 <Button
                                     @click="openModal(cliente)"
@@ -65,7 +65,7 @@
                                     size="small"
                                     rounded
                                     outlined
-                                    v-tooltip.top="'Editar'"
+                                    v-tooltip.top="$t('app.edit')"
                                 />
                                 <Button
                                     @click="eliminarCliente(cliente)"
@@ -74,7 +74,7 @@
                                     size="small"
                                     rounded
                                     outlined
-                                    v-tooltip.top="'Eliminar'"
+                                    v-tooltip.top="$t('app.delete')"
                                 />
                             </div>
                         </td>
@@ -87,32 +87,32 @@
         <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
             <div class="modal">
                 <div class="modal-header">
-                    <h3 class="modal-title">{{ editando ? 'Editar' : 'Nuevo' }} cliente</h3>
+                    <h3 class="modal-title">{{ editando ? $t('clients.editClient') : $t('clients.newClient') }}</h3>
                     <button @click="closeModal" class="modal-close">&times;</button>
                 </div>
                 <form @submit.prevent="guardarCliente">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="form-label">Nombre *</label>
+                            <label class="form-label">{{ $t('clients.name') }} *</label>
                             <input
                                 v-model="clienteForm.nombre"
                                 type="text"
                                 class="form-input"
-                                placeholder="Nombre completo"
+                                :placeholder="$t('clients.namePlaceholder')"
                                 required
                             />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Teléfono</label>
+                            <label class="form-label">{{ $t('clients.phone') }}</label>
                             <input
                                 v-model="clienteForm.telefono"
                                 type="text"
                                 class="form-input"
-                                placeholder="Ej: 1122334455"
+                                :placeholder="$t('clients.phonePlaceholder')"
                             />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Email</label>
+                            <label class="form-label">{{ $t('clients.email') }}</label>
                             <input
                                 v-model="clienteForm.email"
                                 type="email"
@@ -122,10 +122,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" @click="closeModal" class="btn btn-outline">Cancelar</button>
+                        <button type="button" @click="closeModal" class="btn btn-outline">{{ $t('app.cancel') }}</button>
                         <button type="submit" class="btn btn-primary" :disabled="saving">
                             <span v-if="saving" class="spinner"></span>
-                            <span v-else>Guardar</span>
+                            <span v-else>{{ $t('app.save') }}</span>
                         </button>
                     </div>
                 </form>
@@ -136,7 +136,7 @@
         <div v-if="showHistorialModal" class="modal-overlay" @click.self="showHistorialModal = false">
             <div class="modal modal-lg">
                 <div class="modal-header">
-                    <h3 class="modal-title">Historial de turnos - {{ clienteHistorial?.nombre }}</h3>
+                    <h3 class="modal-title">{{ $t('clients.appointmentHistory') }} - {{ clienteHistorial?.nombre }}</h3>
                     <button @click="showHistorialModal = false" class="modal-close">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -146,32 +146,32 @@
 
                     <div v-else-if="!clienteHistorial?.appointments?.length" class="text-center p-4 text-muted">
                         <i class="pi pi-calendar-times" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                        Este cliente no tiene turnos registrados
+                        {{ $t('clients.noAppointmentsHistory') }}
                     </div>
 
                     <div v-else>
                         <div class="historial-stats mb-4">
                             <div class="stat-item">
                                 <span class="stat-value">{{ clienteHistorial.appointments.length }}</span>
-                                <span class="stat-label">Total turnos</span>
+                                <span class="stat-label">{{ $t('clients.totalAppointments') }}</span>
                             </div>
                             <div class="stat-item">
                                 <span class="stat-value">{{ turnosConfirmados }}</span>
-                                <span class="stat-label">Confirmados</span>
+                                <span class="stat-label">{{ $t('clients.confirmedCount') }}</span>
                             </div>
                             <div class="stat-item">
                                 <span class="stat-value">{{ turnosCancelados }}</span>
-                                <span class="stat-label">Cancelados</span>
+                                <span class="stat-label">{{ $t('clients.cancelledCount') }}</span>
                             </div>
                         </div>
 
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th>Fecha</th>
-                                    <th>Hora</th>
-                                    <th>Servicio</th>
-                                    <th>Estado</th>
+                                    <th>{{ $t('agenda.date') }}</th>
+                                    <th>{{ $t('agenda.time') }}</th>
+                                    <th>{{ $t('agenda.service') }}</th>
+                                    <th>{{ $t('agenda.status') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -181,7 +181,7 @@
                                     <td>{{ turno.service?.nombre || turno.motivo || '-' }}</td>
                                     <td>
                                         <span :class="'badge badge-' + turno.estado">
-                                            {{ turno.estado }}
+                                            {{ $t('agenda.' + turno.estado) }}
                                         </span>
                                     </td>
                                 </tr>
@@ -191,7 +191,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" @click="showHistorialModal = false" class="btn btn-outline">
-                        Cerrar
+                        {{ $t('app.close') }}
                     </button>
                 </div>
             </div>
