@@ -5,6 +5,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -71,4 +72,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/services/{id}', [ServiceController::class, 'show']);      // Ver servicio
     Route::put('/services/{id}', [ServiceController::class, 'update']);    // Actualizar servicio
     Route::delete('/services/{id}', [ServiceController::class, 'destroy']); // Eliminar servicio
+});
+
+// =============================================
+// RUTAS DE PAGOS - MercadoPago
+// =============================================
+
+// Webhook de MercadoPago (publico, sin auth)
+Route::post('/payments/webhook', [PaymentController::class, 'webhook']);
+
+// Planes disponibles (publico)
+Route::get('/plans', [PaymentController::class, 'plans']);
+
+// Rutas de pagos (protegidas)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/payments/current-plan', [PaymentController::class, 'currentPlan']);
+    Route::post('/payments/checkout', [PaymentController::class, 'createCheckout']);
+    Route::post('/payments/confirm', [PaymentController::class, 'confirmPayment']);
+    Route::post('/payments/verify', [PaymentController::class, 'verifyPayment']);
+    Route::get('/payments/history', [PaymentController::class, 'history']);
+    Route::post('/payments/downgrade', [PaymentController::class, 'downgradeToFree']);
 });

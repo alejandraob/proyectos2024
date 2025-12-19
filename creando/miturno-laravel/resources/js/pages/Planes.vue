@@ -52,7 +52,7 @@
                     </ul>
                     <button
                         class="btn btn-primary w-full"
-                        :disabled="currentPlan === 'pro'"
+                        :disabled="currentPlan === 'pro' || processingPlan === 'pro'"
                         @click="selectPlan('pro')"
                     >
                         {{ currentPlan === 'pro' ? $t('plans.currentPlan') : $t('plans.upgradeTo') + ' PRO' }}
@@ -79,7 +79,7 @@
                     </ul>
                     <button
                         class="btn btn-secondary w-full"
-                        :disabled="currentPlan === 'premium'"
+                        :disabled="currentPlan === 'premium' || processingPlan === 'premium'"
                         @click="selectPlan('premium')"
                     >
                         {{ currentPlan === 'premium' ? $t('plans.currentPlan') : $t('plans.upgradeTo') + ' PREMIUM' }}
@@ -97,20 +97,107 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import MainLayout from '../components/layout/MainLayout.vue'
 import { useNotify } from '../composables/useNotify'
+import { paymentsService } from '../services/api'
 
-const { success } = useNotify()
+const route = useRoute()
+const { success, error } = useNotify()
 
-// TODO: Obtener del backend el plan actual del usuario
 const currentPlan = ref('free')
+const plans = ref([])
+const loading = ref(false)
+const processingPlan = ref(null)
 
-const selectPlan = (plan) => {
-    // TODO: Integrar con MercadoPago
-    success(`Redirigiendo a pago para plan ${plan.toUpperCase()}...`)
-    console.log('Seleccionar plan:', plan)
+// Cargar plan actual del usuario
+const fetchCurrentPlan = async () => {
+    try {
+        const response = await paymentsService.getCurrentPlan()
+        currentPlan.value = response.data.plan?.name || 'free'
+    } catch (err) {
+        console.error('Error fetching current plan:', err)
+    }
 }
+
+// Cargar planes disponibles
+const fetchPlans = async () => {
+    try {
+        const response = await paymentsService.getPlans()
+        plans.value = response.data
+    } catch (err) {
+        console.error('Error fetching plans:', err)
+    }
+}
+
+// Seleccionar plan y redirigir a MercadoPago
+const selectPlan = async (planName) => {
+    const plan = plans.value.find(p => p.name === planName)
+    if (!plan) {
+        error('Plan no encontrado')
+        return
+    }
+
+    processingPlan.value = planName
+    loading.value = true
+
+    try {
+        const response = await paymentsService.createCheckout(plan.id)
+
+        // response contiene: payment_link, payment_id, plan
+        const checkoutUrl = response.data.payment_link
+
+        if (checkoutUrl) {
+            success('Redirigiendo a MercadoPago...')
+            // Guardar el payment_id en sessionStorage por si lo necesitas después
+            sessionStorage.setItem('payment_id', response.data.payment_id)
+            window.location.href = checkoutUrl
+        } else {
+            error('Error al crear el link de pago')
+        }
+    } catch (err) {
+        console.error('Error creating checkout:', err)
+        error('Error al procesar el pago')
+    } finally {
+        loading.value = false
+        processingPlan.value = null
+    }
+}
+
+// Verificar estado del pago al volver de MercadoPago
+const checkPaymentStatus = async () => {
+    const status = route.query.status
+    const paymentId = sessionStorage.getItem('payment_id')
+
+    if (status) {
+        if (status === 'approved') {
+            success('¡Pago aprobado! Tu plan ha sido actualizado.')
+            // Confirmar el pago en el backend
+            if (paymentId) {
+                try {
+                    await paymentsService.confirmPayment(paymentId)
+                } catch (err) {
+                    console.error('Error confirming payment:', err)
+                }
+            }
+            sessionStorage.removeItem('payment_id')
+        } else if (status === 'pending') {
+            success('Tu pago está pendiente de confirmación.')
+        } else if (status === 'failure') {
+            error('El pago no pudo ser procesado. Intenta nuevamente.')
+            sessionStorage.removeItem('payment_id')
+        }
+
+        // Recargar plan actual
+        await fetchCurrentPlan()
+    }
+}
+
+onMounted(async () => {
+    await Promise.all([fetchCurrentPlan(), fetchPlans()])
+    await checkPaymentStatus()
+})
 </script>
 
 <style scoped>

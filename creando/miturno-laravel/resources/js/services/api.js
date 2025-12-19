@@ -297,3 +297,34 @@ export const appointmentsService = {
 
 // Exportar la instancia de axios por si se necesita directamente
 export default api
+
+// --- Payments Service (MercadoPago) ---
+export const paymentsService = {
+    getPlans() {
+        return api.get('/plans')
+    },
+
+    getCurrentPlan() {
+        return api.get('/payments/current-plan')
+    },
+
+    createCheckout(planId) {
+        return api.post('/payments/checkout', { plan_id: planId })
+    },
+
+    confirmPayment(paymentId) {
+        return api.post('/payments/confirm', { payment_id: paymentId })
+    },
+
+    verifyPayment(paymentId) {
+        return api.post('/payments/verify', { payment_id: paymentId })
+    },
+
+    getHistory() {
+        return api.get('/payments/history')
+    },
+
+    downgradeToFree() {
+        return api.post('/payments/downgrade')
+    },
+}
