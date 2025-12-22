@@ -10,6 +10,9 @@
         <!-- Menú de usuario (PrimeVue) -->
         <Menu ref="userMenu" :model="userMenuItems" :popup="true" class="user-popup-menu" />
 
+        <!-- Simulador de planes (solo desarrollo) -->
+        <PlanSimulator />
+
         <!-- Sidebar -->
         <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen, 'sidebar-hidden': isMobile && !sidebarOpen }">
             <!-- Logo -->
@@ -53,6 +56,15 @@
                         <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                     </svg>
                     <span class="sidebar-text">{{ $t('nav.clients') }}</span>
+                </router-link>
+
+                <!-- Reportes - Solo Premium -->
+                <router-link v-if="isPremium" to="/reportes" class="sidebar-link" active-class="active" @click="closeSidebarOnMobile">
+                    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                    <span class="sidebar-text">{{ $t('nav.reports') }}</span>
+                    <span class="premium-badge sidebar-text">PRO</span>
                 </router-link>
 
                 <div class="sidebar-section">
@@ -127,12 +139,15 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import { useI18n } from 'vue-i18n'
 import { setLocale, getLocale } from '../../i18n'
+import { usePlanFeatures } from '../../composables/usePlanFeatures'
 import Menu from 'primevue/menu'
+import PlanSimulator from '../dev/PlanSimulator.vue'
 
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
 const { t } = useI18n()
+const { isPremium, loadFeatures } = usePlanFeatures()
 
 // Estados del sidebar
 const sidebarCollapsed = ref(false)
@@ -205,6 +220,7 @@ const pageTitle = computed(() => {
         '/agenda': 'Agenda',
         '/clientes': 'Clientes',
         '/configuracion': 'Configuración',
+        '/reportes': 'Reportes',
     }
     return titles[route.path] || 'MiTurno'
 })
@@ -261,7 +277,7 @@ const handleLogout = async () => {
     router.push('/login')
 }
 
-onMounted(() => {
+onMounted(async () => {
     // Cargar estado guardado del sidebar
     const savedCollapsed = localStorage.getItem('sidebarCollapsed')
     if (savedCollapsed !== null) {
@@ -277,6 +293,9 @@ onMounted(() => {
 
     // Inicializar menú de usuario con traducciones
     buildUserMenu()
+
+    // Cargar features del plan
+    await loadFeatures()
 
     // Detectar tamaño de pantalla
     checkMobile()
@@ -423,5 +442,21 @@ onUnmounted(() => {
 .sidebar-collapsed .sidebar-user-btn {
     justify-content: center;
     padding: var(--spacing-sm);
+}
+
+/* Badge premium en sidebar */
+.premium-badge {
+    margin-left: auto;
+    padding: 2px 6px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.sidebar-collapsed .premium-badge {
+    display: none;
 }
 </style>

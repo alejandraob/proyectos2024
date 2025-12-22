@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Business;
 use App\Models\Setting;
+use App\Traits\HasPlanFeatures;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,6 +13,7 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    use HasPlanFeatures;
     /**
      * Registrar un nuevo usuario (profesional)
      *
@@ -148,5 +150,16 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Si el email existe, recibirás un enlace para restablecer tu contraseña.',
         ]);
+    }
+
+    /**
+     * Obtener features del plan del usuario
+     *
+     * Retorna: Features habilitadas según el plan actual
+     */
+    public function features(Request $request)
+    {
+        $user = $request->user();
+        return response()->json($this->getPlanFeatures($user));
     }
 }

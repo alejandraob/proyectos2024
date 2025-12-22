@@ -8,6 +8,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -44,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Autenticación
     Route::post('/logout', [AuthController::class, 'logout']);  // Cerrar sesión
     Route::get('/me', [AuthController::class, 'me']);           // Obtener usuario actual
+    Route::get('/me/features', [AuthController::class, 'features']); // Features del plan
 
     // Negocio
     Route::get('/business', [BusinessController::class, 'show']);              // Ver mi negocio
@@ -92,4 +94,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payments/verify', [PaymentController::class, 'verifyPayment']);
     Route::get('/payments/history', [PaymentController::class, 'history']);
     Route::post('/payments/downgrade', [PaymentController::class, 'downgradeToFree']);
+
+    // Simulación de pagos (solo desarrollo) - para probar restricciones por plan
+    Route::post('/payments/simulate', [PaymentController::class, 'simulateUpgrade']);
 });
+require __DIR__.'/income.php';

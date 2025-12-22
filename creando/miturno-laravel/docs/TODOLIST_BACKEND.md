@@ -111,6 +111,24 @@
 - [x] Formateo automático de números argentinos (+549)
 - [x] Toggle de notificaciones WhatsApp en Configuración (frontend)
 
+### Sistema de Ingresos (21/12/2025)
+- [x] Migración tabla `service_payments` (business_id, client_id, service_id, monto, metodo_pago, estado, fecha_pago, notas)
+- [x] Modelo ServicePayment con relaciones (Business, Client, Service)
+- [x] IncomeController con CRUD completo
+- [x] Endpoint GET /income/summary (totales por período)
+- [x] Filtros por fecha, método de pago y estado
+- [x] Rutas API: GET/POST/PUT/DELETE /income
+
+### Sistema de Reportes Premium (21/12/2025)
+- [x] ReportController con 6 métodos de estadísticas
+- [x] Endpoint dashboard() - stats generales del mes + servicios populares
+- [x] Endpoint appointments() - reportes de turnos agrupados (día/semana/mes/servicio/estado)
+- [x] Endpoint income() - reportes de ingresos agrupados (día/semana/mes/método/servicio)
+- [x] Endpoint topClients() - clientes recurrentes con total_turnos y total_gastado
+- [x] Endpoint hourlyStats() - horarios más solicitados (0-23h)
+- [x] Endpoint weekdayStats() - días más ocupados (Lun-Dom)
+- [x] Rutas API: GET /reports/dashboard, /reports/appointments, /reports/income, /reports/top-clients, /reports/hourly, /reports/weekday
+
 ---
 
 ## Pendiente 📋
@@ -148,7 +166,8 @@ app/
 │   ├── Appointment.php
 │   ├── BusinessHour.php
 │   ├── Setting.php
-│   └── Service.php
+│   ├── Service.php
+│   └── ServicePayment.php
 
 resources/
 ├── views/emails/
@@ -173,7 +192,8 @@ database/migrations/
 ├── create_services_table.php
 ├── add_color_theme_to_settings_table.php
 ├── add_soft_deletes_to_appointments_table.php
-└── add_service_id_to_appointments_table.php
+├── add_service_id_to_appointments_table.php
+└── create_service_payments_table.php
 
 routes/
 └── api.php
@@ -217,6 +237,18 @@ routes/
 | GET | /api/services/{id} | Ver servicio |
 | PUT | /api/services/{id} | Actualizar servicio |
 | DELETE | /api/services/{id} | Eliminar servicio |
+| GET | /api/income | Listar ingresos |
+| POST | /api/income | Crear ingreso |
+| GET | /api/income/summary | Resumen de ingresos |
+| GET | /api/income/{id} | Ver ingreso |
+| PUT | /api/income/{id} | Actualizar ingreso |
+| DELETE | /api/income/{id} | Eliminar ingreso |
+| GET | /api/reports/dashboard | Dashboard de reportes |
+| GET | /api/reports/appointments | Reporte de turnos |
+| GET | /api/reports/income | Reporte de ingresos |
+| GET | /api/reports/top-clients | Top clientes |
+| GET | /api/reports/hourly | Stats por hora |
+| GET | /api/reports/weekday | Stats por día de semana |
 
 ### Comandos útiles
 ```bash

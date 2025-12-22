@@ -270,4 +270,78 @@ class PaymentController extends Controller
 
         return response()->json(['message' => 'Suscripción cancelada.']);
     }
+
+    /**
+     * =============================================
+     * SIMULACIÓN DE PAGOS (solo desarrollo)
+     * =============================================
+     * Permite cambiar de plan sin pasar por MercadoPago
+     * para probar las restricciones por plan
+     */
+    public function simulateUpgrade(Request $request)
+    {
+        // Solo permitir en desarrollo
+        if (config('app.env') === 'production') {
+            return response()->json(['error' => 'No disponible en producción'], 403);
+        }
+
+        $request->validate([
+            'plan_name' => 'required|in:free,pro,premium'
+        ]);
+
+        $user = $request->user();
+        $planName = $request->plan_name;
+
+        // Cancelar suscripción activa actual
+        Subscription::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->update([
+                'status' => 'cancelled',
+                'cancelled_at' => now()
+            ]);
+
+        // Si es FREE, no crear suscripción (el sistema asume FREE por defecto)
+        if ($planName === 'free') {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cambiado a plan FREE',
+                'plan' => Plan::where('name', 'free')->first()
+            ]);
+        }
+
+        // Buscar el plan
+        $plan = Plan::where('name', $planName)->first();
+
+        if (!$plan) {
+            return response()->json(['error' => 'Plan no encontrado'], 404);
+        }
+
+        // Crear suscripción simulada
+        $subscription = Subscription::create([
+            'user_id' => $user->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'starts_at' => now(),
+            'ends_at' => now()->addMonth(),
+        ]);
+
+        // Crear pago simulado
+        Payment::create([
+            'user_id' => $user->id,
+            'subscription_id' => $subscription->id,
+            'plan_id' => $plan->id,
+            'amount' => $plan->price,
+            'currency' => 'ARS',
+            'status' => 'approved',
+            'payment_method' => 'simulated',
+            'paid_at' => now(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Cambiado a plan {$plan->display_name}",
+            'plan' => $plan,
+            'subscription' => $subscription
+        ]);
+    }
 }

@@ -24,11 +24,43 @@
                     <i :class="vistaCalendario ? 'pi pi-list' : 'pi pi-calendar'"></i>
                     {{ vistaCalendario ? $t('agenda.viewList') : $t('agenda.viewCalendar') }}
                 </button>
-                <button @click="openModal()" class="btn btn-primary">
+                <button
+                    @click="openModal()"
+                    class="btn btn-primary"
+                    :disabled="hasReachedLimit"
+                    :title="hasReachedLimit ? 'Límite de turnos alcanzado' : ''"
+                >
                     + {{ $t('agenda.newAppointment') }}
                 </button>
             </div>
         </template>
+
+        <!-- Banner de límite de turnos -->
+        <div v-if="hasReachedLimit" class="plan-alert plan-alert-danger mb-4">
+            <div class="plan-alert-content">
+                <i class="pi pi-exclamation-triangle"></i>
+                <div>
+                    <strong>Límite alcanzado</strong>
+                    <p>Has alcanzado el límite de {{ appointmentsLimit }} turnos mensuales de tu plan {{ planDisplayName }}.</p>
+                </div>
+            </div>
+            <button @click="goToPlans" class="btn btn-primary btn-sm">
+                Mejorar plan
+            </button>
+        </div>
+
+        <div v-else-if="isNearLimit" class="plan-alert plan-alert-warning mb-4">
+            <div class="plan-alert-content">
+                <i class="pi pi-info-circle"></i>
+                <div>
+                    <strong>Cerca del límite</strong>
+                    <p>Te quedan {{ appointmentsRemaining }} turnos de {{ appointmentsLimit }} este mes (plan {{ planDisplayName }}).</p>
+                </div>
+            </div>
+            <button @click="goToPlans" class="btn btn-outline btn-sm">
+                Ver planes
+            </button>
+        </div>
 
         <!-- Vista Calendario -->
         <div v-if="vistaCalendario" class="card">
@@ -202,8 +234,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import MainLayout from '../components/layout/MainLayout.vue'
 import SpeedDial from 'primevue/speeddial'
 import Button from 'primevue/button'
@@ -214,15 +247,27 @@ import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
 import { appointmentsService, businessService, servicesService } from '../services/api'
 import { useNotify } from '../composables/useNotify'
+import { usePlanFeatures } from '../composables/usePlanFeatures'
 import * as XLSX from 'xlsx'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 
 // i18n
 const { t, locale } = useI18n()
+const router = useRouter()
 
 // Notificaciones
 const notify = useNotify()
+
+// Plan features
+const {
+    loadFeatures,
+    appointmentsLimit,
+    appointmentsRemaining,
+    hasUnlimitedAppointments,
+    isFree,
+    planDisplayName,
+} = usePlanFeatures()
 
 // Estados
 const loading = ref(false)
@@ -897,8 +942,29 @@ const exportarPDF = () => {
     }
 }
 
+// Verificar si está cerca del límite de turnos
+const isNearLimit = computed(() => {
+    if (hasUnlimitedAppointments.value) return false
+    if (appointmentsRemaining.value === null) return false
+    return appointmentsRemaining.value <= 5 && appointmentsRemaining.value > 0
+})
+
+// Verificar si alcanzó el límite
+const hasReachedLimit = computed(() => {
+    if (hasUnlimitedAppointments.value) return false
+    return appointmentsRemaining.value === 0
+})
+
+// Ir a página de planes
+const goToPlans = () => {
+    router.push('/planes')
+}
+
 onMounted(async () => {
-    await fetchBusinessHours()
+    await Promise.all([
+        fetchBusinessHours(),
+        loadFeatures(),
+    ])
     fetchServices()
     fetchTurnos()
     fetchAllTurnos()

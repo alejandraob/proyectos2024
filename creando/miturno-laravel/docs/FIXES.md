@@ -640,6 +640,107 @@ Se han creado 6 archivos de documentación en `/docs`:
 
 ---
 
+## Fix #022 - Error 500 en topClients con withCount + groupBy (21/12/2025)
+
+### Problema
+Al acceder a la página de Reportes, el endpoint `/api/reports/top-clients` devolvía error 500.
+
+### Causa
+La combinación de `withCount()` con `leftJoin()` y `groupBy()` en una misma consulta Eloquent causa conflictos SQL. El `withCount` genera una subconsulta que no es compatible con el `groupBy` sobre la tabla principal.
+
+### Código problemático
+```php
+$data = Client::where('clients.business_id', $business->id)
+    ->withCount(['appointments' => ...])
+    ->leftJoin('service_payments', ...)
+    ->select('clients.*', DB::raw('SUM(...)'))
+    ->groupBy('clients.id')  // Conflicto con withCount
+    ->get();
+```
+
+### Solución
+Separar en dos consultas:
+1. Primero obtener clientes con `withCount` para turnos
+2. Luego obtener totales de pagos en consulta separada
+
+```php
+// 1. Clientes con conteo de turnos
+$clients = Client::where('business_id', $business->id)
+    ->withCount(['appointments' => function ($query) use ($fechaInicio, $fechaFin) {
+        $query->whereBetween('fecha_inicio', [$fechaInicio, $fechaFin . ' 23:59:59'])
+              ->where('estado', '!=', 'cancelado');
+    }])
+    ->having('appointments_count', '>', 0)
+    ->orderByDesc('appointments_count')
+    ->limit($limite)
+    ->get();
+
+// 2. Pagos de esos clientes
+$clientIds = $clients->pluck('id');
+$pagosClientes = ServicePayment::whereIn('client_id', $clientIds)
+    ->where('estado', 'pagado')
+    ->whereBetween('fecha_pago', [$fechaInicio, $fechaFin])
+    ->selectRaw('client_id, SUM(monto) as total_gastado')
+    ->groupBy('client_id')
+    ->pluck('total_gastado', 'client_id');
+
+// 3. Combinar resultados
+$data = $clients->map(function ($client) use ($pagosClientes) {
+    return [
+        'id' => $client->id,
+        'nombre' => $client->nombre,
+        'total_turnos' => $client->appointments_count,
+        'total_gastado' => $pagosClientes[$client->id] ?? 0,
+    ];
+});
+```
+
+### Archivos modificados
+- `app/Http/Controllers/ReportController.php` (método topClients)
+
+---
+
+## Feature #023 - Sistema de Reportes Premium (21/12/2025)
+
+### Descripción
+Nueva página de Reportes y Estadísticas disponible solo para usuarios con plan Premium. Muestra métricas clave del negocio.
+
+### Funcionalidades
+1. **Stats Cards**: Clientes atendidos, Turnos totales, Tasa de asistencia, Ingresos totales
+2. **Horarios más solicitados**: Gráfico de barras mostrando las horas con más turnos
+3. **Días más ocupados**: Gráfico de barras por día de la semana
+4. **Servicios más populares**: Tabla con nombre, cantidad y precio
+5. **Clientes recurrentes**: Tabla con nombre, visitas y total gastado
+6. **Selector de período**: Semana, Mes, Trimestre, Año
+
+### Backend
+- `ReportController` con 6 endpoints de estadísticas
+- Consultas optimizadas con agrupaciones SQL
+- Servicios populares incluidos en dashboard
+
+### Frontend
+- `Reportes.vue` con diseño responsive
+- Gráficos de barras CSS (sin librerías externas)
+- Traducciones en ES/EN/PT
+
+### Restricción Premium
+- Ruta con meta `requiresPremium: true`
+- Link en sidebar solo visible si `isPremium`
+- Badge "PRO" junto al link
+
+### Archivos creados
+- `app/Http/Controllers/ReportController.php`
+- `resources/js/pages/Reportes.vue`
+- `resources/js/services/income.js` (reportsService)
+
+### Archivos modificados
+- `routes/api.php`
+- `resources/js/router/index.js`
+- `resources/js/components/layout/MainLayout.vue`
+- `resources/js/i18n/es.js`, `en.js`, `pt.js`
+
+---
+
 ## Template para nuevos fixes
 
 ```markdown

@@ -180,3 +180,177 @@
 - [x] PUT /api/business (actualizar negocio)
 - [x] PUT /api/business/settings (actualizar config)
 - [x] CRUD completo de clientes
+
+---
+
+## Pruebas Sistema de Ingresos - 21/12/2025
+
+### Endpoints de Ingresos
+
+#### GET /api/income
+**Estado:** ✅ EXITOSO
+
+```json
+// Request (con filtros opcionales)
+GET /api/income?fecha_inicio=2025-12-01&fecha_fin=2025-12-31&metodo_pago=efectivo&estado=pagado
+
+// Response
+{
+    "data": [
+        {
+            "id": 1,
+            "monto": "5000.00",
+            "metodo_pago": "efectivo",
+            "estado": "pagado",
+            "fecha_pago": "2025-12-20",
+            "notas": "Corte de pelo",
+            "client": { "nombre": "María García" },
+            "service": { "nombre": "Corte" }
+        }
+    ]
+}
+```
+
+#### POST /api/income
+**Estado:** ✅ EXITOSO
+
+```json
+// Request
+{
+    "client_id": 1,
+    "service_id": 1,
+    "monto": 5000,
+    "metodo_pago": "efectivo",
+    "estado": "pagado",
+    "fecha_pago": "2025-12-20",
+    "notas": "Corte de pelo"
+}
+
+// Response (201)
+{
+    "message": "Ingreso registrado correctamente",
+    "data": { ... }
+}
+```
+
+#### GET /api/income/summary
+**Estado:** ✅ EXITOSO
+
+```json
+// Response
+{
+    "hoy": { "total": 15000, "cantidad": 3 },
+    "semana": { "total": 45000, "cantidad": 9 },
+    "mes": { "total": 180000, "cantidad": 36 },
+    "mes_anterior": { "total": 150000, "cantidad": 30 },
+    "pendiente": 5000
+}
+```
+
+---
+
+## Pruebas Sistema de Reportes - 21/12/2025
+
+### Endpoints de Reportes (requieren autenticación + plan Premium)
+
+#### GET /api/reports/dashboard
+**Estado:** ✅ EXITOSO
+
+```json
+// Response
+{
+    "turnos": {
+        "total_mes": 45,
+        "confirmados": 30,
+        "cancelados": 5,
+        "pendientes": 10,
+        "mes_anterior": 40,
+        "variacion": 12.5
+    },
+    "clientes": {
+        "total": 25,
+        "nuevos_mes": 5
+    },
+    "ingresos": {
+        "total_mes": 180000,
+        "mes_anterior": 150000,
+        "variacion": 20.0
+    },
+    "servicios_populares": [
+        { "nombre": "Corte de pelo", "cantidad": 20, "precio": 5000 },
+        { "nombre": "Tintura", "cantidad": 10, "precio": 15000 }
+    ]
+}
+```
+
+#### GET /api/reports/top-clients
+**Estado:** ✅ EXITOSO
+
+```json
+// Response
+{
+    "fecha_inicio": "2025-01-01",
+    "fecha_fin": "2025-12-31",
+    "ordenado_por": "turnos",
+    "data": [
+        {
+            "id": 1,
+            "nombre": "María García",
+            "telefono": "1122334455",
+            "email": "maria@test.com",
+            "total_turnos": 15,
+            "total_gastado": 75000
+        }
+    ]
+}
+```
+
+#### GET /api/reports/hourly
+**Estado:** ✅ EXITOSO
+
+```json
+// Response
+{
+    "fecha_inicio": "2025-09-21",
+    "fecha_fin": "2025-12-21",
+    "data": [
+        { "hora": 9, "total": 25 },
+        { "hora": 10, "total": 30 },
+        { "hora": 11, "total": 28 },
+        // ... horas 0-23
+    ]
+}
+```
+
+#### GET /api/reports/weekday
+**Estado:** ✅ EXITOSO
+
+```json
+// Response
+{
+    "fecha_inicio": "2025-09-21",
+    "fecha_fin": "2025-12-21",
+    "data": [
+        { "dia": 1, "nombre": "Domingo", "total": 0 },
+        { "dia": 2, "nombre": "Lunes", "total": 35 },
+        { "dia": 3, "nombre": "Martes", "total": 40 },
+        // ... todos los días
+    ]
+}
+```
+
+---
+
+### Errores Encontrados y Resueltos
+
+#### Error: reportsService.dashboard is not a function
+**Causa:** Nombre incorrecto del método en el servicio
+**Solución:** Cambiar a `reportsService.getDashboard()`
+
+#### Error: (hourlyRes.data || []).sort is not a function
+**Causa:** Backend devuelve estructura anidada `{ data: [...] }`
+**Solución:** Acceder a `hourlyRes.data?.data || hourlyRes.data || []`
+
+#### Error 500 en /api/reports/top-clients
+**Causa:** Conflicto SQL entre `withCount` y `leftJoin` + `groupBy`
+**Solución:** Separar en dos consultas independientes

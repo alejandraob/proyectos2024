@@ -327,4 +327,23 @@ export const paymentsService = {
     downgradeToFree() {
         return api.post('/payments/downgrade')
     },
+
+    /**
+     * Simular cambio de plan (solo desarrollo)
+     * @param {string} planName - 'free', 'pro', 'premium'
+     */
+    simulateUpgrade(planName) {
+        return api.post('/payments/simulate', { plan_name: planName })
+    },
+}
+
+// --- Features Service (Plan del usuario) ---
+export const featuresService = {
+    /**
+     * Obtener features del plan actual del usuario
+     * Retorna: plan_name, appointments_limit, email_reminders, whatsapp_enabled, etc.
+     */
+    get() {
+        return api.get('/me/features')
+    },
 }

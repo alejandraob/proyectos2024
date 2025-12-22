@@ -89,6 +89,12 @@ const routes = [
         component: () => import('../pages/Ingresos.vue'),
         meta: { requiresAuth: true },
     },
+    {
+        path: '/reportes',
+        name: 'reportes',
+        component: () => import('../pages/Reportes.vue'),
+        meta: { requiresAuth: true, requiresPremium: true },
+    },
 
     /* ============================================
        RUTA 404

@@ -9,6 +9,7 @@ use App\Mail\NuevoTurnoMail;
 use App\Mail\TurnoConfirmadoMail;
 use App\Mail\TurnoCanceladoMail;
 use App\Services\WhatsAppService;
+use App\Traits\HasPlanFeatures;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -16,6 +17,7 @@ use Illuminate\Support\Collection;
 
 class AppointmentController extends Controller
 {
+    use HasPlanFeatures;
     /**
      * Listar turnos del negocio
      *
@@ -77,7 +79,20 @@ class AppointmentController extends Controller
             'telefono_cliente' => 'nullable|string|max:50',
         ]);
 
-        $business = $request->user()->business;
+        $user = $request->user();
+        $business = $user->business;
+
+        // Verificar límite de turnos del plan
+        if ($this->hasReachedAppointmentLimit($user)) {
+            $remaining = $this->getRemainingAppointments($user);
+            $plan = $this->getUserPlan($user);
+            return response()->json([
+                'message' => "Has alcanzado el límite de {$plan->appointments_limit} turnos mensuales de tu plan {$plan->display_name}. Mejora tu plan para crear más turnos.",
+                'error_code' => 'APPOINTMENT_LIMIT_REACHED',
+                'limit' => $plan->appointments_limit,
+                'remaining' => $remaining,
+            ], 403);
+        }
 
         // Validar que el cliente pertenezca al negocio del usuario
         if ($request->client_id) {
@@ -372,20 +387,17 @@ class AppointmentController extends Controller
      */
     private function verificarConflicto($businessId, $fechaInicio, $fechaFin, $excludeId = null)
     {
+        // Dos rangos de tiempo se solapan si:
+        // El inicio de uno es menor que el fin del otro Y viceversa
+        // (A.inicio < B.fin) AND (A.fin > B.inicio)
+        //
+        // Esto permite que un turno termine exactamente cuando otro empieza
+        // Ej: 10:00-10:30 y 10:30-11:00 NO se solapan
+
         $query = Appointment::where('business_id', $businessId)
             ->whereIn('estado', ['pendiente', 'confirmado'])
-            ->where(function ($q) use ($fechaInicio, $fechaFin) {
-                // El nuevo turno se superpone con uno existente si:
-                // - Empieza durante otro turno
-                // - Termina durante otro turno
-                // - Contiene completamente otro turno
-                $q->whereBetween('fecha_inicio', [$fechaInicio, $fechaFin])
-                    ->orWhereBetween('fecha_fin', [$fechaInicio, $fechaFin])
-                    ->orWhere(function ($q2) use ($fechaInicio, $fechaFin) {
-                        $q2->where('fecha_inicio', '<=', $fechaInicio)
-                            ->where('fecha_fin', '>=', $fechaFin);
-                    });
-            });
+            ->where('fecha_inicio', '<', $fechaFin)   // El turno existente empieza antes de que termine el nuevo
+            ->where('fecha_fin', '>', $fechaInicio);  // El turno existente termina después de que empiece el nuevo
 
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);

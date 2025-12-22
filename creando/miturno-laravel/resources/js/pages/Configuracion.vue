@@ -85,25 +85,43 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-check">
-                                <input
-                                    v-model="settingsForm.notificaciones_email"
-                                    type="checkbox"
-                                    class="form-check-input"
-                                />
-                                <span>{{ $t('settings.emailNotifications') }}</span>
-                            </label>
+                            <div class="feature-row">
+                                <label class="form-check" :class="{ 'feature-disabled': !hasEmailReminders }">
+                                    <input
+                                        v-model="settingsForm.notificaciones_email"
+                                        type="checkbox"
+                                        class="form-check-input"
+                                        :disabled="!hasEmailReminders"
+                                    />
+                                    <span>{{ $t('settings.emailNotifications') }}</span>
+                                </label>
+                                <span v-if="!hasEmailReminders" class="badge-plan badge-pro" @click="goToPlans">
+                                    PRO
+                                </span>
+                            </div>
+                            <p v-if="!hasEmailReminders" class="text-xs text-muted mt-1">
+                                Mejora a PRO para enviar recordatorios por email
+                            </p>
                         </div>
                         <div class="form-group">
-                            <label class="form-check">
-                                <input
-                                    v-model="settingsForm.notificaciones_whatsapp"
-                                    type="checkbox"
-                                    class="form-check-input"
-                                />
-                                <span>{{ $t('settings.whatsappNotifications') }}</span>
-                            </label>
-                            <p class="text-xs text-muted mt-1">{{ $t('settings.notificationsDescription') }}</p>
+                            <div class="feature-row">
+                                <label class="form-check" :class="{ 'feature-disabled': !hasWhatsApp }">
+                                    <input
+                                        v-model="settingsForm.notificaciones_whatsapp"
+                                        type="checkbox"
+                                        class="form-check-input"
+                                        :disabled="!hasWhatsApp"
+                                    />
+                                    <span>{{ $t('settings.whatsappNotifications') }}</span>
+                                </label>
+                                <span v-if="!hasWhatsApp" class="badge-plan badge-premium" @click="goToPlans">
+                                    PREMIUM
+                                </span>
+                            </div>
+                            <p v-if="hasWhatsApp" class="text-xs text-muted mt-1">{{ $t('settings.notificationsDescription') }}</p>
+                            <p v-else class="text-xs text-muted mt-1">
+                                Mejora a PREMIUM para enviar recordatorios por WhatsApp
+                            </p>
                         </div>
                     </div>
                     <div class="card-footer">
@@ -347,14 +365,26 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import MainLayout from '../components/layout/MainLayout.vue'
 import Button from 'primevue/button'
 import { businessService, servicesService } from '../services/api'
 import { useAuthStore } from '../stores/auth'
 import { useNotify } from '../composables/useNotify'
+import { usePlanFeatures } from '../composables/usePlanFeatures'
 
+const router = useRouter()
 const authStore = useAuthStore()
 const notify = useNotify()
+
+// Plan features
+const {
+    loadFeatures,
+    hasEmailReminders,
+    hasWhatsApp,
+    isFree,
+    planDisplayName,
+} = usePlanFeatures()
 
 // Estados
 const savingNegocio = ref(false)
@@ -689,7 +719,13 @@ const formatPrecio = (precio) => {
     return `$${parseFloat(precio).toLocaleString('es-AR')}`
 }
 
-onMounted(() => {
+// Ir a planes
+const goToPlans = () => {
+    router.push('/planes')
+}
+
+onMounted(async () => {
+    await loadFeatures()
     fetchBusiness()
     fetchServices()
 })

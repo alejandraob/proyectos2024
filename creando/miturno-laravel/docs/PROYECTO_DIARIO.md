@@ -15,6 +15,68 @@
 
 ## Registro Diario
 
+### 21 de Diciembre 2025
+
+#### Sesión 11: Reportes y Estadísticas Premium
+**Duración:** ~1.5 horas
+
+**Trabajo realizado:**
+
+**Sistema de Ingresos (Feature #034):**
+- Creación de migración `create_service_payments_table`
+- Modelo ServicePayment con relaciones (Business, Client, Service)
+- IncomeController con CRUD completo + summary
+- Rutas API: GET/POST/PUT/DELETE /income + GET /income/summary
+- Filtros por fecha, método de pago y estado
+
+**Página Ingresos.vue mejorada:**
+- Modal nativo (reemplaza PrimeVue Dialog) para mejor consistencia
+- Exportación a Excel con xlsx
+- Filtro por estado (pagado, pendiente, cancelado)
+- Función confirmDelete para eliminar ingresos
+
+**Sistema de Reportes Premium (Feature #035):**
+- ReportController con 6 endpoints de estadísticas:
+  - dashboard() - stats generales + servicios populares
+  - appointments() - reportes de turnos agrupados
+  - income() - reportes de ingresos agrupados
+  - topClients() - clientes recurrentes con total gastado
+  - hourlyStats() - horarios más solicitados
+  - weekdayStats() - días más ocupados
+- Rutas API: /reports/dashboard, /reports/appointments, /reports/income, /reports/top-clients, /reports/hourly, /reports/weekday
+
+**Página Reportes.vue (Solo Premium):**
+- 4 stats cards: Clientes atendidos, Turnos totales, Tasa asistencia, Ingresos
+- Gráfico de barras: Horarios más solicitados
+- Gráfico de barras: Días más ocupados
+- Tabla: Servicios más populares (nombre, cantidad, precio)
+- Tabla: Clientes recurrentes (nombre, visitas, gastado)
+- Selector de período (semana, mes, trimestre, año)
+
+**Configuración de ruta premium:**
+- Ruta /reportes con meta `requiresPremium: true`
+- Link en sidebar con badge "PRO" (solo visible si isPremium)
+- Traducciones en es.js, en.js, pt.js
+
+**Archivos creados:**
+- database/migrations/xxxx_create_service_payments_table.php
+- app/Models/ServicePayment.php
+- app/Http/Controllers/IncomeController.php
+- app/Http/Controllers/ReportController.php
+- resources/js/pages/Reportes.vue
+- resources/js/services/income.js (incomeService + reportsService)
+
+**Archivos modificados:**
+- routes/api.php (rutas income y reports)
+- resources/js/router/index.js (ruta /reportes)
+- resources/js/components/layout/MainLayout.vue (link Reportes + isPremium)
+- resources/js/pages/Ingresos.vue (modal nativo, exportación, filtros)
+- resources/js/i18n/es.js, en.js, pt.js (traducciones reports)
+
+**Estado:** Reportes Premium funcional
+
+---
+
 ### 16 de Diciembre 2025
 
 #### Sesión 9: Multi-idioma (i18n)
@@ -418,9 +480,9 @@
 
 ### Post-MVP (Opcionales)
 12. [x] ~~Multi-idioma (i18n)~~
-13. [ ] Pagos online (MercadoPago/Stripe)
+13. [x] ~~Pagos online (MercadoPago)~~
 14. [ ] App móvil (PWA)
-15. [ ] Reportes avanzados y analytics
+15. [x] ~~Reportes avanzados y analytics~~
 16. [ ] WhatsApp Business API (producción)
 
 ---
@@ -443,9 +505,11 @@
 | Notificaciones Email | ✅ Completo (recordatorios) | 100% |
 | Integración WhatsApp | ✅ Completo (Twilio sandbox) | 100% |
 | Multi-idioma (i18n) | ✅ Completo (ES/EN/PT) | 100% |
+| Sistema de Ingresos | ✅ Completo (CRUD + exportación) | 100% |
+| Reportes Premium | ✅ Completo (stats, gráficos, tablas) | 100% |
 
 **Progreso Total del MVP:** 100% ✅
-**Features Post-MVP:** 1/5 completados
+**Features Post-MVP:** 3/5 completados
 
 ---
 
